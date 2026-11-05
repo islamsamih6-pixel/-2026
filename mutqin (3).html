@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مُتْقِن — مقيّم تلاوة جزء عمّ</title>
+<meta name="description" content="تطبيق تعليمي لتدريب الطالبات على تسميع جزء عمّ — إعداد اسلام عواودة — رخصة المشاع الإبداعي CC BY-NC-SA 4.0">
+<meta name="author" content="اسلام عواودة">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Cairo",system-ui,sans-serif;
+    background-color:#faf6ee;color:#24312a;
+    background-image:radial-gradient(1100px 500px at 50% -120px,#f3ecda 0%,transparent 70%);
+    background-repeat:no-repeat;
+    min-height:100vh;display:flex;flex-direction:column;line-height:1.6;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  a{color:inherit}
+  svg{flex-shrink:0}
+
+  /* ---------- app chrome ---------- */
+  .app-header{
+    background:linear-gradient(135deg,#163b2e 0%,#1e4d3b 55%,#2e6b54 100%);
+    border-bottom:2px solid #c9a227;
+    box-shadow:0 2px 10px rgb(30 77 59 / .25);
+    position:sticky;top:0;z-index:40;
+  }
+  .app-header .brand{display:flex;width:100%;max-width:56rem;margin-inline:auto;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1rem}
+  .brand-icon{display:flex;height:2.25rem;width:2.25rem;align-items:center;justify-content:center;border-radius:.75rem;background:rgb(255 255 255 / .1)}
+  .brand-text{text-align:right}
+  .brand-text b{display:block;font-size:1.125rem;line-height:1.25;color:#fff}
+  .brand-text small{display:block;font-size:11px;line-height:1rem;color:rgb(255 255 255 / .7)}
+  .app-footer{background:linear-gradient(135deg,#163b2e 0%,#1e4d3b 100%);padding:12px 16px 14px;margin-top:auto}
+  .app-footer p{text-align:center;font-size:12px;color:rgb(255 255 255 / .6)}
+  .app-footer p+p{margin-top:6px}
+  .app-footer p.copy{color:rgb(255 255 255 / .5)}
+  .app-footer a{color:rgb(255 255 255 / .5);text-decoration:underline;text-decoration-color:rgb(255 255 255 / .4);text-underline-offset:4px;transition:color .2s}
+  .app-footer a:hover{color:#fff}
+  main{flex:1}
+  .container{max-width:56rem;margin-inline:auto;padding-inline:1rem;padding-bottom:2.5rem;width:100%}
+
+  /* ---------- typography ---------- */
+  .font-quran{font-family:"Amiri Quran","Amiri Quran",serif}
+
+  .ayah-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:1.5em;height:1.5em;padding:0 .15em;margin:0 .15em;
+    border:1.5px solid #c9a227;border-radius:50%;color:#8a6d1a;
+    font-size:.55em;font-family:"Cairo",sans-serif;vertical-align:middle;background:#fdfaf2;
+  }
+
+  /* ---------- cards & sections ---------- */
+  .card{border:1px solid #e6decb;background:#fff;border-radius:1rem;box-shadow:0 1px 2px rgb(0 0 0 / .05)}
+  .card-p{padding:1.25rem}
+  .section-title{font-size:.875rem;font-weight:700;color:#6e7b72}
+
+  .hero{
+    margin-top:1rem;border:1px solid #e6decb;border-radius:1.5rem;
+    background:linear-gradient(to bottom,#fff,#f7f2e6);
+    padding:1.5rem;text-align:center;box-shadow:0 1px 2px rgb(0 0 0 / .05);
+    position:relative;overflow:hidden;
+  }
+  .hero::before{content:"";position:absolute;inset-inline-start:-60px;top:-60px;width:180px;height:180px;background:radial-gradient(circle,rgb(201 162 39 / .18),transparent 70%);pointer-events:none}
+  @media(min-width:640px){.hero{padding:2rem}}
+  .hero-ayah{font-size:1.125rem;color:#8a6d1a}
+  .hero h1{margin-top:.5rem;font-size:1.5rem;font-weight:700;color:#1e4d3b}
+  @media(min-width:640px){.hero h1{font-size:1.875rem}}
+  .hero-sub{margin:.5rem auto 0;max-width:36rem;font-size:.875rem;line-height:1.5rem;color:#6e7b72}
+  .chips{margin-top:1rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem}
+  .chip{display:inline-flex;align-items:center;gap:.375rem;border:1px solid #e6decb;background:#fff;border-radius:9999px;padding:.375rem .75rem;font-size:12px;color:#6e7b72}
+  .chip b{color:#1e4d3b}
+  .chip.clickable{font-weight:600;color:#1e4d3b;transition:background-color .2s}
+  .chip.clickable:hover{background:#eef5f0}
+  .chip .gold{color:#c9a227}
+  .badges-row{margin-top:.75rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.375rem}
+  .badge-pill{display:inline-flex;align-items:center;gap:.25rem;border-radius:9999px;background:#f5ebd0;padding:.25rem .625rem;font-size:11px;font-weight:600;color:#8a6d1a}
+
+  /* ---------- profile card ---------- */
+  .profile-head{margin-bottom:.75rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem}
+  .profile-head h2{display:flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:700;color:#1e4d3b}
+  .saved-hint{display:flex;align-items:center;gap:.25rem;font-size:11px;color:#6e7b72}
+  .saved-hint.active{color:#1e4d3b}
+  .grid2{display:grid;gap:.75rem}
+  @media(min-width:640px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .field-label{display:block;margin-bottom:.375rem;font-size:12px;font-weight:600;color:#24312a}
+  .field-label .cap{display:inline-flex;align-items:center;gap:.375rem;color:#8a6d1a}
+  .input{
+    width:100%;border:1px solid #e6decb;background:#fbf8f1;border-radius:.75rem;
+    padding:.625rem .875rem;font-size:.875rem;color:#24312a;box-shadow:0 1px 2px rgb(0 0 0 / .05);
+    outline:none;transition:border-color .2s,background-color .2s;
+  }
+  .input::placeholder{color:#9aa69e}
+  .input:focus{border-color:#c9a227;background:#fff}
+  .search-wrap{position:relative;margin-top:1.25rem}
+  .search-wrap .input{padding-inline-start:2.5rem;padding-inline-end:1rem;background:#fff}
+  .search-wrap svg{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);color:#6e7b72}
+
+  /* ---------- surah grid ---------- */
+  .grid-surahs{margin-top:1rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+  @media(min-width:640px){.grid-surahs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(min-width:1024px){.grid-surahs{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .surah-card{
+    position:relative;display:flex;flex-direction:column;align-items:center;
+    border:1px solid #e6decb;background:#fff;border-radius:1rem;padding:1rem;text-align:center;
+    box-shadow:0 1px 2px rgb(0 0 0 / .05);transition:transform .2s,border-color .2s,box-shadow .2s;
+  }
+  .surah-card:hover{transform:translateY(-2px);border-color:#c9a227;box-shadow:0 4px 6px rgb(0 0 0 / .07)}
+  .surah-card h3{margin-top:.625rem;font-size:1.25rem;font-weight:700;color:#24312a}
+  .surah-card:hover h3{color:#1e4d3b}
+  .surah-meta{margin-top:.25rem;display:flex;align-items:center;gap:.5rem;font-size:11px;color:#6e7b72}
+  .surah-meta span{display:inline-flex;align-items:center;gap:.125rem}
+  .score-pill{margin-top:.5rem;border-radius:9999px;padding:.125rem .5rem;font-size:11px;font-weight:700}
+  .score-pill.mastered{background:#e2f0e8;color:#1e4d3b}
+  .score-pill.tried{background:#f5ebd0;color:#8a6d1a}
+  .score-pill.new{background:#f2ede1;color:#6e7b72;font-weight:400}
+  .empty-note{margin-top:2rem;text-align:center;font-size:.875rem;color:#6e7b72}
+
+  .star-badge{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:linear-gradient(135deg,#1e4d3b,#2e6b54);
+    clip-path:polygon(50% 0%,63% 12%,80% 8%,85% 25%,100% 37%,92% 50%,100% 63%,85% 75%,80% 92%,63% 88%,50% 100%,37% 88%,20% 92%,15% 75%,0% 63%,8% 50%,0% 37%,15% 25%,20% 8%,37% 12%)}
+  .star-num{color:#e7ce7b;font-size:14px;font-weight:700}
+
+  /* ---------- buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:.375rem;border-radius:.75rem;padding:.5rem 1rem;font-size:.875rem;font-weight:600;border:1px solid #e6decb;background:#fff;color:#1e4d3b;transition:background-color .2s,box-shadow .2s}
+  .btn:hover{background:#eef5f0}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn-sm{padding:.375rem .75rem;font-size:12px;border-radius:9999px}
+  .btn-primary{background:#1e4d3b;color:#fff;border-color:#1e4d3b}
+  .btn-primary:hover{background:#163b2e}
+  .btn-gold{background:#c9a227;color:#fff;border-color:#c9a227;font-weight:700}
+  .btn-gold:hover{background:#b08e1f}
+  .btn-destructive{background:#b3261e;color:#fff;border-color:#b3261e}
+  .btn-destructive:hover{background:#992019}
+  .btn-ghost{border-color:transparent;background:transparent;color:#6e7b72}
+  .btn-ghost:hover{background:#f2ede1}
+  .btn-ghost.danger{color:#b3261e}
+
+  /* ---------- recite view ---------- */
+  .topbar{display:flex;align-items:center;gap:.75rem;padding:1rem 0}
+  .topbar-center{min-width:0;flex:1;text-align:center}
+  .topbar-center h1{font-size:1.5rem;font-weight:700;color:#1e4d3b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-center p{font-size:12px;color:#6e7b72}
+  .topbar-spacer{width:72px}
+  .ref-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem}
+  .ref-title{display:flex;align-items:center;gap:.5rem}
+  .ref-icon{display:flex;height:2.25rem;width:2.25rem;align-items:center;justify-content:center;border-radius:9999px;background:#f5ebd0}
+  .ref-title h2{font-size:.875rem;font-weight:700;color:#24312a}
+  .ref-title p{font-size:12px;color:#6e7b72}
+  .ref-actions{display:flex;align-items:center;gap:.5rem}
+  .envelope{margin-top:.75rem;display:flex;align-items:flex-end;gap:2px;overflow:hidden;height:40px}
+  .envelope i{display:block;width:3px;border-radius:2px}
+  .ayah-box{margin-top:1rem}
+  .ayah-scroll{max-height:18rem;overflow-y:auto;border-radius:.75rem;background:#fbf8f1;padding:1rem;scrollbar-width:thin}
+  .ayah-text{font-size:1.5rem;line-height:2.4;color:#24312a}
+  .bismillah{margin-bottom:1rem;text-align:center;font-size:1.25rem;color:#8a6d1a}
+  .mem-box{display:flex;min-height:192px;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;border-radius:.75rem;background:#fbf8f1;padding:2rem;text-align:center}
+  .mem-icon{display:flex;height:3.5rem;width:3.5rem;align-items:center;justify-content:center;border-radius:9999px;background:#f5ebd0}
+  .mem-title{font-size:1.5rem;color:#1e4d3b}
+  .mem-sub{font-size:.875rem;color:#6e7b72}
+  .rec-line{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:700;color:#b3261e}
+  .rec-dot{display:inline-block;height:.75rem;width:.75rem;border-radius:9999px;background:#b3261e;animation:blink 1s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .tips{text-align:center}
+  .tip-fade{font-size:.875rem;color:#6e7b72;animation:fade-in .6s ease-out}
+  @keyframes fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .recorder-col{margin-top:1.25rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+  .meter{display:flex;height:4rem;align-items:flex-end;gap:.25rem}
+  .meter i{display:block;width:6px;border-radius:9999px;transition:height .1s;background:#e6decb}
+  .mic-btn{
+    display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;
+    color:#fdfbf5;background:linear-gradient(135deg,#1e4d3b,#2e6b54);
+    box-shadow:0 6px 18px rgb(30 77 59 / .35);transition:transform .15s,box-shadow .15s;touch-action:manipulation;
+  }
+  .mic-btn:hover:not(:disabled){transform:scale(1.04);box-shadow:0 8px 22px rgb(30 77 59 / .45)}
+  .mic-btn:active:not(:disabled){transform:scale(.98)}
+  .mic-btn:disabled{opacity:.5;cursor:not-allowed}
+  .mic-btn-recording{background:linear-gradient(135deg,#b3261e,#d43b31);animation:mic-pulse 1.6s ease-out infinite}
+  @keyframes mic-pulse{0%{box-shadow:0 0 0 0 rgb(179 38 30 / .45)}70%{box-shadow:0 0 0 22px rgb(179 38 30 / 0)}100%{box-shadow:0 0 0 0 rgb(179 38 30 / 0)}}
+  .rec-status{text-align:center;color:#6e7b72}
+  .rec-status .rec-line{justify-content:center}
+  .alert{border-radius:.5rem;background:#f9e3e1;padding:.5rem 1rem;font-size:.875rem;color:#b3261e}
+  /* mic activation card */
+  .mic-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem}
+  .mic-info{display:flex;align-items:center;gap:.625rem;min-width:0}
+  .mic-info h2{font-size:.875rem;font-weight:700;color:#24312a}
+  .mic-info p{font-size:.75rem;line-height:1.4;color:#6e7b72}
+  .mic-ico{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;border-radius:9999px;flex-shrink:0}
+  .mic-pill{display:inline-flex;align-items:center;gap:.375rem;border-radius:9999px;background:#1e4d3b;color:#fff;font-size:.75rem;font-weight:700;padding:.5rem 1rem;transition:background .15s;flex-shrink:0}
+  .mic-pill:hover{background:#163b2e}
+  .mic-pill:disabled{opacity:.6;cursor:wait}
+  .mic-pill-alt{background:#fff;color:#1e4d3b;border:1px solid #e6decb}
+  .mic-pill-alt:hover{background:#eef5f0}
+  .mic-pill-ghost{background:#fff;color:#1e4d3b;border:1px solid #e6decb;font-size:.6875rem;font-weight:600;padding:.35rem .75rem}
+  .mic-pill-ghost:hover{background:#eef5f0}
+  .mic-pill-ghost.danger{color:#b3261e;border-color:rgba(179,38,30,.3)}
+  .frame-hint{margin-top:.75rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;background:#fbf8f1;border-radius:.75rem;padding:.6rem .9rem}
+  .frame-hint p{font-size:.6875rem;line-height:1.4;color:#6e7b72}
+  .mic-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:1rem}
+  .mic-banner span{font-size:.75rem;line-height:1.4}
+  .mic-help{margin-top:.75rem;border:1px solid #e6decb;border-radius:.75rem;background:#fbf8f1;padding:.6rem .9rem}
+  .mic-help summary{cursor:pointer;font-size:.78rem;font-weight:700;color:#b3261e}
+  .mic-help[open] summary{margin-bottom:.5rem}
+  .mic-help-steps{margin:0;padding-inline-start:1.4rem;font-size:.75rem;line-height:1.8;color:#4a4340}
+  .mic-help-steps li{margin-bottom:.3rem}
+  .mic-help-steps b{color:#b3261e}
+  .mic-help-note{margin:.5rem 0 0;font-size:.6875rem;line-height:1.7;color:#6e7b72}
+  .take-panel{display:flex;width:100%;flex-direction:column;align-items:center;gap:.75rem}
+  .take-audio{width:100%;max-width:24rem}
+  .actions-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem}
+  .spin{animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- results ---------- */
+  .score-head{display:flex;flex-direction:column;align-items:center;gap:.25rem}
+  .score-head small{font-size:.875rem;color:#6e7b72}
+  .score-head h1{font-size:1.5rem;font-weight:700;color:#1e4d3b}
+  .ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring-center small{font-size:.875rem;color:#6e7b72}
+  .ring-center .score{font-size:2.25rem;font-weight:700}
+  .ring-center .of{font-size:12px;color:#6e7b72}
+  .ring-center .sub{margin-top:.25rem;font-size:12px;font-weight:600}
+  .grade-pill{border-radius:9999px;padding:.25rem 1rem;font-size:.875rem;font-weight:700}
+  .asr-note{display:flex;align-items:center;gap:.375rem;font-size:12px;color:#8a6d1a}
+  .bd-row{margin-bottom:.75rem}
+  .bd-row:last-child{margin-bottom:0}
+  .bd-head{margin-bottom:.25rem;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+  .bd-head .lbl{font-weight:600;color:#24312a}
+  .bd-head .lbl small{font-weight:400;color:#6e7b72}
+  .bd-head .val{font-weight:700}
+  .bd-track{height:.625rem;width:100%;overflow:hidden;border-radius:9999px;background:#f2ede1}
+  .bd-fill{height:100%;border-radius:9999px;transition:width .8s ease-out;animation:bar-grow .9s ease-out}
+  @keyframes bar-grow{from{width:0}}
+  .bd-desc{margin-top:.25rem;font-size:11px;color:#6e7b72}
+  .notes-list{display:flex;flex-direction:column;gap:.625rem}
+  .notes-list li{display:flex;align-items:flex-start;gap:.5rem;font-size:.875rem;line-height:1.5rem;color:#24312a;list-style:none}
+  .legend{display:flex;align-items:center;gap:.75rem;font-size:11px;color:#6e7b72}
+  .legend span{display:inline-flex;align-items:center;gap:.25rem}
+  .dot{display:inline-block;height:.625rem;width:.625rem;border-radius:9999px}
+  .w-correct{color:#234b3a}
+  .w-sub{color:#b3261e;background:#fbeae9;border-radius:.35em;padding:0 .15em;border-bottom:2px solid #b3261e;cursor:help}
+  .w-missing{color:#b3261e;opacity:.8;border-bottom:2px dotted #b3261e;padding:0 .1em}
+  .extras-note{margin-top:.5rem;font-size:12px;color:#8a6d1a}
+  .results-actions{margin-top:1.5rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem}
+
+  /* ---------- progress ---------- */
+  .progress-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+  .progress-head h1{font-size:1.25rem;font-weight:700;color:#1e4d3b}
+  .profile-bar{margin-bottom:.75rem;display:flex;flex-wrap:wrap;align-items:center;column-gap:1rem;row-gap:.375rem;border:1px solid #e6decb;background:#fff;border-radius:1rem;padding:.75rem 1rem;font-size:.875rem;box-shadow:0 1px 2px rgb(0 0 0 / .05)}
+  .profile-bar span{display:inline-flex;align-items:center;gap:.375rem;color:#6e7b72}
+  .profile-bar b{color:#1e4d3b}
+  .stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+  @media(min-width:640px){.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .stat-card{border:1px solid #e6decb;background:#fff;border-radius:1rem;padding:1rem;text-align:center;box-shadow:0 1px 2px rgb(0 0 0 / .05)}
+  .stat-card .v{font-size:1.875rem;font-weight:700}
+  .stat-card .l{margin-top:.25rem;font-size:12px;color:#6e7b72}
+  .badges-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+  @media(min-width:640px){.badges-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .badge-card{border-radius:.75rem;border:1px solid #e6decb;background:#f7f4ec;padding:.75rem;text-align:center;transition:background-color .2s;opacity:.55}
+  .badge-card.earned{border-color:#c9a227;background:#f5ebd0;opacity:1}
+  .badge-card .ic{font-size:1.875rem}
+  .badge-card.earned .ic{filter:none}
+  .badge-card .ic{filter:grayscale(1)}
+  .badge-card.earned .ic{filter:none}
+  .badge-card p{margin-top:.25rem;font-size:12px;font-weight:700;color:#24312a}
+  .badge-card small{font-size:10px;line-height:1rem;color:#6e7b72}
+  .chart-empty{padding:2rem 0;text-align:center;font-size:.875rem;color:#6e7b72}
+  .table-wrap{max-height:20rem;overflow-y:auto;border-radius:.75rem;border:1px solid #ede6d4;scrollbar-width:thin}
+  table{width:100%;border-collapse:collapse;text-align:right;font-size:.875rem}
+  thead th{position:sticky;top:0;background:#f5f1e6;font-size:12px;font-weight:600;color:#6e7b72;padding:.5rem .75rem;text-align:right}
+  tbody td{padding:.5rem .75rem;border-top:1px solid #ede6d4}
+  tbody td.date{font-size:12px;color:#6e7b72}
+  tbody td.mark span{display:inline-block;min-width:2.5rem;border-radius:9999px;padding:.125rem .5rem;text-align:center;font-size:12px;font-weight:700}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <button class="brand" data-action="go-home" aria-label="الصفحة الرئيسية">
+    <span class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e7ce7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2V4z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7V4z"/><path d="M9.2 8.6l1.6 1.6 3-3.2" stroke-width="1.8"/></svg>
+    </span>
+    <span class="brand-text"><b>مُتْقِن</b><small>مقيّم تلاوة جزء عمّ</small></span>
+  </button>
+</header>
+
+<main id="app"></main>
+
+<footer class="app-footer">
+  <p>مُتْقِن — أداة تعليمية للتدرب على تلاوة جزء عمّ · التقييم استرشادي ولا يغني عن متقرئٍ بشري</p>
+  <p class="copy">© ٢٠٢٦ اسلام عواودة — جميع الحقوق محفوظة للمُعدِّ</p>
+  <p class="copy">مرخّص بموجب رخصة المشاع الإبداعي: نَسْب المُصنَّف – غير تجاري – الترخيص بالمثل 4.0
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ar" target="_blank" rel="noopener noreferrer">(CC BY-NC-SA 4.0)</a>
+  </p>
+</footer>
+
+<script>
+"use strict";
+/* ============ data (injected by build script) ============ */
+const SURAHS = [{"id": 78, "name": "سُورَةُ النَّبَإِ", "englishName": "An-Naba", "ayahs": [{"n": 1, "text": "عَمَّ يَتَسَآءَلُونَ"}, {"n": 2, "text": "عَنِ ٱلنَّبَإِ ٱلْعَظِيمِ"}, {"n": 3, "text": "ٱلَّذِى هُمْ فِيهِ مُخْتَلِفُونَ"}, {"n": 4, "text": "كَلَّا سَيَعْلَمُونَ"}, {"n": 5, "text": "ثُمَّ كَلَّا سَيَعْلَمُونَ"}, {"n": 6, "text": "أَلَمْ نَجْعَلِ ٱلْأَرْضَ مِهَٰدًۭا"}, {"n": 7, "text": "وَٱلْجِبَالَ أَوْتَادًۭا"}, {"n": 8, "text": "وَخَلَقْنَٰكُمْ أَزْوَٰجًۭا"}, {"n": 9, "text": "وَجَعَلْنَا نَوْمَكُمْ سُبَاتًۭا"}, {"n": 10, "text": "وَجَعَلْنَا ٱلَّيْلَ لِبَاسًۭا"}, {"n": 11, "text": "وَجَعَلْنَا ٱلنَّهَارَ مَعَاشًۭا"}, {"n": 12, "text": "وَبَنَيْنَا فَوْقَكُمْ سَبْعًۭا شِدَادًۭا"}, {"n": 13, "text": "وَجَعَلْنَا سِرَاجًۭا وَهَّاجًۭا"}, {"n": 14, "text": "وَأَنزَلْنَا مِنَ ٱلْمُعْصِرَٰتِ مَآءًۭ ثَجَّاجًۭا"}, {"n": 15, "text": "لِّنُخْرِجَ بِهِۦ حَبًّۭا وَنَبَاتًۭا"}, {"n": 16, "text": "وَجَنَّٰتٍ أَلْفَافًا"}, {"n": 17, "text": "إِنَّ يَوْمَ ٱلْفَصْلِ كَانَ مِيقَٰتًۭا"}, {"n": 18, "text": "يَوْمَ يُنفَخُ فِى ٱلصُّورِ فَتَأْتُونَ أَفْوَاجًۭا"}, {"n": 19, "text": "وَفُتِحَتِ ٱلسَّمَآءُ فَكَانَتْ أَبْوَٰبًۭا"}, {"n": 20, "text": "وَسُيِّرَتِ ٱلْجِبَالُ فَكَانَتْ سَرَابًا"}, {"n": 21, "text": "إِنَّ جَهَنَّمَ كَانَتْ مِرْصَادًۭا"}, {"n": 22, "text": "لِّلطَّٰغِينَ مَـَٔابًۭا"}, {"n": 23, "text": "لَّٰبِثِينَ فِيهَآ أَحْقَابًۭا"}, {"n": 24, "text": "لَّا يَذُوقُونَ فِيهَا بَرْدًۭا وَلَا شَرَابًا"}, {"n": 25, "text": "إِلَّا حَمِيمًۭا وَغَسَّاقًۭا"}, {"n": 26, "text": "جَزَآءًۭ وِفَاقًا"}, {"n": 27, "text": "إِنَّهُمْ كَانُوا۟ لَا يَرْجُونَ حِسَابًۭا"}, {"n": 28, "text": "وَكَذَّبُوا۟ بِـَٔايَٰتِنَا كِذَّابًۭا"}, {"n": 29, "text": "وَكُلَّ شَىْءٍ أَحْصَيْنَٰهُ كِتَٰبًۭا"}, {"n": 30, "text": "فَذُوقُوا۟ فَلَن نَّزِيدَكُمْ إِلَّا عَذَابًا"}, {"n": 31, "text": "إِنَّ لِلْمُتَّقِينَ مَفَازًا"}, {"n": 32, "text": "حَدَآئِقَ وَأَعْنَٰبًۭا"}, {"n": 33, "text": "وَكَوَاعِبَ أَتْرَابًۭا"}, {"n": 34, "text": "وَكَأْسًۭا دِهَاقًۭا"}, {"n": 35, "text": "لَّا يَسْمَعُونَ فِيهَا لَغْوًۭا وَلَا كِذَّٰبًۭا"}, {"n": 36, "text": "جَزَآءًۭ مِّن رَّبِّكَ عَطَآءً حِسَابًۭا"}, {"n": 37, "text": "رَّبِّ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ وَمَا بَيْنَهُمَا ٱلرَّحْمَٰنِ ۖ لَا يَمْلِكُونَ مِنْهُ خِطَابًۭا"}, {"n": 38, "text": "يَوْمَ يَقُومُ ٱلرُّوحُ وَٱلْمَلَٰٓئِكَةُ صَفًّۭا ۖ لَّا يَتَكَلَّمُونَ إِلَّا مَنْ أَذِنَ لَهُ ٱلرَّحْمَٰنُ وَقَالَ صَوَابًۭا"}, {"n": 39, "text": "ذَٰلِكَ ٱلْيَوْمُ ٱلْحَقُّ ۖ فَمَن شَآءَ ٱتَّخَذَ إِلَىٰ رَبِّهِۦ مَـَٔابًا"}, {"n": 40, "text": "إِنَّآ أَنذَرْنَٰكُمْ عَذَابًۭا قَرِيبًۭا يَوْمَ يَنظُرُ ٱلْمَرْءُ مَا قَدَّمَتْ يَدَاهُ وَيَقُولُ ٱلْكَافِرُ يَٰلَيْتَنِى كُنتُ تُرَٰبًۢا"}], "ayahCount": 40, "duration": 292.21}, {"id": 79, "name": "سُورَةُ النَّازِعَاتِ", "englishName": "An-Naazi'aat", "ayahs": [{"n": 1, "text": "وَٱلنَّٰزِعَٰتِ غَرْقًۭا"}, {"n": 2, "text": "وَٱلنَّٰشِطَٰتِ نَشْطًۭا"}, {"n": 3, "text": "وَٱلسَّٰبِحَٰتِ سَبْحًۭا"}, {"n": 4, "text": "فَٱلسَّٰبِقَٰتِ سَبْقًۭا"}, {"n": 5, "text": "فَٱلْمُدَبِّرَٰتِ أَمْرًۭا"}, {"n": 6, "text": "يَوْمَ تَرْجُفُ ٱلرَّاجِفَةُ"}, {"n": 7, "text": "تَتْبَعُهَا ٱلرَّادِفَةُ"}, {"n": 8, "text": "قُلُوبٌۭ يَوْمَئِذٍۢ وَاجِفَةٌ"}, {"n": 9, "text": "أَبْصَٰرُهَا خَٰشِعَةٌۭ"}, {"n": 10, "text": "يَقُولُونَ أَءِنَّا لَمَرْدُودُونَ فِى ٱلْحَافِرَةِ"}, {"n": 11, "text": "أَءِذَا كُنَّا عِظَٰمًۭا نَّخِرَةًۭ"}, {"n": 12, "text": "قَالُوا۟ تِلْكَ إِذًۭا كَرَّةٌ خَاسِرَةٌۭ"}, {"n": 13, "text": "فَإِنَّمَا هِىَ زَجْرَةٌۭ وَٰحِدَةٌۭ"}, {"n": 14, "text": "فَإِذَا هُم بِٱلسَّاهِرَةِ"}, {"n": 15, "text": "هَلْ أَتَىٰكَ حَدِيثُ مُوسَىٰٓ"}, {"n": 16, "text": "إِذْ نَادَىٰهُ رَبُّهُۥ بِٱلْوَادِ ٱلْمُقَدَّسِ طُوًى"}, {"n": 17, "text": "ٱذْهَبْ إِلَىٰ فِرْعَوْنَ إِنَّهُۥ طَغَىٰ"}, {"n": 18, "text": "فَقُلْ هَل لَّكَ إِلَىٰٓ أَن تَزَكَّىٰ"}, {"n": 19, "text": "وَأَهْدِيَكَ إِلَىٰ رَبِّكَ فَتَخْشَىٰ"}, {"n": 20, "text": "فَأَرَىٰهُ ٱلْءَايَةَ ٱلْكُبْرَىٰ"}, {"n": 21, "text": "فَكَذَّبَ وَعَصَىٰ"}, {"n": 22, "text": "ثُمَّ أَدْبَرَ يَسْعَىٰ"}, {"n": 23, "text": "فَحَشَرَ فَنَادَىٰ"}, {"n": 24, "text": "فَقَالَ أَنَا۠ رَبُّكُمُ ٱلْأَعْلَىٰ"}, {"n": 25, "text": "فَأَخَذَهُ ٱللَّهُ نَكَالَ ٱلْءَاخِرَةِ وَٱلْأُولَىٰٓ"}, {"n": 26, "text": "إِنَّ فِى ذَٰلِكَ لَعِبْرَةًۭ لِّمَن يَخْشَىٰٓ"}, {"n": 27, "text": "ءَأَنتُمْ أَشَدُّ خَلْقًا أَمِ ٱلسَّمَآءُ ۚ بَنَىٰهَا"}, {"n": 28, "text": "رَفَعَ سَمْكَهَا فَسَوَّىٰهَا"}, {"n": 29, "text": "وَأَغْطَشَ لَيْلَهَا وَأَخْرَجَ ضُحَىٰهَا"}, {"n": 30, "text": "وَٱلْأَرْضَ بَعْدَ ذَٰلِكَ دَحَىٰهَآ"}, {"n": 31, "text": "أَخْرَجَ مِنْهَا مَآءَهَا وَمَرْعَىٰهَا"}, {"n": 32, "text": "وَٱلْجِبَالَ أَرْسَىٰهَا"}, {"n": 33, "text": "مَتَٰعًۭا لَّكُمْ وَلِأَنْعَٰمِكُمْ"}, {"n": 34, "text": "فَإِذَا جَآءَتِ ٱلطَّآمَّةُ ٱلْكُبْرَىٰ"}, {"n": 35, "text": "يَوْمَ يَتَذَكَّرُ ٱلْإِنسَٰنُ مَا سَعَىٰ"}, {"n": 36, "text": "وَبُرِّزَتِ ٱلْجَحِيمُ لِمَن يَرَىٰ"}, {"n": 37, "text": "فَأَمَّا مَن طَغَىٰ"}, {"n": 38, "text": "وَءَاثَرَ ٱلْحَيَوٰةَ ٱلدُّنْيَا"}, {"n": 39, "text": "فَإِنَّ ٱلْجَحِيمَ هِىَ ٱلْمَأْوَىٰ"}, {"n": 40, "text": "وَأَمَّا مَنْ خَافَ مَقَامَ رَبِّهِۦ وَنَهَى ٱلنَّفْسَ عَنِ ٱلْهَوَىٰ"}, {"n": 41, "text": "فَإِنَّ ٱلْجَنَّةَ هِىَ ٱلْمَأْوَىٰ"}, {"n": 42, "text": "يَسْـَٔلُونَكَ عَنِ ٱلسَّاعَةِ أَيَّانَ مُرْسَىٰهَا"}, {"n": 43, "text": "فِيمَ أَنتَ مِن ذِكْرَىٰهَآ"}, {"n": 44, "text": "إِلَىٰ رَبِّكَ مُنتَهَىٰهَآ"}, {"n": 45, "text": "إِنَّمَآ أَنتَ مُنذِرُ مَن يَخْشَىٰهَا"}, {"n": 46, "text": "كَأَنَّهُمْ يَوْمَ يَرَوْنَهَا لَمْ يَلْبَثُوٓا۟ إِلَّا عَشِيَّةً أَوْ ضُحَىٰهَا"}], "ayahCount": 46, "duration": 256.44}, {"id": 80, "name": "سُورَةُ عَبَسَ", "englishName": "Abasa", "ayahs": [{"n": 1, "text": "عَبَسَ وَتَوَلَّىٰٓ"}, {"n": 2, "text": "أَن جَآءَهُ ٱلْأَعْمَىٰ"}, {"n": 3, "text": "وَمَا يُدْرِيكَ لَعَلَّهُۥ يَزَّكَّىٰٓ"}, {"n": 4, "text": "أَوْ يَذَّكَّرُ فَتَنفَعَهُ ٱلذِّكْرَىٰٓ"}, {"n": 5, "text": "أَمَّا مَنِ ٱسْتَغْنَىٰ"}, {"n": 6, "text": "فَأَنتَ لَهُۥ تَصَدَّىٰ"}, {"n": 7, "text": "وَمَا عَلَيْكَ أَلَّا يَزَّكَّىٰ"}, {"n": 8, "text": "وَأَمَّا مَن جَآءَكَ يَسْعَىٰ"}, {"n": 9, "text": "وَهُوَ يَخْشَىٰ"}, {"n": 10, "text": "فَأَنتَ عَنْهُ تَلَهَّىٰ"}, {"n": 11, "text": "كَلَّآ إِنَّهَا تَذْكِرَةٌۭ"}, {"n": 12, "text": "فَمَن شَآءَ ذَكَرَهُۥ"}, {"n": 13, "text": "فِى صُحُفٍۢ مُّكَرَّمَةٍۢ"}, {"n": 14, "text": "مَّرْفُوعَةٍۢ مُّطَهَّرَةٍۭ"}, {"n": 15, "text": "بِأَيْدِى سَفَرَةٍۢ"}, {"n": 16, "text": "كِرَامٍۭ بَرَرَةٍۢ"}, {"n": 17, "text": "قُتِلَ ٱلْإِنسَٰنُ مَآ أَكْفَرَهُۥ"}, {"n": 18, "text": "مِنْ أَىِّ شَىْءٍ خَلَقَهُۥ"}, {"n": 19, "text": "مِن نُّطْفَةٍ خَلَقَهُۥ فَقَدَّرَهُۥ"}, {"n": 20, "text": "ثُمَّ ٱلسَّبِيلَ يَسَّرَهُۥ"}, {"n": 21, "text": "ثُمَّ أَمَاتَهُۥ فَأَقْبَرَهُۥ"}, {"n": 22, "text": "ثُمَّ إِذَا شَآءَ أَنشَرَهُۥ"}, {"n": 23, "text": "كَلَّا لَمَّا يَقْضِ مَآ أَمَرَهُۥ"}, {"n": 24, "text": "فَلْيَنظُرِ ٱلْإِنسَٰنُ إِلَىٰ طَعَامِهِۦٓ"}, {"n": 25, "text": "أَنَّا صَبَبْنَا ٱلْمَآءَ صَبًّۭا"}, {"n": 26, "text": "ثُمَّ شَقَقْنَا ٱلْأَرْضَ شَقًّۭا"}, {"n": 27, "text": "فَأَنۢبَتْنَا فِيهَا حَبًّۭا"}, {"n": 28, "text": "وَعِنَبًۭا وَقَضْبًۭا"}, {"n": 29, "text": "وَزَيْتُونًۭا وَنَخْلًۭا"}, {"n": 30, "text": "وَحَدَآئِقَ غُلْبًۭا"}, {"n": 31, "text": "وَفَٰكِهَةًۭ وَأَبًّۭا"}, {"n": 32, "text": "مَّتَٰعًۭا لَّكُمْ وَلِأَنْعَٰمِكُمْ"}, {"n": 33, "text": "فَإِذَا جَآءَتِ ٱلصَّآخَّةُ"}, {"n": 34, "text": "يَوْمَ يَفِرُّ ٱلْمَرْءُ مِنْ أَخِيهِ"}, {"n": 35, "text": "وَأُمِّهِۦ وَأَبِيهِ"}, {"n": 36, "text": "وَصَٰحِبَتِهِۦ وَبَنِيهِ"}, {"n": 37, "text": "لِكُلِّ ٱمْرِئٍۢ مِّنْهُمْ يَوْمَئِذٍۢ شَأْنٌۭ يُغْنِيهِ"}, {"n": 38, "text": "وُجُوهٌۭ يَوْمَئِذٍۢ مُّسْفِرَةٌۭ"}, {"n": 39, "text": "ضَاحِكَةٌۭ مُّسْتَبْشِرَةٌۭ"}, {"n": 40, "text": "وَوُجُوهٌۭ يَوْمَئِذٍ عَلَيْهَا غَبَرَةٌۭ"}, {"n": 41, "text": "تَرْهَقُهَا قَتَرَةٌ"}, {"n": 42, "text": "أُو۟لَٰٓئِكَ هُمُ ٱلْكَفَرَةُ ٱلْفَجَرَةُ"}], "ayahCount": 42, "duration": 220.42}, {"id": 81, "name": "سُورَةُ التَّكۡوِيرِ", "englishName": "At-Takwir", "ayahs": [{"n": 1, "text": "إِذَا ٱلشَّمْسُ كُوِّرَتْ"}, {"n": 2, "text": "وَإِذَا ٱلنُّجُومُ ٱنكَدَرَتْ"}, {"n": 3, "text": "وَإِذَا ٱلْجِبَالُ سُيِّرَتْ"}, {"n": 4, "text": "وَإِذَا ٱلْعِشَارُ عُطِّلَتْ"}, {"n": 5, "text": "وَإِذَا ٱلْوُحُوشُ حُشِرَتْ"}, {"n": 6, "text": "وَإِذَا ٱلْبِحَارُ سُجِّرَتْ"}, {"n": 7, "text": "وَإِذَا ٱلنُّفُوسُ زُوِّجَتْ"}, {"n": 8, "text": "وَإِذَا ٱلْمَوْءُۥدَةُ سُئِلَتْ"}, {"n": 9, "text": "بِأَىِّ ذَنۢبٍۢ قُتِلَتْ"}, {"n": 10, "text": "وَإِذَا ٱلصُّحُفُ نُشِرَتْ"}, {"n": 11, "text": "وَإِذَا ٱلسَّمَآءُ كُشِطَتْ"}, {"n": 12, "text": "وَإِذَا ٱلْجَحِيمُ سُعِّرَتْ"}, {"n": 13, "text": "وَإِذَا ٱلْجَنَّةُ أُزْلِفَتْ"}, {"n": 14, "text": "عَلِمَتْ نَفْسٌۭ مَّآ أَحْضَرَتْ"}, {"n": 15, "text": "فَلَآ أُقْسِمُ بِٱلْخُنَّسِ"}, {"n": 16, "text": "ٱلْجَوَارِ ٱلْكُنَّسِ"}, {"n": 17, "text": "وَٱلَّيْلِ إِذَا عَسْعَسَ"}, {"n": 18, "text": "وَٱلصُّبْحِ إِذَا تَنَفَّسَ"}, {"n": 19, "text": "إِنَّهُۥ لَقَوْلُ رَسُولٍۢ كَرِيمٍۢ"}, {"n": 20, "text": "ذِى قُوَّةٍ عِندَ ذِى ٱلْعَرْشِ مَكِينٍۢ"}, {"n": 21, "text": "مُّطَاعٍۢ ثَمَّ أَمِينٍۢ"}, {"n": 22, "text": "وَمَا صَاحِبُكُم بِمَجْنُونٍۢ"}, {"n": 23, "text": "وَلَقَدْ رَءَاهُ بِٱلْأُفُقِ ٱلْمُبِينِ"}, {"n": 24, "text": "وَمَا هُوَ عَلَى ٱلْغَيْبِ بِضَنِينٍۢ"}, {"n": 25, "text": "وَمَا هُوَ بِقَوْلِ شَيْطَٰنٍۢ رَّجِيمٍۢ"}, {"n": 26, "text": "فَأَيْنَ تَذْهَبُونَ"}, {"n": 27, "text": "إِنْ هُوَ إِلَّا ذِكْرٌۭ لِّلْعَٰلَمِينَ"}, {"n": 28, "text": "لِمَن شَآءَ مِنكُمْ أَن يَسْتَقِيمَ"}, {"n": 29, "text": "وَمَا تَشَآءُونَ إِلَّآ أَن يَشَآءَ ٱللَّهُ رَبُّ ٱلْعَٰلَمِينَ"}], "ayahCount": 29, "duration": 158.33}, {"id": 82, "name": "سُورَةُ الانفِطَارِ", "englishName": "Al-Infitaar", "ayahs": [{"n": 1, "text": "إِذَا ٱلسَّمَآءُ ٱنفَطَرَتْ"}, {"n": 2, "text": "وَإِذَا ٱلْكَوَاكِبُ ٱنتَثَرَتْ"}, {"n": 3, "text": "وَإِذَا ٱلْبِحَارُ فُجِّرَتْ"}, {"n": 4, "text": "وَإِذَا ٱلْقُبُورُ بُعْثِرَتْ"}, {"n": 5, "text": "عَلِمَتْ نَفْسٌۭ مَّا قَدَّمَتْ وَأَخَّرَتْ"}, {"n": 6, "text": "يَٰٓأَيُّهَا ٱلْإِنسَٰنُ مَا غَرَّكَ بِرَبِّكَ ٱلْكَرِيمِ"}, {"n": 7, "text": "ٱلَّذِى خَلَقَكَ فَسَوَّىٰكَ فَعَدَلَكَ"}, {"n": 8, "text": "فِىٓ أَىِّ صُورَةٍۢ مَّا شَآءَ رَكَّبَكَ"}, {"n": 9, "text": "كَلَّا بَلْ تُكَذِّبُونَ بِٱلدِّينِ"}, {"n": 10, "text": "وَإِنَّ عَلَيْكُمْ لَحَٰفِظِينَ"}, {"n": 11, "text": "كِرَامًۭا كَٰتِبِينَ"}, {"n": 12, "text": "يَعْلَمُونَ مَا تَفْعَلُونَ"}, {"n": 13, "text": "إِنَّ ٱلْأَبْرَارَ لَفِى نَعِيمٍۢ"}, {"n": 14, "text": "وَإِنَّ ٱلْفُجَّارَ لَفِى جَحِيمٍۢ"}, {"n": 15, "text": "يَصْلَوْنَهَا يَوْمَ ٱلدِّينِ"}, {"n": 16, "text": "وَمَا هُمْ عَنْهَا بِغَآئِبِينَ"}, {"n": 17, "text": "وَمَآ أَدْرَىٰكَ مَا يَوْمُ ٱلدِّينِ"}, {"n": 18, "text": "ثُمَّ مَآ أَدْرَىٰكَ مَا يَوْمُ ٱلدِّينِ"}, {"n": 19, "text": "يَوْمَ لَا تَمْلِكُ نَفْسٌۭ لِّنَفْسٍۢ شَيْـًۭٔا ۖ وَٱلْأَمْرُ يَوْمَئِذٍۢ لِّلَّهِ"}], "ayahCount": 19, "duration": 136.78}, {"id": 83, "name": "سُورَةُ المُطَفِّفِينَ", "englishName": "Al-Mutaffifin", "ayahs": [{"n": 1, "text": "وَيْلٌۭ لِّلْمُطَفِّفِينَ"}, {"n": 2, "text": "ٱلَّذِينَ إِذَا ٱكْتَالُوا۟ عَلَى ٱلنَّاسِ يَسْتَوْفُونَ"}, {"n": 3, "text": "وَإِذَا كَالُوهُمْ أَو وَّزَنُوهُمْ يُخْسِرُونَ"}, {"n": 4, "text": "أَلَا يَظُنُّ أُو۟لَٰٓئِكَ أَنَّهُم مَّبْعُوثُونَ"}, {"n": 5, "text": "لِيَوْمٍ عَظِيمٍۢ"}, {"n": 6, "text": "يَوْمَ يَقُومُ ٱلنَّاسُ لِرَبِّ ٱلْعَٰلَمِينَ"}, {"n": 7, "text": "كَلَّآ إِنَّ كِتَٰبَ ٱلْفُجَّارِ لَفِى سِجِّينٍۢ"}, {"n": 8, "text": "وَمَآ أَدْرَىٰكَ مَا سِجِّينٌۭ"}, {"n": 9, "text": "كِتَٰبٌۭ مَّرْقُومٌۭ"}, {"n": 10, "text": "وَيْلٌۭ يَوْمَئِذٍۢ لِّلْمُكَذِّبِينَ"}, {"n": 11, "text": "ٱلَّذِينَ يُكَذِّبُونَ بِيَوْمِ ٱلدِّينِ"}, {"n": 12, "text": "وَمَا يُكَذِّبُ بِهِۦٓ إِلَّا كُلُّ مُعْتَدٍ أَثِيمٍ"}, {"n": 13, "text": "إِذَا تُتْلَىٰ عَلَيْهِ ءَايَٰتُنَا قَالَ أَسَٰطِيرُ ٱلْأَوَّلِينَ"}, {"n": 14, "text": "كَلَّا ۖ بَلْ ۜ رَانَ عَلَىٰ قُلُوبِهِم مَّا كَانُوا۟ يَكْسِبُونَ"}, {"n": 15, "text": "كَلَّآ إِنَّهُمْ عَن رَّبِّهِمْ يَوْمَئِذٍۢ لَّمَحْجُوبُونَ"}, {"n": 16, "text": "ثُمَّ إِنَّهُمْ لَصَالُوا۟ ٱلْجَحِيمِ"}, {"n": 17, "text": "ثُمَّ يُقَالُ هَٰذَا ٱلَّذِى كُنتُم بِهِۦ تُكَذِّبُونَ"}, {"n": 18, "text": "كَلَّآ إِنَّ كِتَٰبَ ٱلْأَبْرَارِ لَفِى عِلِّيِّينَ"}, {"n": 19, "text": "وَمَآ أَدْرَىٰكَ مَا عِلِّيُّونَ"}, {"n": 20, "text": "كِتَٰبٌۭ مَّرْقُومٌۭ"}, {"n": 21, "text": "يَشْهَدُهُ ٱلْمُقَرَّبُونَ"}, {"n": 22, "text": "إِنَّ ٱلْأَبْرَارَ لَفِى نَعِيمٍ"}, {"n": 23, "text": "عَلَى ٱلْأَرَآئِكِ يَنظُرُونَ"}, {"n": 24, "text": "تَعْرِفُ فِى وُجُوهِهِمْ نَضْرَةَ ٱلنَّعِيمِ"}, {"n": 25, "text": "يُسْقَوْنَ مِن رَّحِيقٍۢ مَّخْتُومٍ"}, {"n": 26, "text": "خِتَٰمُهُۥ مِسْكٌۭ ۚ وَفِى ذَٰلِكَ فَلْيَتَنَافَسِ ٱلْمُتَنَٰفِسُونَ"}, {"n": 27, "text": "وَمِزَاجُهُۥ مِن تَسْنِيمٍ"}, {"n": 28, "text": "عَيْنًۭا يَشْرَبُ بِهَا ٱلْمُقَرَّبُونَ"}, {"n": 29, "text": "إِنَّ ٱلَّذِينَ أَجْرَمُوا۟ كَانُوا۟ مِنَ ٱلَّذِينَ ءَامَنُوا۟ يَضْحَكُونَ"}, {"n": 30, "text": "وَإِذَا مَرُّوا۟ بِهِمْ يَتَغَامَزُونَ"}, {"n": 31, "text": "وَإِذَا ٱنقَلَبُوٓا۟ إِلَىٰٓ أَهْلِهِمُ ٱنقَلَبُوا۟ فَكِهِينَ"}, {"n": 32, "text": "وَإِذَا رَأَوْهُمْ قَالُوٓا۟ إِنَّ هَٰٓؤُلَآءِ لَضَآلُّونَ"}, {"n": 33, "text": "وَمَآ أُرْسِلُوا۟ عَلَيْهِمْ حَٰفِظِينَ"}, {"n": 34, "text": "فَٱلْيَوْمَ ٱلَّذِينَ ءَامَنُوا۟ مِنَ ٱلْكُفَّارِ يَضْحَكُونَ"}, {"n": 35, "text": "عَلَى ٱلْأَرَآئِكِ يَنظُرُونَ"}, {"n": 36, "text": "هَلْ ثُوِّبَ ٱلْكُفَّارُ مَا كَانُوا۟ يَفْعَلُونَ"}], "ayahCount": 36, "duration": 310.28}, {"id": 84, "name": "سُورَةُ الانشِقَاقِ", "englishName": "Al-Inshiqaaq", "ayahs": [{"n": 1, "text": "إِذَا ٱلسَّمَآءُ ٱنشَقَّتْ"}, {"n": 2, "text": "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ"}, {"n": 3, "text": "وَإِذَا ٱلْأَرْضُ مُدَّتْ"}, {"n": 4, "text": "وَأَلْقَتْ مَا فِيهَا وَتَخَلَّتْ"}, {"n": 5, "text": "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ"}, {"n": 6, "text": "يَٰٓأَيُّهَا ٱلْإِنسَٰنُ إِنَّكَ كَادِحٌ إِلَىٰ رَبِّكَ كَدْحًۭا فَمُلَٰقِيهِ"}, {"n": 7, "text": "فَأَمَّا مَنْ أُوتِىَ كِتَٰبَهُۥ بِيَمِينِهِۦ"}, {"n": 8, "text": "فَسَوْفَ يُحَاسَبُ حِسَابًۭا يَسِيرًۭا"}, {"n": 9, "text": "وَيَنقَلِبُ إِلَىٰٓ أَهْلِهِۦ مَسْرُورًۭا"}, {"n": 10, "text": "وَأَمَّا مَنْ أُوتِىَ كِتَٰبَهُۥ وَرَآءَ ظَهْرِهِۦ"}, {"n": 11, "text": "فَسَوْفَ يَدْعُوا۟ ثُبُورًۭا"}, {"n": 12, "text": "وَيَصْلَىٰ سَعِيرًا"}, {"n": 13, "text": "إِنَّهُۥ كَانَ فِىٓ أَهْلِهِۦ مَسْرُورًا"}, {"n": 14, "text": "إِنَّهُۥ ظَنَّ أَن لَّن يَحُورَ"}, {"n": 15, "text": "بَلَىٰٓ إِنَّ رَبَّهُۥ كَانَ بِهِۦ بَصِيرًۭا"}, {"n": 16, "text": "فَلَآ أُقْسِمُ بِٱلشَّفَقِ"}, {"n": 17, "text": "وَٱلَّيْلِ وَمَا وَسَقَ"}, {"n": 18, "text": "وَٱلْقَمَرِ إِذَا ٱتَّسَقَ"}, {"n": 19, "text": "لَتَرْكَبُنَّ طَبَقًا عَن طَبَقٍۢ"}, {"n": 20, "text": "فَمَا لَهُمْ لَا يُؤْمِنُونَ"}, {"n": 21, "text": "وَإِذَا قُرِئَ عَلَيْهِمُ ٱلْقُرْءَانُ لَا يَسْجُدُونَ ۩"}, {"n": 22, "text": "بَلِ ٱلَّذِينَ كَفَرُوا۟ يُكَذِّبُونَ"}, {"n": 23, "text": "وَٱللَّهُ أَعْلَمُ بِمَا يُوعُونَ"}, {"n": 24, "text": "فَبَشِّرْهُم بِعَذَابٍ أَلِيمٍ"}, {"n": 25, "text": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ لَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍۭ"}], "ayahCount": 25, "duration": 160.21}, {"id": 85, "name": "سُورَةُ البُرُوجِ", "englishName": "Al-Burooj", "ayahs": [{"n": 1, "text": "وَٱلسَّمَآءِ ذَاتِ ٱلْبُرُوجِ"}, {"n": 2, "text": "وَٱلْيَوْمِ ٱلْمَوْعُودِ"}, {"n": 3, "text": "وَشَاهِدٍۢ وَمَشْهُودٍۢ"}, {"n": 4, "text": "قُتِلَ أَصْحَٰبُ ٱلْأُخْدُودِ"}, {"n": 5, "text": "ٱلنَّارِ ذَاتِ ٱلْوَقُودِ"}, {"n": 6, "text": "إِذْ هُمْ عَلَيْهَا قُعُودٌۭ"}, {"n": 7, "text": "وَهُمْ عَلَىٰ مَا يَفْعَلُونَ بِٱلْمُؤْمِنِينَ شُهُودٌۭ"}, {"n": 8, "text": "وَمَا نَقَمُوا۟ مِنْهُمْ إِلَّآ أَن يُؤْمِنُوا۟ بِٱللَّهِ ٱلْعَزِيزِ ٱلْحَمِيدِ"}, {"n": 9, "text": "ٱلَّذِى لَهُۥ مُلْكُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ ۚ وَٱللَّهُ عَلَىٰ كُلِّ شَىْءٍۢ شَهِيدٌ"}, {"n": 10, "text": "إِنَّ ٱلَّذِينَ فَتَنُوا۟ ٱلْمُؤْمِنِينَ وَٱلْمُؤْمِنَٰتِ ثُمَّ لَمْ يَتُوبُوا۟ فَلَهُمْ عَذَابُ جَهَنَّمَ وَلَهُمْ عَذَابُ ٱلْحَرِيقِ"}, {"n": 11, "text": "إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ لَهُمْ جَنَّٰتٌۭ تَجْرِى مِن تَحْتِهَا ٱلْأَنْهَٰرُ ۚ ذَٰلِكَ ٱلْفَوْزُ ٱلْكَبِيرُ"}, {"n": 12, "text": "إِنَّ بَطْشَ رَبِّكَ لَشَدِيدٌ"}, {"n": 13, "text": "إِنَّهُۥ هُوَ يُبْدِئُ وَيُعِيدُ"}, {"n": 14, "text": "وَهُوَ ٱلْغَفُورُ ٱلْوَدُودُ"}, {"n": 15, "text": "ذُو ٱلْعَرْشِ ٱلْمَجِيدُ"}, {"n": 16, "text": "فَعَّالٌۭ لِّمَا يُرِيدُ"}, {"n": 17, "text": "هَلْ أَتَىٰكَ حَدِيثُ ٱلْجُنُودِ"}, {"n": 18, "text": "فِرْعَوْنَ وَثَمُودَ"}, {"n": 19, "text": "بَلِ ٱلَّذِينَ كَفَرُوا۟ فِى تَكْذِيبٍۢ"}, {"n": 20, "text": "وَٱللَّهُ مِن وَرَآئِهِم مُّحِيطٌۢ"}, {"n": 21, "text": "بَلْ هُوَ قُرْءَانٌۭ مَّجِيدٌۭ"}, {"n": 22, "text": "فِى لَوْحٍۢ مَّحْفُوظٍۭ"}], "ayahCount": 22, "duration": 198.19}, {"id": 86, "name": "سُورَةُ الطَّارِقِ", "englishName": "At-Taariq", "ayahs": [{"n": 1, "text": "وَٱلسَّمَآءِ وَٱلطَّارِقِ"}, {"n": 2, "text": "وَمَآ أَدْرَىٰكَ مَا ٱلطَّارِقُ"}, {"n": 3, "text": "ٱلنَّجْمُ ٱلثَّاقِبُ"}, {"n": 4, "text": "إِن كُلُّ نَفْسٍۢ لَّمَّا عَلَيْهَا حَافِظٌۭ"}, {"n": 5, "text": "فَلْيَنظُرِ ٱلْإِنسَٰنُ مِمَّ خُلِقَ"}, {"n": 6, "text": "خُلِقَ مِن مَّآءٍۢ دَافِقٍۢ"}, {"n": 7, "text": "يَخْرُجُ مِنۢ بَيْنِ ٱلصُّلْبِ وَٱلتَّرَآئِبِ"}, {"n": 8, "text": "إِنَّهُۥ عَلَىٰ رَجْعِهِۦ لَقَادِرٌۭ"}, {"n": 9, "text": "يَوْمَ تُبْلَى ٱلسَّرَآئِرُ"}, {"n": 10, "text": "فَمَا لَهُۥ مِن قُوَّةٍۢ وَلَا نَاصِرٍۢ"}, {"n": 11, "text": "وَٱلسَّمَآءِ ذَاتِ ٱلرَّجْعِ"}, {"n": 12, "text": "وَٱلْأَرْضِ ذَاتِ ٱلصَّدْعِ"}, {"n": 13, "text": "إِنَّهُۥ لَقَوْلٌۭ فَصْلٌۭ"}, {"n": 14, "text": "وَمَا هُوَ بِٱلْهَزْلِ"}, {"n": 15, "text": "إِنَّهُمْ يَكِيدُونَ كَيْدًۭا"}, {"n": 16, "text": "وَأَكِيدُ كَيْدًۭا"}, {"n": 17, "text": "فَمَهِّلِ ٱلْكَٰفِرِينَ أَمْهِلْهُمْ رُوَيْدًۢا"}], "ayahCount": 17, "duration": 100.23}, {"id": 87, "name": "سُورَةُ الأَعۡلَىٰ", "englishName": "Al-A'laa", "ayahs": [{"n": 1, "text": "سَبِّحِ ٱسْمَ رَبِّكَ ٱلْأَعْلَى"}, {"n": 2, "text": "ٱلَّذِى خَلَقَ فَسَوَّىٰ"}, {"n": 3, "text": "وَٱلَّذِى قَدَّرَ فَهَدَىٰ"}, {"n": 4, "text": "وَٱلَّذِىٓ أَخْرَجَ ٱلْمَرْعَىٰ"}, {"n": 5, "text": "فَجَعَلَهُۥ غُثَآءً أَحْوَىٰ"}, {"n": 6, "text": "سَنُقْرِئُكَ فَلَا تَنسَىٰٓ"}, {"n": 7, "text": "إِلَّا مَا شَآءَ ٱللَّهُ ۚ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ"}, {"n": 8, "text": "وَنُيَسِّرُكَ لِلْيُسْرَىٰ"}, {"n": 9, "text": "فَذَكِّرْ إِن نَّفَعَتِ ٱلذِّكْرَىٰ"}, {"n": 10, "text": "سَيَذَّكَّرُ مَن يَخْشَىٰ"}, {"n": 11, "text": "وَيَتَجَنَّبُهَا ٱلْأَشْقَى"}, {"n": 12, "text": "ٱلَّذِى يَصْلَى ٱلنَّارَ ٱلْكُبْرَىٰ"}, {"n": 13, "text": "ثُمَّ لَا يَمُوتُ فِيهَا وَلَا يَحْيَىٰ"}, {"n": 14, "text": "قَدْ أَفْلَحَ مَن تَزَكَّىٰ"}, {"n": 15, "text": "وَذَكَرَ ٱسْمَ رَبِّهِۦ فَصَلَّىٰ"}, {"n": 16, "text": "بَلْ تُؤْثِرُونَ ٱلْحَيَوٰةَ ٱلدُّنْيَا"}, {"n": 17, "text": "وَٱلْءَاخِرَةُ خَيْرٌۭ وَأَبْقَىٰٓ"}, {"n": 18, "text": "إِنَّ هَٰذَا لَفِى ٱلصُّحُفِ ٱلْأُولَىٰ"}, {"n": 19, "text": "صُحُفِ إِبْرَٰهِيمَ وَمُوسَىٰ"}], "ayahCount": 19, "duration": 107.81}, {"id": 88, "name": "سُورَةُ الغَاشِيَةِ", "englishName": "Al-Ghaashiya", "ayahs": [{"n": 1, "text": "هَلْ أَتَىٰكَ حَدِيثُ ٱلْغَٰشِيَةِ"}, {"n": 2, "text": "وُجُوهٌۭ يَوْمَئِذٍ خَٰشِعَةٌ"}, {"n": 3, "text": "عَامِلَةٌۭ نَّاصِبَةٌۭ"}, {"n": 4, "text": "تَصْلَىٰ نَارًا حَامِيَةًۭ"}, {"n": 5, "text": "تُسْقَىٰ مِنْ عَيْنٍ ءَانِيَةٍۢ"}, {"n": 6, "text": "لَّيْسَ لَهُمْ طَعَامٌ إِلَّا مِن ضَرِيعٍۢ"}, {"n": 7, "text": "لَّا يُسْمِنُ وَلَا يُغْنِى مِن جُوعٍۢ"}, {"n": 8, "text": "وُجُوهٌۭ يَوْمَئِذٍۢ نَّاعِمَةٌۭ"}, {"n": 9, "text": "لِّسَعْيِهَا رَاضِيَةٌۭ"}, {"n": 10, "text": "فِى جَنَّةٍ عَالِيَةٍۢ"}, {"n": 11, "text": "لَّا تَسْمَعُ فِيهَا لَٰغِيَةًۭ"}, {"n": 12, "text": "فِيهَا عَيْنٌۭ جَارِيَةٌۭ"}, {"n": 13, "text": "فِيهَا سُرُرٌۭ مَّرْفُوعَةٌۭ"}, {"n": 14, "text": "وَأَكْوَابٌۭ مَّوْضُوعَةٌۭ"}, {"n": 15, "text": "وَنَمَارِقُ مَصْفُوفَةٌۭ"}, {"n": 16, "text": "وَزَرَابِىُّ مَبْثُوثَةٌ"}, {"n": 17, "text": "أَفَلَا يَنظُرُونَ إِلَى ٱلْإِبِلِ كَيْفَ خُلِقَتْ"}, {"n": 18, "text": "وَإِلَى ٱلسَّمَآءِ كَيْفَ رُفِعَتْ"}, {"n": 19, "text": "وَإِلَى ٱلْجِبَالِ كَيْفَ نُصِبَتْ"}, {"n": 20, "text": "وَإِلَى ٱلْأَرْضِ كَيْفَ سُطِحَتْ"}, {"n": 21, "text": "فَذَكِّرْ إِنَّمَآ أَنتَ مُذَكِّرٌۭ"}, {"n": 22, "text": "لَّسْتَ عَلَيْهِم بِمُصَيْطِرٍ"}, {"n": 23, "text": "إِلَّا مَن تَوَلَّىٰ وَكَفَرَ"}, {"n": 24, "text": "فَيُعَذِّبُهُ ٱللَّهُ ٱلْعَذَابَ ٱلْأَكْبَرَ"}, {"n": 25, "text": "إِنَّ إِلَيْنَآ إِيَابَهُمْ"}, {"n": 26, "text": "ثُمَّ إِنَّ عَلَيْنَا حِسَابَهُم"}], "ayahCount": 26, "duration": 134.16}, {"id": 89, "name": "سُورَةُ الفَجۡرِ", "englishName": "Al-Fajr", "ayahs": [{"n": 1, "text": "وَٱلْفَجْرِ"}, {"n": 2, "text": "وَلَيَالٍ عَشْرٍۢ"}, {"n": 3, "text": "وَٱلشَّفْعِ وَٱلْوَتْرِ"}, {"n": 4, "text": "وَٱلَّيْلِ إِذَا يَسْرِ"}, {"n": 5, "text": "هَلْ فِى ذَٰلِكَ قَسَمٌۭ لِّذِى حِجْرٍ"}, {"n": 6, "text": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ"}, {"n": 7, "text": "إِرَمَ ذَاتِ ٱلْعِمَادِ"}, {"n": 8, "text": "ٱلَّتِى لَمْ يُخْلَقْ مِثْلُهَا فِى ٱلْبِلَٰدِ"}, {"n": 9, "text": "وَثَمُودَ ٱلَّذِينَ جَابُوا۟ ٱلصَّخْرَ بِٱلْوَادِ"}, {"n": 10, "text": "وَفِرْعَوْنَ ذِى ٱلْأَوْتَادِ"}, {"n": 11, "text": "ٱلَّذِينَ طَغَوْا۟ فِى ٱلْبِلَٰدِ"}, {"n": 12, "text": "فَأَكْثَرُوا۟ فِيهَا ٱلْفَسَادَ"}, {"n": 13, "text": "فَصَبَّ عَلَيْهِمْ رَبُّكَ سَوْطَ عَذَابٍ"}, {"n": 14, "text": "إِنَّ رَبَّكَ لَبِٱلْمِرْصَادِ"}, {"n": 15, "text": "فَأَمَّا ٱلْإِنسَٰنُ إِذَا مَا ٱبْتَلَىٰهُ رَبُّهُۥ فَأَكْرَمَهُۥ وَنَعَّمَهُۥ فَيَقُولُ رَبِّىٓ أَكْرَمَنِ"}, {"n": 16, "text": "وَأَمَّآ إِذَا مَا ٱبْتَلَىٰهُ فَقَدَرَ عَلَيْهِ رِزْقَهُۥ فَيَقُولُ رَبِّىٓ أَهَٰنَنِ"}, {"n": 17, "text": "كَلَّا ۖ بَل لَّا تُكْرِمُونَ ٱلْيَتِيمَ"}, {"n": 18, "text": "وَلَا تَحَٰٓضُّونَ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ"}, {"n": 19, "text": "وَتَأْكُلُونَ ٱلتُّرَاثَ أَكْلًۭا لَّمًّۭا"}, {"n": 20, "text": "وَتُحِبُّونَ ٱلْمَالَ حُبًّۭا جَمًّۭا"}, {"n": 21, "text": "كَلَّآ إِذَا دُكَّتِ ٱلْأَرْضُ دَكًّۭا دَكًّۭا"}, {"n": 22, "text": "وَجَآءَ رَبُّكَ وَٱلْمَلَكُ صَفًّۭا صَفًّۭا"}, {"n": 23, "text": "وَجِا۟ىٓءَ يَوْمَئِذٍۭ بِجَهَنَّمَ ۚ يَوْمَئِذٍۢ يَتَذَكَّرُ ٱلْإِنسَٰنُ وَأَنَّىٰ لَهُ ٱلذِّكْرَىٰ"}, {"n": 24, "text": "يَقُولُ يَٰلَيْتَنِى قَدَّمْتُ لِحَيَاتِى"}, {"n": 25, "text": "فَيَوْمَئِذٍۢ لَّا يُعَذِّبُ عَذَابَهُۥٓ أَحَدٌۭ"}, {"n": 26, "text": "وَلَا يُوثِقُ وَثَاقَهُۥٓ أَحَدٌۭ"}, {"n": 27, "text": "يَٰٓأَيَّتُهَا ٱلنَّفْسُ ٱلْمُطْمَئِنَّةُ"}, {"n": 28, "text": "ٱرْجِعِىٓ إِلَىٰ رَبِّكِ رَاضِيَةًۭ مَّرْضِيَّةًۭ"}, {"n": 29, "text": "فَٱدْخُلِى فِى عِبَٰدِى"}, {"n": 30, "text": "وَٱدْخُلِى جَنَّتِى"}], "ayahCount": 30, "duration": 212.98}, {"id": 90, "name": "سُورَةُ البَلَدِ", "englishName": "Al-Balad", "ayahs": [{"n": 1, "text": "لَآ أُقْسِمُ بِهَٰذَا ٱلْبَلَدِ"}, {"n": 2, "text": "وَأَنتَ حِلٌّۢ بِهَٰذَا ٱلْبَلَدِ"}, {"n": 3, "text": "وَوَالِدٍۢ وَمَا وَلَدَ"}, {"n": 4, "text": "لَقَدْ خَلَقْنَا ٱلْإِنسَٰنَ فِى كَبَدٍ"}, {"n": 5, "text": "أَيَحْسَبُ أَن لَّن يَقْدِرَ عَلَيْهِ أَحَدٌۭ"}, {"n": 6, "text": "يَقُولُ أَهْلَكْتُ مَالًۭا لُّبَدًا"}, {"n": 7, "text": "أَيَحْسَبُ أَن لَّمْ يَرَهُۥٓ أَحَدٌ"}, {"n": 8, "text": "أَلَمْ نَجْعَل لَّهُۥ عَيْنَيْنِ"}, {"n": 9, "text": "وَلِسَانًۭا وَشَفَتَيْنِ"}, {"n": 10, "text": "وَهَدَيْنَٰهُ ٱلنَّجْدَيْنِ"}, {"n": 11, "text": "فَلَا ٱقْتَحَمَ ٱلْعَقَبَةَ"}, {"n": 12, "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْعَقَبَةُ"}, {"n": 13, "text": "فَكُّ رَقَبَةٍ"}, {"n": 14, "text": "أَوْ إِطْعَٰمٌۭ فِى يَوْمٍۢ ذِى مَسْغَبَةٍۢ"}, {"n": 15, "text": "يَتِيمًۭا ذَا مَقْرَبَةٍ"}, {"n": 16, "text": "أَوْ مِسْكِينًۭا ذَا مَتْرَبَةٍۢ"}, {"n": 17, "text": "ثُمَّ كَانَ مِنَ ٱلَّذِينَ ءَامَنُوا۟ وَتَوَاصَوْا۟ بِٱلصَّبْرِ وَتَوَاصَوْا۟ بِٱلْمَرْحَمَةِ"}, {"n": 18, "text": "أُو۟لَٰٓئِكَ أَصْحَٰبُ ٱلْمَيْمَنَةِ"}, {"n": 19, "text": "وَٱلَّذِينَ كَفَرُوا۟ بِـَٔايَٰتِنَا هُمْ أَصْحَٰبُ ٱلْمَشْـَٔمَةِ"}, {"n": 20, "text": "عَلَيْهِمْ نَارٌۭ مُّؤْصَدَةٌۢ"}], "ayahCount": 20, "duration": 120.03}, {"id": 91, "name": "سُورَةُ الشَّمۡسِ", "englishName": "Ash-Shams", "ayahs": [{"n": 1, "text": "وَٱلشَّمْسِ وَضُحَىٰهَا"}, {"n": 2, "text": "وَٱلْقَمَرِ إِذَا تَلَىٰهَا"}, {"n": 3, "text": "وَٱلنَّهَارِ إِذَا جَلَّىٰهَا"}, {"n": 4, "text": "وَٱلَّيْلِ إِذَا يَغْشَىٰهَا"}, {"n": 5, "text": "وَٱلسَّمَآءِ وَمَا بَنَىٰهَا"}, {"n": 6, "text": "وَٱلْأَرْضِ وَمَا طَحَىٰهَا"}, {"n": 7, "text": "وَنَفْسٍۢ وَمَا سَوَّىٰهَا"}, {"n": 8, "text": "فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَىٰهَا"}, {"n": 9, "text": "قَدْ أَفْلَحَ مَن زَكَّىٰهَا"}, {"n": 10, "text": "وَقَدْ خَابَ مَن دَسَّىٰهَا"}, {"n": 11, "text": "كَذَّبَتْ ثَمُودُ بِطَغْوَىٰهَآ"}, {"n": 12, "text": "إِذِ ٱنۢبَعَثَ أَشْقَىٰهَا"}, {"n": 13, "text": "فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَٰهَا"}, {"n": 14, "text": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا"}, {"n": 15, "text": "وَلَا يَخَافُ عُقْبَٰهَا"}], "ayahCount": 15, "duration": 84.43}, {"id": 92, "name": "سُورَةُ اللَّيۡلِ", "englishName": "Al-Lail", "ayahs": [{"n": 1, "text": "وَٱلَّيْلِ إِذَا يَغْشَىٰ"}, {"n": 2, "text": "وَٱلنَّهَارِ إِذَا تَجَلَّىٰ"}, {"n": 3, "text": "وَمَا خَلَقَ ٱلذَّكَرَ وَٱلْأُنثَىٰٓ"}, {"n": 4, "text": "إِنَّ سَعْيَكُمْ لَشَتَّىٰ"}, {"n": 5, "text": "فَأَمَّا مَنْ أَعْطَىٰ وَٱتَّقَىٰ"}, {"n": 6, "text": "وَصَدَّقَ بِٱلْحُسْنَىٰ"}, {"n": 7, "text": "فَسَنُيَسِّرُهُۥ لِلْيُسْرَىٰ"}, {"n": 8, "text": "وَأَمَّا مَنۢ بَخِلَ وَٱسْتَغْنَىٰ"}, {"n": 9, "text": "وَكَذَّبَ بِٱلْحُسْنَىٰ"}, {"n": 10, "text": "فَسَنُيَسِّرُهُۥ لِلْعُسْرَىٰ"}, {"n": 11, "text": "وَمَا يُغْنِى عَنْهُ مَالُهُۥٓ إِذَا تَرَدَّىٰٓ"}, {"n": 12, "text": "إِنَّ عَلَيْنَا لَلْهُدَىٰ"}, {"n": 13, "text": "وَإِنَّ لَنَا لَلْءَاخِرَةَ وَٱلْأُولَىٰ"}, {"n": 14, "text": "فَأَنذَرْتُكُمْ نَارًۭا تَلَظَّىٰ"}, {"n": 15, "text": "لَا يَصْلَىٰهَآ إِلَّا ٱلْأَشْقَى"}, {"n": 16, "text": "ٱلَّذِى كَذَّبَ وَتَوَلَّىٰ"}, {"n": 17, "text": "وَسَيُجَنَّبُهَا ٱلْأَتْقَى"}, {"n": 18, "text": "ٱلَّذِى يُؤْتِى مَالَهُۥ يَتَزَكَّىٰ"}, {"n": 19, "text": "وَمَا لِأَحَدٍ عِندَهُۥ مِن نِّعْمَةٍۢ تُجْزَىٰٓ"}, {"n": 20, "text": "إِلَّا ٱبْتِغَآءَ وَجْهِ رَبِّهِ ٱلْأَعْلَىٰ"}, {"n": 21, "text": "وَلَسَوْفَ يَرْضَىٰ"}], "ayahCount": 21, "duration": 111.62}, {"id": 93, "name": "سُورَةُ الضُّحَىٰ", "englishName": "Ad-Dhuhaa", "ayahs": [{"n": 1, "text": "وَٱلضُّحَىٰ"}, {"n": 2, "text": "وَٱلَّيْلِ إِذَا سَجَىٰ"}, {"n": 3, "text": "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ"}, {"n": 4, "text": "وَلَلْءَاخِرَةُ خَيْرٌۭ لَّكَ مِنَ ٱلْأُولَىٰ"}, {"n": 5, "text": "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰٓ"}, {"n": 6, "text": "أَلَمْ يَجِدْكَ يَتِيمًۭا فَـَٔاوَىٰ"}, {"n": 7, "text": "وَوَجَدَكَ ضَآلًّۭا فَهَدَىٰ"}, {"n": 8, "text": "وَوَجَدَكَ عَآئِلًۭا فَأَغْنَىٰ"}, {"n": 9, "text": "فَأَمَّا ٱلْيَتِيمَ فَلَا تَقْهَرْ"}, {"n": 10, "text": "وَأَمَّا ٱلسَّآئِلَ فَلَا تَنْهَرْ"}, {"n": 11, "text": "وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ"}], "ayahCount": 11, "duration": 65.12}, {"id": 94, "name": "سُورَةُ الشَّرۡحِ", "englishName": "Ash-Sharh", "ayahs": [{"n": 1, "text": "أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ"}, {"n": 2, "text": "وَوَضَعْنَا عَنكَ وِزْرَكَ"}, {"n": 3, "text": "ٱلَّذِىٓ أَنقَضَ ظَهْرَكَ"}, {"n": 4, "text": "وَرَفَعْنَا لَكَ ذِكْرَكَ"}, {"n": 5, "text": "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا"}, {"n": 6, "text": "إِنَّ مَعَ ٱلْعُسْرِ يُسْرًۭا"}, {"n": 7, "text": "فَإِذَا فَرَغْتَ فَٱنصَبْ"}, {"n": 8, "text": "وَإِلَىٰ رَبِّكَ فَٱرْغَب"}], "ayahCount": 8, "duration": 43.02}, {"id": 95, "name": "سُورَةُ التِّينِ", "englishName": "At-Tin", "ayahs": [{"n": 1, "text": "وَٱلتِّينِ وَٱلزَّيْتُونِ"}, {"n": 2, "text": "وَطُورِ سِينِينَ"}, {"n": 3, "text": "وَهَٰذَا ٱلْبَلَدِ ٱلْأَمِينِ"}, {"n": 4, "text": "لَقَدْ خَلَقْنَا ٱلْإِنسَٰنَ فِىٓ أَحْسَنِ تَقْوِيمٍۢ"}, {"n": 5, "text": "ثُمَّ رَدَدْنَٰهُ أَسْفَلَ سَٰفِلِينَ"}, {"n": 6, "text": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ فَلَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍۢ"}, {"n": 7, "text": "فَمَا يُكَذِّبُكَ بَعْدُ بِٱلدِّينِ"}, {"n": 8, "text": "أَلَيْسَ ٱللَّهُ بِأَحْكَمِ ٱلْحَٰكِمِينَ"}], "ayahCount": 8, "duration": 64.94}, {"id": 96, "name": "سُورَةُ العَلَقِ", "englishName": "Al-Alaq", "ayahs": [{"n": 1, "text": "ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِى خَلَقَ"}, {"n": 2, "text": "خَلَقَ ٱلْإِنسَٰنَ مِنْ عَلَقٍ"}, {"n": 3, "text": "ٱقْرَأْ وَرَبُّكَ ٱلْأَكْرَمُ"}, {"n": 4, "text": "ٱلَّذِى عَلَّمَ بِٱلْقَلَمِ"}, {"n": 5, "text": "عَلَّمَ ٱلْإِنسَٰنَ مَا لَمْ يَعْلَمْ"}, {"n": 6, "text": "كَلَّآ إِنَّ ٱلْإِنسَٰنَ لَيَطْغَىٰٓ"}, {"n": 7, "text": "أَن رَّءَاهُ ٱسْتَغْنَىٰٓ"}, {"n": 8, "text": "إِنَّ إِلَىٰ رَبِّكَ ٱلرُّجْعَىٰٓ"}, {"n": 9, "text": "أَرَءَيْتَ ٱلَّذِى يَنْهَىٰ"}, {"n": 10, "text": "عَبْدًا إِذَا صَلَّىٰٓ"}, {"n": 11, "text": "أَرَءَيْتَ إِن كَانَ عَلَى ٱلْهُدَىٰٓ"}, {"n": 12, "text": "أَوْ أَمَرَ بِٱلتَّقْوَىٰٓ"}, {"n": 13, "text": "أَرَءَيْتَ إِن كَذَّبَ وَتَوَلَّىٰٓ"}, {"n": 14, "text": "أَلَمْ يَعْلَم بِأَنَّ ٱللَّهَ يَرَىٰ"}, {"n": 15, "text": "كَلَّا لَئِن لَّمْ يَنتَهِ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ"}, {"n": 16, "text": "نَاصِيَةٍۢ كَٰذِبَةٍ خَاطِئَةٍۢ"}, {"n": 17, "text": "فَلْيَدْعُ نَادِيَهُۥ"}, {"n": 18, "text": "سَنَدْعُ ٱلزَّبَانِيَةَ"}, {"n": 19, "text": "كَلَّا لَا تُطِعْهُ وَٱسْجُدْ وَٱقْتَرِب ۩"}], "ayahCount": 19, "duration": 95.14}, {"id": 97, "name": "سُورَةُ القَدۡرِ", "englishName": "Al-Qadr", "ayahs": [{"n": 1, "text": "إِنَّآ أَنزَلْنَٰهُ فِى لَيْلَةِ ٱلْقَدْرِ"}, {"n": 2, "text": "وَمَآ أَدْرَىٰكَ مَا لَيْلَةُ ٱلْقَدْرِ"}, {"n": 3, "text": "لَيْلَةُ ٱلْقَدْرِ خَيْرٌۭ مِّنْ أَلْفِ شَهْرٍۢ"}, {"n": 4, "text": "تَنَزَّلُ ٱلْمَلَٰٓئِكَةُ وَٱلرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍۢ"}, {"n": 5, "text": "سَلَٰمٌ هِىَ حَتَّىٰ مَطْلَعِ ٱلْفَجْرِ"}], "ayahCount": 5, "duration": 45.17}, {"id": 98, "name": "سُورَةُ البَيِّنَةِ", "englishName": "Al-Bayyina", "ayahs": [{"n": 1, "text": "لَمْ يَكُنِ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَٰبِ وَٱلْمُشْرِكِينَ مُنفَكِّينَ حَتَّىٰ تَأْتِيَهُمُ ٱلْبَيِّنَةُ"}, {"n": 2, "text": "رَسُولٌۭ مِّنَ ٱللَّهِ يَتْلُوا۟ صُحُفًۭا مُّطَهَّرَةًۭ"}, {"n": 3, "text": "فِيهَا كُتُبٌۭ قَيِّمَةٌۭ"}, {"n": 4, "text": "وَمَا تَفَرَّقَ ٱلَّذِينَ أُوتُوا۟ ٱلْكِتَٰبَ إِلَّا مِنۢ بَعْدِ مَا جَآءَتْهُمُ ٱلْبَيِّنَةُ"}, {"n": 5, "text": "وَمَآ أُمِرُوٓا۟ إِلَّا لِيَعْبُدُوا۟ ٱللَّهَ مُخْلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُوا۟ ٱلصَّلَوٰةَ وَيُؤْتُوا۟ ٱلزَّكَوٰةَ ۚ وَذَٰلِكَ دِينُ ٱلْقَيِّمَةِ"}, {"n": 6, "text": "إِنَّ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَٰبِ وَٱلْمُشْرِكِينَ فِى نَارِ جَهَنَّمَ خَٰلِدِينَ فِيهَآ ۚ أُو۟لَٰٓئِكَ هُمْ شَرُّ ٱلْبَرِيَّةِ"}, {"n": 7, "text": "إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ أُو۟لَٰٓئِكَ هُمْ خَيْرُ ٱلْبَرِيَّةِ"}, {"n": 8, "text": "جَزَآؤُهُمْ عِندَ رَبِّهِمْ جَنَّٰتُ عَدْنٍۢ تَجْرِى مِن تَحْتِهَا ٱلْأَنْهَٰرُ خَٰلِدِينَ فِيهَآ أَبَدًۭا ۖ رَّضِىَ ٱللَّهُ عَنْهُمْ وَرَضُوا۟ عَنْهُ ۚ ذَٰلِكَ لِمَنْ خَشِىَ رَبَّهُۥ"}], "ayahCount": 8, "duration": 126.46}, {"id": 99, "name": "سُورَةُ الزَّلۡزَلَةِ", "englishName": "Az-Zalzala", "ayahs": [{"n": 1, "text": "إِذَا زُلْزِلَتِ ٱلْأَرْضُ زِلْزَالَهَا"}, {"n": 2, "text": "وَأَخْرَجَتِ ٱلْأَرْضُ أَثْقَالَهَا"}, {"n": 3, "text": "وَقَالَ ٱلْإِنسَٰنُ مَا لَهَا"}, {"n": 4, "text": "يَوْمَئِذٍۢ تُحَدِّثُ أَخْبَارَهَا"}, {"n": 5, "text": "بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا"}, {"n": 6, "text": "يَوْمَئِذٍۢ يَصْدُرُ ٱلنَّاسُ أَشْتَاتًۭا لِّيُرَوْا۟ أَعْمَٰلَهُمْ"}, {"n": 7, "text": "فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًۭا يَرَهُۥ"}, {"n": 8, "text": "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍۢ شَرًّۭا يَرَهُۥ"}], "ayahCount": 8, "duration": 60.0}, {"id": 100, "name": "سُورَةُ العَادِيَاتِ", "englishName": "Al-Aadiyaat", "ayahs": [{"n": 1, "text": "وَٱلْعَٰدِيَٰتِ ضَبْحًۭا"}, {"n": 2, "text": "فَٱلْمُورِيَٰتِ قَدْحًۭا"}, {"n": 3, "text": "فَٱلْمُغِيرَٰتِ صُبْحًۭا"}, {"n": 4, "text": "فَأَثَرْنَ بِهِۦ نَقْعًۭا"}, {"n": 5, "text": "فَوَسَطْنَ بِهِۦ جَمْعًا"}, {"n": 6, "text": "إِنَّ ٱلْإِنسَٰنَ لِرَبِّهِۦ لَكَنُودٌۭ"}, {"n": 7, "text": "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٌۭ"}, {"n": 8, "text": "وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ"}, {"n": 9, "text": "۞ أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ"}, {"n": 10, "text": "وَحُصِّلَ مَا فِى ٱلصُّدُورِ"}, {"n": 11, "text": "إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍۢ لَّخَبِيرٌۢ"}], "ayahCount": 11, "duration": 70.01}, {"id": 101, "name": "سُورَةُ القَارِعَةِ", "englishName": "Al-Qaari'a", "ayahs": [{"n": 1, "text": "ٱلْقَارِعَةُ"}, {"n": 2, "text": "مَا ٱلْقَارِعَةُ"}, {"n": 3, "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْقَارِعَةُ"}, {"n": 4, "text": "يَوْمَ يَكُونُ ٱلنَّاسُ كَٱلْفَرَاشِ ٱلْمَبْثُوثِ"}, {"n": 5, "text": "وَتَكُونُ ٱلْجِبَالُ كَٱلْعِهْنِ ٱلْمَنفُوشِ"}, {"n": 6, "text": "فَأَمَّا مَن ثَقُلَتْ مَوَٰزِينُهُۥ"}, {"n": 7, "text": "فَهُوَ فِى عِيشَةٍۢ رَّاضِيَةٍۢ"}, {"n": 8, "text": "وَأَمَّا مَنْ خَفَّتْ مَوَٰزِينُهُۥ"}, {"n": 9, "text": "فَأُمُّهُۥ هَاوِيَةٌۭ"}, {"n": 10, "text": "وَمَآ أَدْرَىٰكَ مَا هِيَهْ"}, {"n": 11, "text": "نَارٌ حَامِيَةٌۢ"}], "ayahCount": 11, "duration": 62.54}, {"id": 102, "name": "سُورَةُ التَّكَاثُرِ", "englishName": "At-Takaathur", "ayahs": [{"n": 1, "text": "أَلْهَىٰكُمُ ٱلتَّكَاثُرُ"}, {"n": 2, "text": "حَتَّىٰ زُرْتُمُ ٱلْمَقَابِرَ"}, {"n": 3, "text": "كَلَّا سَوْفَ تَعْلَمُونَ"}, {"n": 4, "text": "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ"}, {"n": 5, "text": "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ"}, {"n": 6, "text": "لَتَرَوُنَّ ٱلْجَحِيمَ"}, {"n": 7, "text": "ثُمَّ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ"}, {"n": 8, "text": "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ"}], "ayahCount": 8, "duration": 62.59}, {"id": 103, "name": "سُورَةُ العَصۡرِ", "englishName": "Al-Asr", "ayahs": [{"n": 1, "text": "وَٱلْعَصْرِ"}, {"n": 2, "text": "إِنَّ ٱلْإِنسَٰنَ لَفِى خُسْرٍ"}, {"n": 3, "text": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ"}], "ayahCount": 3, "duration": 27.4}, {"id": 104, "name": "سُورَةُ الهُمَزَةِ", "englishName": "Al-Humaza", "ayahs": [{"n": 1, "text": "وَيْلٌۭ لِّكُلِّ هُمَزَةٍۢ لُّمَزَةٍ"}, {"n": 2, "text": "ٱلَّذِى جَمَعَ مَالًۭا وَعَدَّدَهُۥ"}, {"n": 3, "text": "يَحْسَبُ أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ"}, {"n": 4, "text": "كَلَّا ۖ لَيُنۢبَذَنَّ فِى ٱلْحُطَمَةِ"}, {"n": 5, "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْحُطَمَةُ"}, {"n": 6, "text": "نَارُ ٱللَّهِ ٱلْمُوقَدَةُ"}, {"n": 7, "text": "ٱلَّتِى تَطَّلِعُ عَلَى ٱلْأَفْـِٔدَةِ"}, {"n": 8, "text": "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌۭ"}, {"n": 9, "text": "فِى عَمَدٍۢ مُّمَدَّدَةٍۭ"}], "ayahCount": 9, "duration": 58.02}, {"id": 105, "name": "سُورَةُ الفِيلِ", "englishName": "Al-Fil", "ayahs": [{"n": 1, "text": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَٰبِ ٱلْفِيلِ"}, {"n": 2, "text": "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِى تَضْلِيلٍۢ"}, {"n": 3, "text": "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ"}, {"n": 4, "text": "تَرْمِيهِم بِحِجَارَةٍۢ مِّن سِجِّيلٍۢ"}, {"n": 5, "text": "فَجَعَلَهُمْ كَعَصْفٍۢ مَّأْكُولٍۭ"}], "ayahCount": 5, "duration": 48.69}, {"id": 106, "name": "سُورَةُ قُرَيۡشٍ", "englishName": "Quraish", "ayahs": [{"n": 1, "text": "لِإِيلَٰفِ قُرَيْشٍ"}, {"n": 2, "text": "إِۦلَٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ"}, {"n": 3, "text": "فَلْيَعْبُدُوا۟ رَبَّ هَٰذَا ٱلْبَيْتِ"}, {"n": 4, "text": "ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ"}], "ayahCount": 4, "duration": 42.53}, {"id": 107, "name": "سُورَةُ المَاعُونِ", "englishName": "Al-Maa'un", "ayahs": [{"n": 1, "text": "أَرَءَيْتَ ٱلَّذِى يُكَذِّبُ بِٱلدِّينِ"}, {"n": 2, "text": "فَذَٰلِكَ ٱلَّذِى يَدُعُّ ٱلْيَتِيمَ"}, {"n": 3, "text": "وَلَا يَحُضُّ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ"}, {"n": 4, "text": "فَوَيْلٌۭ لِّلْمُصَلِّينَ"}, {"n": 5, "text": "ٱلَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ"}, {"n": 6, "text": "ٱلَّذِينَ هُمْ يُرَآءُونَ"}, {"n": 7, "text": "وَيَمْنَعُونَ ٱلْمَاعُونَ"}], "ayahCount": 7, "duration": 57.55}, {"id": 108, "name": "سُورَةُ الكَوۡثَرِ", "englishName": "Al-Kawthar", "ayahs": [{"n": 1, "text": "إِنَّآ أَعْطَيْنَٰكَ ٱلْكَوْثَرَ"}, {"n": 2, "text": "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ"}, {"n": 3, "text": "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ"}], "ayahCount": 3, "duration": 24.5}, {"id": 109, "name": "سُورَةُ الكَافِرُونَ", "englishName": "Al-Kaafiroon", "ayahs": [{"n": 1, "text": "قُلْ يَٰٓأَيُّهَا ٱلْكَٰفِرُونَ"}, {"n": 2, "text": "لَآ أَعْبُدُ مَا تَعْبُدُونَ"}, {"n": 3, "text": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ"}, {"n": 4, "text": "وَلَآ أَنَا۠ عَابِدٌۭ مَّا عَبَدتُّمْ"}, {"n": 5, "text": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ"}, {"n": 6, "text": "لَكُمْ دِينُكُمْ وَلِىَ دِينِ"}], "ayahCount": 6, "duration": 54.26}, {"id": 110, "name": "سُورَةُ النَّصۡرِ", "englishName": "An-Nasr", "ayahs": [{"n": 1, "text": "إِذَا جَآءَ نَصْرُ ٱللَّهِ وَٱلْفَتْحُ"}, {"n": 2, "text": "وَرَأَيْتَ ٱلنَّاسَ يَدْخُلُونَ فِى دِينِ ٱللَّهِ أَفْوَاجًۭا"}, {"n": 3, "text": "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَٱسْتَغْفِرْهُ ۚ إِنَّهُۥ كَانَ تَوَّابًۢا"}], "ayahCount": 3, "duration": 34.93}, {"id": 111, "name": "سُورَةُ المَسَدِ", "englishName": "Al-Masad", "ayahs": [{"n": 1, "text": "تَبَّتْ يَدَآ أَبِى لَهَبٍۢ وَتَبَّ"}, {"n": 2, "text": "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا كَسَبَ"}, {"n": 3, "text": "سَيَصْلَىٰ نَارًۭا ذَاتَ لَهَبٍۢ"}, {"n": 4, "text": "وَٱمْرَأَتُهُۥ حَمَّالَةَ ٱلْحَطَبِ"}, {"n": 5, "text": "فِى جِيدِهَا حَبْلٌۭ مِّن مَّسَدٍۭ"}], "ayahCount": 5, "duration": 41.56}, {"id": 112, "name": "سُورَةُ الإِخۡلَاصِ", "englishName": "Al-Ikhlaas", "ayahs": [{"n": 1, "text": "قُلْ هُوَ ٱللَّهُ أَحَدٌ"}, {"n": 2, "text": "ٱللَّهُ ٱلصَّمَدُ"}, {"n": 3, "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"}, {"n": 4, "text": "وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ"}], "ayahCount": 4, "duration": 21.68}, {"id": 113, "name": "سُورَةُ الفَلَقِ", "englishName": "Al-Falaq", "ayahs": [{"n": 1, "text": "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ"}, {"n": 2, "text": "مِن شَرِّ مَا خَلَقَ"}, {"n": 3, "text": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ"}, {"n": 4, "text": "وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِى ٱلْعُقَدِ"}, {"n": 5, "text": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"}], "ayahCount": 5, "duration": 33.04}, {"id": 114, "name": "سُورَةُ النَّاسِ", "englishName": "An-Naas", "ayahs": [{"n": 1, "text": "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ"}, {"n": 2, "text": "مَلِكِ ٱلنَّاسِ"}, {"n": 3, "text": "إِلَٰهِ ٱلنَّاسِ"}, {"n": 4, "text": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ"}, {"n": 5, "text": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ"}, {"n": 6, "text": "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ"}], "ayahCount": 6, "duration": 50.02}];
+const REFERENCES = {"78": {"duration": 292.21, "speechRatio": 0.991, "pauses": 0, "segments": 1, "envelope": [0, 0, 0, 0, 23, 44, 49, 42, 49, 51, 48, 43, 39, 16, 45, 25, 32, 30, 22, 25, 41, 44, 45, 42, 40, 40, 36, 39, 15, 8, 25, 25, 35, 49, 52, 36, 21, 27, 15, 31, 30, 25, 16, 16, 26, 27, 28, 29, 27, 24, 22, 23, 22, 22, 27, 13, 7, 10, 40, 26, 29, 32, 27, 28, 32, 25, 16, 28, 26, 23, 23, 22, 23, 25, 29, 27, 27, 27, 25, 26, 23, 26, 27, 25, 29, 6, 5, 32, 38, 31, 30, 30, 33, 49, 38, 35, 41, 29, 34, 37, 28, 33, 35, 31, 28, 32, 40, 24, 5, 9, 42, 41, 33, 36, 33, 28, 19, 30, 31, 23, 9, 32, 17, 24, 29, 26, 26, 25, 24, 26, 26, 14, 5, 25, 41, 43, 47, 32, 40, 32, 36, 34, 37, 29, 26, 27, 28, 28, 27, 25, 28, 26, 7, 15, 34, 31, 35, 36, 38, 35, 33, 34, 50, 34, 33, 30, 26, 28, 26, 27, 25, 22, 25, 24, 23, 28, 24, 24, 22, 5, 2, 36, 37, 33, 45, 55, 43, 40, 44, 15, 47, 33, 44, 41, 55, 52, 25, 9, 44, 37, 31, 50, 36, 35, 44, 23, 45, 38, 53, 41, 11, 35, 45, 54, 35, 37, 40, 18, 37, 29, 19, 42, 39, 36, 52, 25, 8, 43, 49, 51, 35, 50, 43, 39, 30, 22, 28, 23, 31, 27, 21, 37, 29, 8, 35, 39, 39, 32, 38, 33, 48, 30, 38, 27, 33, 18, 21, 18, 4, 22, 33, 34, 31, 34, 28, 28, 26, 23, 28, 32, 37, 37, 28, 25, 24, 20, 34, 22, 7, 41, 51, 37, 27, 35, 27, 34, 26, 21, 29, 20, 30, 29, 26, 27, 29, 25, 18, 21, 32, 26, 36, 30, 8, 6, 30, 44, 41, 35, 53, 29, 51, 66, 39, 34, 34, 34, 36, 34, 18, 42, 31, 41, 50, 18, 8, 39, 47, 29, 32, 33, 31, 30, 47, 33, 50, 35, 39, 32, 29, 12, 31, 44, 47, 29, 40, 39, 37, 34, 37, 35, 38, 37, 30, 23, 24, 23, 25, 21, 17, 24, 39, 27, 41, 34, 9, 18, 40, 15, 32, 34, 35, 35, 25, 24, 24, 30, 26, 29, 25, 27, 28, 25, 31, 17, 27, 31, 13, 29, 39, 34, 35, 36, 31, 32, 41, 29, 34, 27, 30, 23, 34, 17, 41, 35, 9, 24, 34, 36, 36, 35, 44, 44, 33, 41, 35, 36, 30, 36, 45, 41, 36, 35, 47, 51, 36, 52, 40, 8, 20, 51, 44, 40, 37, 31, 29, 21, 44, 36, 27, 21, 55, 41, 36, 38, 11, 36, 32, 39, 29, 33, 46, 36, 50, 47, 11, 15, 34, 36, 34, 29, 14, 36, 43, 42, 35, 38, 46, 52, 57, 57, 28, 34, 44, 40, 22, 31, 34, 40, 42, 40, 43, 22, 7, 33, 37, 19, 42, 37, 38, 29, 40, 46, 42, 29, 37, 42, 27, 8, 40, 45, 32, 47, 41, 15, 7, 35, 38, 34, 33, 31, 35, 40, 35, 38, 34, 34, 36, 43, 33, 45, 40, 20, 31, 24, 34, 58, 46, 53, 39, 10, 30, 5, 60, 51, 33, 38, 46, 55, 57, 46, 65, 48, 10, 55, 65, 32, 32, 48, 56, 31, 48, 60, 78, 64, 52, 40, 42, 47, 43, 42, 29, 10, 74, 74, 80, 81, 31, 25, 91, 73, 56, 69, 59, 74, 57, 31, 38, 44, 49, 48, 20, 57, 44, 50, 44, 69, 75, 67, 47, 68, 84, 64, 80, 54, 16, 41, 40, 80, 71, 61, 46, 48, 61, 58, 57, 55, 52, 73, 64, 22, 61, 63, 92, 100, 60, 19, 61, 70, 93, 87, 69, 60, 57, 59, 62, 54, 57, 38, 38, 41, 42, 50, 40, 65, 69, 36, 12, 36, 34, 36, 39, 39, 67, 47, 29, 67, 59, 54, 68, 90, 67, 58, 34, 60, 60, 44, 37, 67, 68, 77, 61, 17, 51, 60, 31, 67, 46, 61, 43, 56, 66, 56, 66, 32, 54, 51, 29, 19, 70, 59, 74, 71, 22, 51, 50, 60, 68, 53, 53, 36, 35, 29, 8, 29, 28, 39, 35, 29, 29, 49, 45, 51, 42, 9, 47, 57, 78, 48, 55, 44, 53, 29, 35, 34, 44, 30, 39, 52, 31, 29, 34, 44, 56, 54, 50, 49, 37, 45, 52, 10, 17, 47, 39, 42, 44, 49, 50, 50, 36, 30, 46, 38, 36, 41, 38, 53, 40, 62, 41, 10, 41, 49, 57, 62, 61, 60, 47, 47, 50, 46, 34, 64, 53, 41, 32, 52, 51, 55, 45, 11, 46, 52, 67, 48, 33, 49, 40, 45, 59, 60, 58, 45, 11, 54, 57, 16, 45, 32, 32, 32, 33, 44, 47, 40, 70, 66, 15, 44, 62, 54, 20, 36, 34, 33, 25, 23, 24, 27, 35, 35, 34, 34, 38, 34, 33, 29, 37, 49, 21, 22, 26, 30, 24, 34, 29, 6, 13, 49, 53, 60, 63, 60, 61, 54, 58, 63, 46, 30, 32, 34, 36, 29, 30, 28, 27, 37, 46, 39, 61, 55, 56, 53, 53, 60, 53, 35, 29, 18, 19, 23, 25, 35, 31, 7, 5, 55, 21, 35, 25, 52, 53, 53, 48, 21, 37, 43, 45, 23, 21, 37, 36, 43, 38, 35, 42, 38, 46, 40, 33, 33, 47, 55, 53, 47, 55, 60, 57, 57, 54, 54, 53, 20, 9, 66, 64, 61, 43, 41, 48, 47, 45, 42, 43, 32, 51, 58, 42, 55, 42, 11, 44, 53, 45, 58, 53, 54, 43, 19, 55, 48, 46, 55, 38, 58, 81, 57, 55, 64, 80, 81, 87, 88, 54, 60, 46, 51, 13, 78, 89, 24, 17, 81, 75, 61, 58, 70, 55, 51, 57, 66, 42, 39, 81, 78, 61, 29, 53, 44, 87, 63, 61, 59, 41, 47, 60, 57, 54, 59, 67, 67, 50, 68, 68, 65, 86, 69, 17, 55, 74, 62, 54, 43, 47, 38, 32, 36, 30, 7, 26, 5, 3, 45, 46, 47, 49, 47, 45, 37, 58, 54, 46, 44, 43, 46, 45, 33, 33, 41, 60, 45, 71, 67, 70, 25, 45, 39, 43, 60, 76, 69, 74, 79, 30, 14, 38, 45, 51, 49, 42, 63, 83, 81, 80, 83, 77, 86, 86, 79, 85, 54, 57, 54, 76, 35, 65, 51, 58, 62, 73, 72, 62, 48, 39, 40, 42, 37, 63, 46, 49, 52, 35, 38, 36, 32, 47, 41, 57, 58, 52, 55, 53, 60, 67, 41, 63, 34, 41, 61, 52, 45, 41, 42, 22, 38, 44, 38, 40, 35, 32, 30, 35, 39, 43, 43, 39, 13, 5, 52, 37, 51, 53, 52, 53, 57, 51, 72, 56, 55, 56, 32, 48, 58, 55, 21, 45, 35, 17, 37, 56, 62, 53, 56, 51, 45, 64, 59, 35, 57, 54, 23, 35, 42, 52, 50, 28, 21, 21, 20, 12, 21, 22, 23, 19, 17, 18, 18, 18, 17, 19, 19, 12, 3, 2, 1, 0, 0, 0, 0, 0]}, "79": {"duration": 256.44, "speechRatio": 0.996, "pauses": 0, "segments": 1, "envelope": [0, 15, 27, 44, 64, 61, 46, 29, 38, 35, 47, 42, 27, 28, 23, 34, 29, 35, 37, 36, 33, 36, 37, 35, 19, 8, 14, 57, 42, 52, 46, 44, 49, 55, 52, 34, 51, 49, 35, 48, 13, 37, 56, 39, 11, 9, 40, 40, 45, 52, 36, 38, 38, 43, 29, 39, 50, 27, 31, 12, 60, 55, 13, 7, 30, 8, 52, 37, 38, 51, 30, 27, 42, 22, 45, 42, 9, 7, 20, 27, 45, 40, 54, 70, 32, 28, 37, 33, 57, 40, 9, 22, 25, 38, 42, 14, 44, 48, 35, 19, 38, 39, 62, 55, 12, 12, 61, 58, 45, 52, 28, 38, 36, 38, 68, 35, 24, 24, 6, 3, 23, 9, 50, 50, 36, 26, 56, 39, 23, 27, 9, 6, 35, 53, 50, 53, 44, 45, 45, 40, 54, 44, 57, 34, 37, 45, 44, 51, 47, 58, 45, 32, 42, 10, 7, 39, 58, 49, 69, 52, 45, 41, 70, 47, 29, 43, 18, 7, 50, 47, 66, 59, 52, 60, 59, 33, 36, 38, 44, 44, 41, 39, 39, 31, 13, 33, 34, 41, 37, 26, 34, 23, 33, 21, 32, 13, 5, 3, 19, 32, 41, 42, 25, 34, 35, 27, 21, 23, 35, 33, 35, 57, 38, 33, 29, 29, 28, 28, 26, 31, 35, 8, 5, 8, 67, 51, 47, 30, 36, 37, 45, 48, 32, 35, 38, 26, 45, 44, 46, 36, 38, 65, 31, 61, 27, 9, 6, 38, 42, 34, 47, 46, 40, 42, 45, 45, 41, 48, 36, 48, 59, 28, 42, 41, 37, 35, 47, 35, 33, 33, 11, 5, 3, 52, 39, 67, 38, 39, 34, 30, 30, 34, 28, 10, 59, 39, 33, 34, 10, 4, 2, 35, 37, 40, 62, 52, 36, 37, 49, 30, 37, 41, 25, 56, 50, 12, 7, 23, 23, 35, 37, 52, 46, 45, 30, 34, 45, 40, 33, 35, 48, 56, 42, 40, 29, 41, 33, 26, 30, 43, 50, 27, 7, 18, 29, 29, 36, 28, 45, 38, 25, 22, 33, 35, 29, 42, 41, 33, 33, 37, 36, 41, 28, 42, 59, 24, 9, 22, 42, 44, 40, 41, 39, 48, 31, 49, 63, 51, 49, 49, 53, 53, 68, 61, 44, 38, 44, 39, 32, 31, 12, 61, 60, 20, 8, 49, 41, 22, 53, 45, 45, 52, 53, 48, 17, 35, 38, 34, 29, 23, 67, 64, 13, 8, 58, 52, 69, 56, 48, 40, 59, 42, 35, 29, 27, 36, 55, 55, 13, 25, 32, 19, 41, 48, 38, 33, 51, 54, 11, 31, 42, 45, 35, 32, 34, 36, 54, 47, 44, 27, 31, 54, 34, 12, 35, 38, 46, 28, 31, 32, 33, 45, 19, 6, 30, 69, 76, 66, 59, 75, 44, 51, 47, 51, 39, 53, 37, 80, 67, 17, 18, 59, 43, 51, 47, 42, 58, 77, 47, 34, 49, 58, 50, 37, 47, 21, 39, 27, 37, 30, 36, 38, 45, 37, 8, 15, 40, 37, 37, 39, 26, 33, 29, 48, 37, 21, 38, 36, 47, 38, 39, 32, 34, 30, 27, 33, 31, 32, 31, 8, 32, 38, 17, 5, 54, 60, 35, 34, 34, 30, 30, 37, 38, 29, 33, 32, 37, 45, 27, 33, 27, 22, 33, 33, 39, 41, 39, 35, 35, 40, 38, 37, 17, 5, 32, 44, 54, 41, 59, 30, 9, 44, 55, 62, 37, 32, 42, 43, 44, 26, 40, 33, 53, 35, 49, 50, 11, 13, 51, 50, 50, 47, 66, 46, 59, 56, 62, 57, 39, 48, 44, 34, 31, 43, 38, 54, 26, 9, 50, 36, 45, 33, 51, 37, 46, 61, 58, 36, 42, 32, 59, 49, 64, 54, 13, 35, 36, 49, 35, 42, 33, 56, 45, 47, 43, 51, 47, 49, 43, 44, 51, 40, 41, 41, 44, 39, 23, 41, 46, 39, 64, 21, 16, 56, 35, 46, 81, 76, 60, 21, 53, 75, 47, 76, 23, 33, 47, 60, 53, 41, 47, 38, 35, 36, 39, 35, 43, 44, 30, 23, 32, 5, 5, 36, 43, 62, 53, 47, 63, 61, 64, 65, 60, 66, 66, 56, 45, 23, 49, 78, 76, 80, 89, 81, 74, 82, 83, 90, 88, 85, 74, 39, 42, 56, 48, 50, 38, 54, 100, 93, 28, 18, 41, 54, 58, 44, 56, 49, 34, 57, 52, 31, 33, 38, 40, 26, 50, 47, 40, 44, 32, 56, 64, 56, 12, 59, 57, 28, 45, 48, 44, 48, 36, 39, 46, 53, 40, 38, 42, 45, 46, 50, 61, 92, 37, 14, 36, 50, 39, 40, 40, 57, 48, 32, 31, 34, 26, 53, 98, 90, 19, 29, 53, 76, 51, 70, 49, 47, 58, 57, 39, 14, 38, 50, 76, 68, 20, 47, 37, 40, 38, 43, 54, 53, 36, 33, 38, 38, 36, 54, 53, 49, 20, 36, 45, 11, 7, 41, 37, 38, 45, 42, 35, 35, 41, 42, 32, 37, 49, 32, 40, 55, 62, 53, 49, 18, 50, 37, 42, 40, 35, 30, 34, 35, 32, 29, 34, 18, 35, 28, 25, 38, 53, 73, 40, 10, 49, 40, 41, 42, 42, 52, 36, 50, 32, 33, 34, 49, 44, 46, 49, 49, 43, 32, 59, 74, 20, 11, 41, 20, 70, 45, 45, 53, 63, 70, 36, 16, 58, 58, 37, 35, 39, 46, 59, 46, 42, 21, 54, 57, 41, 58, 17, 9, 42, 43, 54, 42, 39, 39, 34, 46, 38, 35, 35, 37, 33, 31, 9, 72, 67, 54, 64, 33, 11, 59, 75, 82, 44, 37, 48, 37, 38, 38, 40, 33, 38, 36, 44, 38, 58, 21, 9, 40, 43, 43, 35, 34, 36, 32, 36, 34, 41, 44, 44, 45, 36, 35, 37, 40, 30, 41, 37, 35, 35, 31, 51, 34, 30, 30, 27, 32, 39, 19, 22, 36, 32, 45, 34, 7, 10, 49, 41, 43, 37, 28, 23, 30, 44, 46, 43, 42, 44, 43, 23, 26, 32, 37, 41, 40, 46, 35, 25, 36, 37, 30, 28, 27, 32, 28, 36, 58, 69, 40, 26, 29, 34, 28, 30, 18, 34, 31, 29, 32, 31, 22, 31, 29, 9, 5, 2, 1, 1, 0, 0, 0]}, "80": {"duration": 220.42, "speechRatio": 0.995, "pauses": 0, "segments": 1, "envelope": [0, 14, 29, 43, 53, 61, 37, 27, 29, 29, 42, 40, 27, 30, 25, 35, 27, 28, 25, 25, 30, 33, 35, 35, 30, 27, 10, 5, 2, 18, 38, 36, 40, 40, 44, 47, 52, 47, 16, 8, 4, 40, 33, 31, 22, 22, 22, 42, 43, 48, 50, 47, 54, 69, 51, 35, 34, 37, 26, 41, 40, 11, 7, 3, 42, 42, 46, 43, 44, 34, 29, 37, 36, 41, 48, 42, 33, 27, 21, 16, 24, 49, 31, 7, 5, 37, 33, 37, 17, 31, 23, 26, 20, 25, 28, 33, 31, 27, 38, 28, 19, 23, 8, 30, 40, 22, 6, 34, 37, 41, 41, 43, 55, 43, 34, 19, 39, 27, 34, 37, 13, 6, 33, 38, 36, 32, 30, 24, 47, 43, 42, 27, 22, 23, 35, 48, 24, 8, 23, 36, 54, 54, 47, 35, 30, 35, 34, 52, 61, 35, 21, 27, 12, 34, 34, 8, 10, 36, 36, 37, 38, 38, 40, 42, 34, 37, 34, 35, 36, 29, 36, 39, 39, 49, 45, 50, 41, 25, 30, 16, 38, 50, 30, 8, 29, 39, 38, 33, 14, 49, 41, 9, 30, 50, 37, 38, 38, 27, 45, 36, 32, 36, 40, 19, 51, 55, 12, 13, 47, 39, 58, 53, 58, 60, 58, 63, 59, 53, 61, 31, 31, 34, 29, 33, 40, 28, 32, 19, 38, 20, 6, 4, 46, 39, 35, 41, 41, 27, 50, 37, 40, 40, 43, 39, 43, 42, 40, 34, 42, 16, 7, 15, 45, 23, 36, 23, 30, 33, 31, 37, 34, 24, 39, 32, 8, 4, 33, 14, 40, 45, 26, 33, 31, 33, 33, 36, 21, 9, 34, 35, 10, 6, 32, 44, 32, 41, 37, 34, 50, 33, 9, 27, 49, 48, 34, 33, 32, 37, 52, 48, 43, 13, 7, 41, 40, 58, 37, 43, 36, 32, 29, 29, 30, 51, 44, 44, 44, 39, 35, 32, 39, 50, 50, 16, 34, 42, 18, 7, 19, 42, 36, 39, 38, 41, 35, 27, 27, 45, 39, 47, 14, 7, 30, 35, 38, 36, 35, 36, 37, 41, 41, 28, 27, 50, 43, 62, 49, 33, 34, 22, 44, 47, 23, 7, 6, 28, 35, 42, 37, 29, 41, 13, 44, 38, 51, 58, 32, 33, 45, 25, 9, 6, 25, 46, 53, 48, 44, 50, 41, 47, 29, 38, 55, 33, 45, 39, 48, 42, 32, 10, 6, 27, 43, 44, 47, 39, 36, 32, 43, 46, 24, 40, 38, 26, 35, 38, 47, 59, 49, 40, 32, 38, 37, 23, 47, 33, 12, 5, 17, 60, 59, 68, 63, 47, 56, 39, 41, 36, 46, 50, 54, 41, 42, 48, 42, 49, 47, 46, 46, 49, 46, 43, 47, 16, 8, 4, 49, 46, 59, 47, 50, 54, 41, 50, 41, 37, 41, 40, 43, 36, 55, 60, 43, 54, 69, 47, 64, 77, 48, 35, 13, 6, 38, 45, 51, 60, 63, 57, 77, 67, 60, 90, 59, 57, 48, 59, 49, 54, 50, 48, 45, 48, 51, 42, 29, 54, 56, 42, 13, 16, 44, 54, 59, 57, 52, 47, 46, 46, 48, 52, 46, 41, 33, 36, 29, 7, 46, 57, 27, 10, 52, 38, 30, 31, 29, 37, 31, 26, 54, 28, 35, 37, 41, 25, 16, 41, 77, 39, 11, 54, 53, 55, 69, 49, 46, 36, 45, 62, 43, 21, 65, 76, 44, 11, 70, 48, 41, 76, 65, 60, 60, 67, 55, 59, 56, 59, 51, 27, 64, 70, 22, 12, 57, 59, 59, 59, 47, 43, 40, 47, 48, 35, 52, 53, 36, 59, 64, 25, 42, 50, 61, 38, 50, 70, 55, 52, 37, 41, 58, 40, 43, 56, 42, 12, 35, 45, 57, 47, 44, 46, 43, 44, 52, 55, 39, 51, 56, 40, 31, 37, 10, 5, 56, 46, 62, 57, 63, 68, 75, 76, 81, 86, 88, 87, 75, 58, 37, 37, 75, 92, 95, 80, 82, 91, 81, 80, 91, 92, 86, 45, 53, 31, 10, 7, 68, 76, 81, 90, 54, 48, 93, 54, 62, 26, 40, 36, 68, 53, 41, 52, 51, 49, 59, 53, 51, 51, 31, 9, 88, 64, 46, 52, 53, 51, 56, 60, 68, 57, 93, 74, 52, 53, 42, 38, 46, 45, 52, 48, 47, 47, 17, 52, 76, 100, 49, 65, 38, 57, 61, 81, 63, 36, 39, 33, 43, 42, 48, 43, 20, 7, 41, 43, 61, 69, 55, 67, 64, 57, 39, 40, 49, 55, 61, 45, 70, 62, 73, 56, 86, 45, 51, 50, 57, 59, 52, 67, 31, 53, 49, 54, 44, 49, 49, 63, 36, 51, 56, 58, 64, 55, 51, 49, 51, 23, 26, 60, 81, 81, 66, 36, 39, 28, 36, 56, 37, 60, 46, 54, 54, 51, 50, 51, 55, 27, 49, 76, 22, 12, 62, 96, 45, 68, 50, 38, 47, 50, 51, 53, 15, 76, 38, 62, 48, 19, 6, 80, 70, 58, 79, 62, 47, 44, 40, 38, 51, 57, 69, 42, 41, 68, 96, 76, 56, 73, 65, 77, 74, 57, 19, 11, 58, 50, 56, 82, 89, 58, 53, 60, 65, 17, 9, 73, 73, 63, 57, 64, 57, 50, 52, 61, 45, 41, 42, 40, 33, 45, 39, 49, 30, 40, 32, 34, 37, 23, 8, 4, 2, 1, 0, 0, 0, 0]}, "81": {"duration": 158.33, "speechRatio": 0.99, "pauses": 0, "segments": 1, "envelope": [0, 27, 21, 35, 58, 60, 38, 53, 22, 58, 58, 37, 42, 22, 31, 34, 35, 33, 30, 28, 28, 30, 19, 4, 4, 39, 46, 46, 29, 31, 47, 48, 52, 39, 9, 6, 17, 43, 45, 39, 42, 42, 38, 43, 41, 55, 46, 35, 39, 30, 39, 51, 47, 10, 7, 32, 45, 59, 47, 38, 71, 70, 34, 44, 45, 57, 42, 10, 7, 48, 44, 58, 55, 43, 66, 74, 53, 22, 33, 42, 9, 7, 6, 52, 47, 56, 52, 41, 51, 28, 33, 39, 43, 10, 6, 30, 32, 48, 36, 37, 48, 52, 28, 22, 34, 55, 15, 9, 25, 46, 41, 40, 42, 39, 43, 45, 49, 44, 49, 47, 40, 40, 15, 7, 4, 54, 31, 56, 44, 67, 39, 57, 65, 47, 37, 51, 44, 9, 7, 34, 43, 33, 33, 53, 39, 42, 41, 31, 36, 42, 42, 37, 42, 31, 41, 10, 6, 45, 48, 67, 19, 51, 45, 40, 37, 54, 15, 8, 8, 60, 51, 32, 44, 74, 86, 88, 74, 73, 79, 71, 91, 100, 88, 57, 42, 45, 20, 8, 6, 52, 39, 60, 38, 55, 54, 46, 47, 30, 54, 60, 13, 11, 7, 48, 61, 63, 60, 45, 42, 44, 48, 54, 51, 62, 38, 39, 37, 16, 7, 5, 66, 53, 48, 19, 28, 26, 34, 33, 34, 35, 37, 53, 58, 63, 68, 54, 51, 36, 49, 65, 22, 13, 7, 72, 82, 85, 79, 82, 83, 71, 72, 86, 57, 59, 41, 54, 47, 41, 36, 32, 33, 38, 36, 38, 10, 6, 3, 62, 56, 73, 81, 58, 36, 36, 33, 40, 38, 45, 39, 42, 10, 7, 57, 45, 63, 50, 46, 37, 63, 56, 18, 58, 21, 9, 22, 45, 46, 82, 43, 43, 68, 58, 47, 40, 26, 32, 8, 5, 34, 29, 31, 31, 75, 58, 62, 58, 58, 59, 65, 34, 44, 30, 26, 26, 28, 31, 50, 34, 31, 26, 31, 33, 37, 38, 42, 37, 38, 33, 7, 8, 36, 55, 78, 71, 38, 44, 73, 48, 54, 62, 61, 48, 46, 73, 25, 30, 38, 30, 34, 33, 40, 42, 40, 40, 40, 43, 44, 28, 42, 70, 94, 60, 52, 56, 54, 48, 39, 29, 41, 44, 38, 44, 45, 46, 36, 36, 40, 40, 40, 36, 34, 39, 35, 9, 48, 55, 57, 64, 64, 34, 45, 55, 41, 39, 41, 32, 50, 43, 54, 52, 46, 62, 63, 56, 49, 53, 36, 8, 57, 63, 57, 74, 76, 86, 52, 38, 37, 45, 31, 28, 29, 40, 31, 33, 37, 31, 34, 37, 41, 39, 40, 36, 33, 9, 47, 62, 68, 66, 87, 83, 67, 68, 57, 40, 43, 53, 36, 39, 41, 39, 46, 42, 46, 42, 40, 19, 8, 58, 64, 62, 74, 61, 63, 74, 53, 64, 50, 69, 87, 64, 52, 51, 49, 48, 49, 40, 44, 40, 45, 43, 48, 33, 11, 54, 67, 45, 53, 63, 65, 49, 64, 71, 70, 56, 18, 30, 53, 71, 84, 36, 45, 75, 65, 29, 54, 65, 56, 50, 79, 67, 54, 38, 39, 45, 49, 47, 47, 42, 48, 43, 38, 32, 23, 56, 58, 45, 48, 37, 45, 69, 64, 64, 51, 56, 64, 39, 24, 35, 43, 29, 27, 29, 21, 32, 27, 29, 31, 32, 22, 23, 20, 31, 35, 34, 31, 35, 35, 17, 16, 42, 66, 52, 47, 56, 58, 48, 49, 54, 66, 69, 51, 60, 45, 30, 27, 44, 33, 36, 40, 51, 63, 65, 58, 31, 28, 30, 33, 31, 43, 47, 48, 47, 53, 38, 30, 45, 43, 25, 25, 11, 27, 33, 36, 35, 26, 23, 25, 24, 25, 25, 26, 23, 21, 23, 23, 16, 4, 2, 1, 1, 0, 0, 0, 0]}, "82": {"duration": 136.78, "speechRatio": 0.993, "pauses": 0, "segments": 1, "envelope": [0, 18, 11, 34, 39, 63, 42, 32, 32, 12, 35, 41, 30, 29, 23, 27, 24, 26, 26, 35, 30, 30, 30, 28, 27, 15, 4, 3, 26, 32, 34, 39, 46, 56, 48, 41, 39, 38, 39, 28, 27, 28, 32, 25, 30, 35, 18, 5, 3, 29, 39, 56, 45, 73, 72, 60, 34, 46, 37, 38, 38, 36, 43, 44, 39, 9, 7, 4, 45, 42, 41, 35, 37, 55, 37, 26, 12, 28, 27, 6, 4, 29, 37, 47, 35, 41, 44, 44, 35, 28, 21, 36, 9, 5, 3, 22, 46, 45, 16, 34, 11, 35, 32, 32, 33, 29, 31, 41, 41, 38, 24, 50, 33, 31, 55, 26, 52, 52, 9, 8, 14, 56, 70, 75, 70, 75, 75, 76, 69, 41, 40, 47, 50, 34, 38, 36, 37, 32, 47, 52, 43, 58, 50, 48, 54, 41, 38, 56, 21, 31, 57, 39, 39, 27, 27, 31, 32, 28, 26, 27, 25, 7, 4, 58, 48, 57, 40, 45, 78, 58, 60, 45, 47, 45, 59, 54, 52, 47, 39, 53, 26, 8, 5, 25, 41, 49, 47, 52, 53, 46, 46, 49, 52, 38, 40, 46, 70, 56, 30, 37, 40, 37, 40, 65, 35, 32, 39, 44, 57, 51, 41, 43, 46, 45, 46, 29, 37, 46, 15, 7, 5, 58, 46, 64, 52, 34, 27, 36, 14, 28, 35, 32, 29, 16, 20, 32, 36, 39, 43, 41, 41, 40, 33, 9, 45, 29, 33, 34, 34, 61, 88, 64, 37, 50, 39, 58, 77, 39, 47, 36, 41, 45, 32, 39, 37, 36, 36, 37, 35, 11, 19, 72, 80, 58, 41, 42, 48, 44, 51, 66, 29, 27, 38, 43, 37, 38, 41, 40, 40, 32, 11, 72, 37, 71, 71, 65, 64, 68, 45, 26, 46, 40, 31, 32, 36, 36, 38, 36, 39, 37, 28, 7, 25, 36, 37, 42, 51, 53, 58, 63, 63, 62, 100, 89, 62, 29, 30, 42, 28, 27, 28, 28, 26, 26, 25, 26, 27, 22, 6, 47, 32, 37, 43, 38, 39, 62, 35, 22, 60, 67, 59, 42, 33, 36, 20, 25, 23, 27, 25, 27, 28, 30, 26, 27, 15, 38, 33, 61, 50, 53, 52, 49, 43, 32, 29, 18, 23, 22, 19, 22, 31, 34, 35, 31, 40, 32, 10, 37, 46, 43, 41, 60, 48, 49, 56, 38, 56, 73, 68, 52, 52, 54, 64, 71, 71, 34, 36, 36, 36, 35, 34, 36, 33, 33, 32, 32, 35, 18, 29, 57, 69, 63, 61, 63, 66, 73, 76, 51, 82, 76, 55, 53, 63, 61, 57, 52, 20, 27, 34, 33, 29, 30, 31, 34, 37, 38, 36, 37, 33, 32, 4, 39, 41, 45, 49, 44, 55, 47, 55, 56, 59, 65, 63, 64, 65, 53, 68, 73, 72, 50, 63, 58, 54, 47, 35, 19, 34, 31, 29, 35, 40, 38, 40, 41, 37, 37, 38, 14, 7, 63, 49, 79, 87, 62, 46, 55, 50, 47, 11, 36, 44, 45, 28, 19, 34, 31, 24, 25, 25, 26, 28, 32, 30, 43, 20, 7, 37, 34, 47, 59, 72, 62, 49, 48, 33, 40, 39, 33, 45, 52, 38, 37, 38, 37, 40, 38, 43, 41, 40, 23, 7, 4, 3, 1, 1, 0, 0, 0]}, "83": {"duration": 310.28, "speechRatio": 0.995, "pauses": 0, "segments": 1, "envelope": [0, 17, 17, 52, 54, 60, 39, 20, 30, 24, 36, 30, 16, 21, 24, 27, 38, 34, 38, 38, 33, 35, 35, 37, 20, 6, 11, 48, 43, 46, 48, 36, 25, 27, 11, 21, 35, 37, 48, 46, 39, 43, 41, 41, 34, 8, 2, 27, 35, 33, 40, 37, 29, 26, 22, 42, 38, 37, 28, 31, 28, 24, 21, 19, 22, 12, 15, 6, 15, 11, 14, 15, 17, 15, 17, 13, 14, 13, 12, 2, 2, 25, 29, 46, 25, 31, 27, 30, 30, 23, 30, 21, 21, 31, 32, 32, 32, 26, 26, 36, 45, 42, 39, 42, 44, 38, 41, 38, 31, 7, 5, 44, 59, 53, 44, 40, 30, 35, 40, 35, 25, 36, 42, 42, 38, 39, 41, 40, 27, 32, 34, 32, 31, 22, 24, 38, 37, 27, 29, 24, 27, 35, 34, 34, 26, 38, 36, 41, 36, 42, 31, 34, 29, 6, 18, 56, 42, 35, 35, 45, 33, 31, 33, 34, 34, 26, 27, 31, 27, 25, 20, 6, 41, 36, 40, 27, 35, 28, 33, 33, 33, 35, 37, 39, 36, 55, 38, 34, 32, 53, 49, 35, 25, 25, 26, 28, 32, 31, 33, 25, 30, 30, 31, 25, 7, 23, 72, 63, 68, 60, 58, 62, 61, 58, 66, 75, 34, 29, 29, 29, 35, 22, 55, 58, 52, 28, 24, 57, 60, 41, 35, 28, 22, 16, 21, 25, 26, 23, 22, 23, 24, 21, 23, 23, 22, 20, 8, 4, 39, 40, 44, 54, 61, 65, 63, 58, 67, 54, 47, 62, 71, 45, 50, 40, 25, 17, 29, 26, 27, 27, 29, 36, 29, 36, 31, 31, 32, 29, 27, 6, 4, 42, 65, 63, 37, 32, 38, 31, 55, 24, 51, 65, 53, 55, 59, 62, 53, 47, 49, 44, 35, 11, 6, 54, 40, 44, 42, 31, 26, 37, 42, 45, 40, 38, 36, 35, 32, 28, 16, 26, 26, 26, 22, 25, 21, 21, 22, 26, 23, 15, 4, 40, 52, 47, 39, 47, 38, 43, 24, 38, 61, 44, 35, 40, 31, 17, 25, 34, 36, 34, 37, 34, 34, 34, 37, 29, 7, 29, 60, 71, 64, 56, 23, 45, 42, 38, 36, 34, 38, 38, 43, 36, 36, 35, 42, 71, 34, 46, 47, 35, 13, 36, 41, 35, 23, 30, 26, 25, 25, 28, 26, 24, 29, 26, 23, 8, 5, 42, 44, 46, 41, 45, 73, 75, 57, 38, 38, 65, 59, 63, 33, 48, 40, 60, 51, 49, 33, 54, 35, 34, 43, 39, 41, 46, 45, 29, 32, 32, 28, 33, 38, 39, 32, 33, 40, 37, 17, 8, 67, 67, 76, 62, 37, 12, 16, 75, 67, 82, 75, 60, 53, 59, 56, 39, 33, 30, 22, 29, 32, 48, 60, 55, 63, 58, 71, 29, 30, 38, 53, 48, 51, 54, 46, 51, 46, 43, 29, 10, 54, 49, 70, 57, 51, 49, 49, 57, 46, 50, 39, 30, 38, 38, 43, 57, 46, 63, 41, 52, 20, 36, 30, 30, 39, 41, 34, 32, 35, 35, 22, 13, 30, 26, 32, 26, 28, 28, 27, 27, 25, 28, 28, 25, 5, 11, 38, 46, 38, 37, 44, 30, 32, 45, 51, 51, 48, 57, 47, 39, 36, 64, 60, 44, 46, 25, 23, 35, 42, 43, 47, 42, 43, 48, 45, 10, 43, 48, 46, 53, 59, 55, 63, 82, 62, 66, 57, 54, 43, 41, 41, 38, 49, 40, 41, 44, 36, 43, 41, 39, 38, 31, 28, 41, 35, 40, 57, 21, 27, 46, 42, 44, 43, 46, 46, 43, 41, 44, 35, 13, 7, 54, 42, 71, 76, 75, 61, 66, 66, 68, 32, 35, 37, 42, 41, 39, 22, 68, 58, 52, 50, 69, 74, 80, 41, 46, 33, 39, 37, 31, 18, 26, 27, 31, 30, 27, 30, 30, 37, 34, 22, 5, 42, 50, 66, 67, 68, 64, 66, 66, 59, 61, 71, 60, 53, 62, 49, 35, 33, 37, 43, 62, 57, 65, 71, 74, 68, 67, 55, 54, 44, 19, 19, 55, 67, 61, 35, 39, 36, 32, 44, 16, 65, 67, 50, 55, 60, 54, 46, 51, 44, 37, 11, 48, 25, 37, 48, 39, 40, 40, 23, 34, 33, 42, 46, 50, 46, 47, 48, 52, 45, 24, 8, 35, 42, 38, 38, 36, 37, 53, 42, 60, 64, 66, 66, 31, 33, 42, 39, 39, 39, 37, 36, 33, 36, 40, 41, 40, 16, 7, 81, 72, 57, 71, 76, 83, 73, 61, 58, 65, 67, 55, 29, 37, 45, 43, 35, 32, 28, 57, 57, 59, 50, 54, 57, 53, 54, 51, 39, 16, 18, 51, 39, 32, 31, 45, 49, 45, 55, 40, 34, 27, 33, 41, 39, 32, 44, 42, 31, 38, 27, 25, 25, 21, 22, 22, 21, 23, 23, 17, 4, 28, 6, 45, 39, 30, 25, 33, 26, 30, 23, 34, 39, 32, 31, 33, 30, 23, 53, 60, 61, 67, 61, 67, 56, 58, 44, 14, 23, 49, 62, 45, 51, 51, 34, 13, 6, 3, 51, 38, 43, 76, 59, 44, 41, 32, 35, 44, 53, 43, 35, 36, 30, 35, 37, 30, 21, 29, 39, 38, 36, 33, 32, 32, 34, 34, 9, 4, 42, 40, 65, 52, 63, 61, 34, 30, 33, 31, 28, 21, 28, 17, 33, 34, 31, 28, 31, 32, 29, 31, 32, 23, 6, 50, 48, 40, 32, 40, 32, 25, 35, 29, 51, 55, 31, 52, 47, 35, 47, 54, 48, 43, 39, 31, 33, 28, 29, 30, 29, 27, 19, 5, 31, 29, 33, 37, 43, 44, 60, 64, 38, 35, 46, 48, 59, 65, 76, 50, 59, 54, 58, 46, 61, 59, 29, 33, 60, 71, 57, 52, 64, 69, 20, 42, 49, 55, 42, 47, 50, 43, 47, 42, 48, 45, 20, 8, 65, 45, 64, 71, 72, 66, 80, 47, 43, 40, 54, 70, 76, 55, 38, 51, 53, 54, 55, 51, 51, 53, 37, 10, 48, 40, 60, 43, 55, 49, 46, 74, 69, 59, 75, 65, 71, 74, 74, 70, 32, 74, 65, 64, 61, 67, 66, 74, 59, 34, 31, 36, 54, 44, 44, 38, 51, 52, 53, 46, 30, 30, 27, 35, 35, 35, 33, 32, 31, 28, 31, 19, 25, 53, 54, 57, 76, 67, 62, 66, 54, 66, 56, 58, 44, 49, 51, 46, 42, 31, 30, 38, 37, 41, 49, 49, 58, 55, 58, 59, 65, 45, 59, 56, 63, 61, 58, 62, 63, 42, 58, 51, 66, 85, 78, 82, 68, 69, 72, 69, 74, 73, 67, 62, 48, 47, 60, 59, 62, 64, 66, 61, 54, 61, 59, 25, 20, 75, 63, 64, 54, 54, 65, 69, 66, 62, 58, 74, 21, 51, 73, 75, 60, 40, 41, 52, 80, 33, 38, 33, 35, 32, 34, 31, 31, 31, 31, 26, 6, 61, 45, 72, 50, 62, 58, 53, 39, 53, 56, 44, 35, 48, 41, 44, 56, 42, 35, 59, 80, 52, 63, 34, 38, 54, 64, 68, 72, 65, 62, 64, 61, 63, 71, 56, 22, 26, 75, 69, 71, 73, 88, 100, 99, 94, 94, 92, 91, 65, 30, 49, 62, 61, 56, 62, 49, 61, 43, 43, 45, 46, 50, 49, 47, 53, 50, 50, 33, 13, 18, 74, 39, 61, 58, 72, 49, 49, 12, 55, 62, 43, 38, 38, 25, 38, 31, 32, 34, 18, 30, 30, 36, 32, 35, 25, 32, 34, 29, 34, 30, 13, 6, 3, 2, 1, 0, 0, 0, 0]}, "84": {"duration": 160.21, "speechRatio": 0.994, "pauses": 0, "segments": 1, "envelope": [0, 26, 20, 40, 60, 66, 40, 24, 30, 30, 53, 40, 27, 33, 27, 38, 35, 36, 36, 28, 33, 30, 31, 31, 19, 8, 4, 46, 52, 40, 61, 66, 65, 56, 45, 41, 46, 60, 63, 72, 40, 28, 27, 28, 25, 35, 27, 35, 5, 4, 35, 56, 46, 46, 26, 54, 31, 34, 40, 50, 39, 26, 45, 25, 6, 5, 47, 38, 51, 49, 32, 38, 33, 16, 46, 7, 6, 34, 45, 29, 38, 19, 33, 19, 33, 28, 41, 28, 29, 36, 35, 22, 7, 4, 47, 48, 43, 44, 27, 62, 22, 36, 47, 49, 37, 21, 37, 10, 5, 3, 27, 62, 68, 68, 72, 67, 63, 73, 60, 49, 71, 61, 50, 33, 31, 33, 36, 43, 37, 53, 33, 38, 35, 36, 37, 40, 55, 66, 44, 23, 29, 34, 58, 65, 49, 25, 45, 51, 70, 42, 46, 47, 50, 34, 49, 61, 63, 26, 34, 29, 29, 25, 25, 25, 27, 23, 5, 4, 55, 49, 45, 52, 46, 47, 64, 58, 46, 52, 71, 26, 44, 25, 75, 61, 49, 48, 31, 39, 40, 47, 38, 12, 8, 8, 43, 74, 47, 60, 53, 66, 49, 33, 42, 64, 46, 34, 32, 32, 35, 34, 40, 60, 78, 71, 15, 11, 56, 50, 48, 52, 54, 41, 64, 52, 53, 59, 56, 59, 64, 76, 68, 74, 57, 28, 39, 36, 39, 30, 44, 66, 77, 89, 57, 15, 12, 50, 54, 44, 48, 53, 50, 62, 75, 61, 35, 80, 49, 47, 41, 56, 60, 58, 56, 49, 70, 83, 74, 69, 69, 68, 69, 70, 75, 50, 56, 29, 34, 13, 5, 22, 50, 33, 66, 68, 76, 85, 53, 67, 79, 84, 84, 42, 16, 42, 50, 27, 72, 40, 51, 53, 73, 70, 48, 14, 24, 43, 36, 34, 33, 44, 38, 29, 54, 45, 24, 31, 39, 38, 37, 38, 35, 41, 24, 34, 34, 28, 24, 27, 38, 52, 65, 40, 12, 7, 38, 44, 48, 52, 66, 93, 78, 53, 33, 35, 30, 36, 49, 49, 45, 57, 31, 33, 38, 37, 45, 76, 69, 74, 62, 74, 73, 80, 76, 68, 69, 52, 13, 49, 80, 87, 51, 12, 14, 43, 51, 54, 52, 74, 64, 53, 68, 76, 66, 66, 43, 44, 44, 51, 39, 45, 60, 93, 70, 18, 15, 71, 90, 76, 71, 70, 68, 72, 79, 64, 74, 38, 55, 39, 26, 43, 51, 20, 7, 66, 63, 73, 56, 60, 56, 60, 57, 38, 36, 9, 25, 45, 44, 52, 50, 47, 38, 36, 36, 39, 15, 36, 72, 59, 67, 53, 63, 63, 56, 60, 73, 69, 74, 59, 58, 84, 46, 55, 55, 56, 57, 69, 48, 13, 26, 70, 80, 72, 61, 68, 90, 67, 32, 41, 47, 57, 55, 47, 69, 63, 60, 60, 62, 53, 14, 70, 63, 73, 100, 60, 58, 84, 85, 74, 51, 48, 53, 46, 51, 40, 75, 54, 45, 57, 49, 29, 28, 35, 49, 55, 48, 43, 43, 45, 43, 43, 34, 7, 6, 12, 84, 57, 61, 37, 38, 41, 40, 50, 54, 42, 45, 30, 36, 52, 46, 39, 43, 39, 53, 55, 56, 45, 37, 10, 7, 39, 50, 83, 65, 70, 36, 59, 41, 45, 47, 43, 48, 57, 76, 66, 71, 68, 72, 59, 55, 25, 9, 61, 57, 37, 24, 55, 42, 41, 44, 51, 72, 56, 52, 41, 45, 44, 37, 41, 41, 38, 34, 38, 39, 26, 10, 7, 40, 45, 66, 63, 46, 49, 56, 61, 53, 47, 48, 61, 53, 55, 42, 34, 68, 54, 41, 54, 39, 49, 31, 43, 38, 48, 43, 37, 51, 43, 39, 37, 38, 37, 41, 48, 49, 36, 46, 50, 44, 52, 48, 42, 40, 44, 47, 20, 7, 5, 3, 2, 1, 0, 0]}, "85": {"duration": 198.19, "speechRatio": 0.993, "pauses": 0, "segments": 1, "envelope": [0, 24, 12, 37, 32, 58, 48, 28, 32, 14, 34, 39, 29, 26, 28, 31, 33, 30, 26, 26, 28, 28, 28, 31, 26, 7, 3, 2, 33, 16, 44, 39, 45, 43, 43, 41, 40, 38, 40, 37, 40, 37, 33, 42, 22, 31, 24, 28, 33, 33, 33, 28, 35, 36, 32, 35, 42, 31, 33, 29, 13, 5, 3, 6, 37, 39, 41, 42, 33, 38, 30, 33, 33, 32, 27, 34, 33, 30, 31, 30, 32, 28, 26, 10, 5, 2, 34, 35, 42, 29, 36, 37, 34, 31, 30, 35, 37, 23, 21, 31, 33, 36, 29, 37, 33, 29, 31, 32, 30, 29, 33, 14, 4, 3, 40, 40, 52, 32, 19, 60, 50, 52, 39, 13, 48, 57, 58, 45, 52, 42, 39, 36, 34, 34, 31, 31, 30, 26, 6, 23, 36, 34, 46, 45, 31, 31, 42, 44, 40, 39, 26, 34, 29, 30, 39, 32, 35, 27, 33, 37, 34, 33, 34, 32, 34, 33, 8, 4, 28, 15, 33, 40, 53, 38, 41, 34, 29, 35, 43, 34, 31, 33, 29, 31, 27, 26, 26, 27, 29, 6, 5, 31, 30, 28, 51, 61, 54, 53, 54, 28, 53, 52, 40, 37, 31, 31, 19, 27, 33, 34, 36, 37, 50, 54, 39, 31, 31, 27, 31, 35, 31, 32, 32, 40, 31, 9, 5, 18, 52, 60, 53, 61, 66, 51, 43, 38, 41, 32, 36, 60, 59, 55, 56, 45, 48, 49, 43, 41, 36, 36, 31, 28, 29, 20, 33, 54, 32, 35, 49, 49, 37, 34, 33, 32, 26, 32, 27, 25, 24, 27, 27, 29, 27, 28, 24, 27, 27, 25, 6, 4, 54, 54, 44, 51, 56, 53, 38, 49, 34, 27, 31, 38, 41, 48, 38, 29, 40, 39, 23, 10, 4, 4, 42, 50, 65, 43, 36, 47, 45, 26, 44, 29, 33, 24, 29, 37, 39, 33, 30, 30, 24, 30, 37, 33, 28, 27, 31, 32, 33, 30, 24, 26, 31, 27, 7, 3, 3, 39, 39, 38, 37, 39, 52, 56, 56, 37, 46, 53, 52, 50, 49, 42, 37, 33, 43, 47, 54, 44, 32, 38, 48, 48, 30, 47, 38, 36, 34, 31, 53, 51, 29, 31, 51, 53, 48, 42, 43, 29, 38, 41, 48, 33, 29, 24, 25, 24, 24, 28, 34, 43, 45, 36, 44, 46, 46, 41, 35, 26, 36, 26, 22, 22, 20, 22, 26, 27, 30, 32, 25, 19, 13, 4, 3, 8, 43, 34, 36, 34, 37, 30, 43, 55, 39, 32, 46, 53, 57, 48, 64, 69, 57, 46, 45, 15, 61, 57, 37, 49, 25, 51, 38, 35, 26, 23, 28, 27, 33, 37, 33, 31, 37, 28, 24, 34, 35, 32, 27, 25, 26, 25, 26, 26, 20, 21, 29, 27, 27, 29, 34, 32, 27, 31, 32, 36, 37, 37, 34, 37, 39, 22, 7, 5, 44, 57, 34, 65, 41, 43, 40, 34, 37, 40, 33, 28, 27, 27, 24, 33, 35, 30, 29, 34, 36, 7, 6, 4, 35, 32, 34, 35, 34, 40, 46, 45, 44, 46, 29, 40, 54, 43, 33, 33, 30, 26, 25, 28, 26, 30, 31, 31, 27, 27, 7, 14, 38, 29, 28, 29, 30, 29, 40, 38, 41, 41, 41, 36, 37, 31, 40, 31, 31, 28, 21, 22, 20, 26, 27, 30, 30, 34, 33, 34, 27, 6, 39, 58, 65, 53, 46, 67, 66, 48, 48, 40, 37, 41, 34, 34, 37, 33, 33, 34, 35, 33, 32, 23, 7, 23, 42, 60, 27, 35, 36, 39, 38, 34, 35, 40, 38, 34, 36, 34, 41, 36, 36, 33, 6, 57, 29, 73, 73, 55, 44, 65, 75, 53, 36, 35, 31, 35, 36, 39, 37, 35, 34, 37, 25, 10, 57, 63, 55, 60, 38, 38, 40, 34, 52, 44, 51, 58, 50, 58, 58, 49, 56, 48, 47, 45, 41, 9, 27, 52, 78, 63, 63, 46, 51, 68, 55, 37, 38, 36, 38, 39, 35, 35, 40, 36, 34, 7, 19, 57, 48, 66, 43, 54, 52, 53, 64, 65, 30, 27, 33, 20, 31, 38, 38, 36, 34, 32, 33, 33, 33, 37, 32, 6, 44, 51, 89, 87, 60, 53, 60, 60, 63, 83, 94, 84, 93, 100, 92, 92, 95, 93, 87, 42, 46, 45, 45, 43, 52, 57, 42, 41, 48, 49, 49, 43, 43, 52, 48, 35, 7, 70, 64, 83, 73, 50, 78, 76, 62, 45, 48, 43, 28, 41, 27, 32, 32, 38, 45, 45, 37, 42, 35, 36, 37, 37, 9, 38, 49, 58, 43, 27, 34, 41, 41, 43, 32, 44, 11, 27, 34, 32, 31, 28, 30, 34, 34, 31, 35, 32, 37, 32, 20, 7, 4, 2, 1, 0, 0, 0, 0]}, "86": {"duration": 100.23, "speechRatio": 0.99, "pauses": 0, "segments": 1, "envelope": [0, 39, 25, 60, 74, 98, 76, 45, 49, 22, 51, 52, 41, 32, 31, 29, 39, 47, 37, 37, 42, 44, 39, 38, 41, 39, 14, 7, 4, 64, 27, 73, 76, 87, 75, 65, 55, 53, 51, 58, 58, 48, 56, 16, 51, 65, 51, 34, 9, 7, 4, 42, 44, 60, 62, 68, 80, 86, 85, 79, 76, 90, 93, 78, 78, 41, 56, 91, 73, 51, 29, 11, 59, 56, 62, 55, 55, 46, 63, 49, 39, 11, 66, 53, 41, 37, 8, 6, 59, 52, 52, 58, 50, 75, 89, 63, 14, 37, 55, 54, 38, 37, 45, 36, 48, 75, 95, 81, 55, 70, 70, 71, 75, 41, 25, 9, 7, 50, 56, 75, 59, 49, 49, 44, 43, 51, 46, 35, 43, 43, 42, 45, 43, 65, 55, 43, 32, 39, 37, 34, 38, 36, 48, 39, 15, 7, 4, 62, 49, 73, 50, 45, 46, 62, 76, 76, 75, 63, 48, 53, 55, 47, 40, 36, 32, 33, 37, 47, 73, 40, 57, 10, 8, 42, 18, 39, 48, 41, 39, 46, 46, 62, 40, 39, 20, 39, 48, 43, 52, 24, 69, 89, 83, 69, 65, 67, 71, 69, 76, 77, 41, 41, 11, 7, 42, 53, 50, 51, 57, 70, 65, 77, 96, 87, 100, 85, 59, 69, 55, 59, 54, 76, 94, 49, 21, 11, 17, 70, 73, 69, 89, 76, 23, 74, 93, 80, 63, 56, 62, 73, 77, 75, 34, 14, 8, 18, 46, 65, 79, 71, 74, 56, 58, 45, 48, 46, 46, 51, 52, 28, 40, 45, 43, 47, 68, 78, 57, 53, 33, 31, 8, 4, 3, 51, 17, 56, 63, 71, 76, 74, 86, 83, 85, 67, 61, 84, 55, 67, 69, 58, 22, 12, 6, 63, 75, 77, 50, 68, 80, 75, 46, 16, 66, 38, 13, 9, 34, 47, 56, 57, 44, 49, 62, 62, 70, 49, 78, 81, 58, 42, 38, 39, 37, 48, 18, 11, 18, 61, 74, 69, 49, 47, 41, 41, 28, 17, 7, 36, 43, 39, 34, 35, 42, 44, 42, 51, 28, 47, 64, 71, 53, 57, 42, 87, 96, 45, 15, 54, 71, 33, 55, 72, 68, 50, 69, 92, 64, 18, 11, 76, 52, 40, 53, 47, 38, 53, 39, 43, 36, 34, 45, 41, 45, 38, 42, 39, 29, 45, 43, 35, 40, 46, 47, 15, 9, 4, 3, 2, 1, 0, 0]}, "87": {"duration": 107.81, "speechRatio": 0.989, "pauses": 0, "segments": 1, "envelope": [0, 26, 15, 40, 50, 55, 42, 35, 42, 20, 32, 32, 33, 24, 20, 33, 39, 37, 36, 38, 40, 40, 35, 34, 42, 34, 5, 4, 4, 34, 41, 24, 17, 52, 44, 31, 30, 41, 34, 19, 40, 30, 13, 5, 3, 18, 32, 42, 38, 31, 45, 35, 39, 24, 36, 41, 59, 45, 12, 8, 45, 44, 42, 44, 45, 19, 43, 34, 31, 37, 43, 46, 17, 7, 12, 48, 49, 35, 36, 25, 24, 27, 34, 40, 46, 48, 24, 48, 50, 32, 43, 44, 62, 50, 14, 9, 37, 57, 64, 61, 94, 100, 64, 46, 39, 45, 49, 51, 51, 50, 44, 34, 30, 20, 42, 54, 33, 7, 5, 60, 71, 90, 47, 40, 40, 61, 43, 45, 42, 46, 51, 36, 59, 61, 15, 9, 34, 52, 67, 61, 48, 45, 50, 49, 51, 54, 53, 64, 60, 65, 50, 47, 65, 77, 68, 77, 81, 80, 81, 70, 35, 11, 8, 30, 44, 46, 48, 47, 59, 61, 58, 53, 28, 51, 36, 31, 54, 38, 51, 44, 43, 40, 29, 25, 57, 50, 10, 7, 45, 39, 48, 13, 67, 61, 53, 40, 48, 33, 61, 76, 33, 12, 59, 45, 10, 30, 16, 28, 24, 30, 28, 27, 36, 50, 30, 20, 23, 19, 43, 57, 35, 9, 7, 62, 70, 18, 58, 38, 76, 60, 57, 40, 30, 31, 31, 43, 52, 36, 66, 54, 12, 9, 38, 46, 50, 53, 37, 44, 44, 32, 50, 42, 48, 36, 39, 27, 77, 71, 20, 12, 58, 57, 61, 46, 56, 50, 46, 49, 32, 32, 29, 37, 54, 74, 62, 41, 81, 63, 74, 66, 17, 12, 47, 46, 45, 49, 48, 44, 69, 98, 91, 66, 55, 47, 46, 35, 47, 61, 67, 64, 71, 73, 48, 24, 54, 65, 36, 12, 6, 50, 67, 56, 37, 81, 78, 64, 48, 56, 55, 52, 51, 59, 16, 51, 81, 45, 13, 70, 80, 65, 94, 25, 71, 66, 18, 48, 42, 39, 46, 60, 60, 89, 63, 17, 12, 71, 39, 38, 42, 82, 80, 70, 55, 62, 64, 50, 38, 24, 49, 37, 52, 46, 10, 10, 55, 40, 85, 71, 66, 57, 68, 51, 53, 61, 56, 42, 44, 58, 49, 53, 52, 56, 13, 8, 29, 36, 36, 47, 47, 53, 57, 80, 69, 78, 73, 30, 15, 36, 28, 26, 33, 37, 44, 51, 40, 9, 8, 58, 62, 40, 55, 60, 69, 45, 33, 38, 44, 39, 32, 33, 21, 39, 43, 24, 8, 5, 3, 1, 1, 0, 0, 0]}, "88": {"duration": 134.16, "speechRatio": 0.988, "pauses": 0, "segments": 4, "envelope": [0, 23, 19, 43, 58, 66, 46, 26, 29, 33, 39, 26, 17, 17, 21, 27, 28, 32, 28, 26, 24, 16, 5, 3, 2, 36, 47, 47, 62, 40, 34, 38, 26, 27, 36, 49, 24, 40, 20, 6, 5, 3, 27, 42, 42, 30, 30, 24, 19, 20, 36, 33, 37, 30, 29, 27, 62, 28, 44, 25, 8, 5, 2, 45, 48, 34, 34, 37, 31, 28, 31, 26, 30, 41, 30, 31, 13, 5, 3, 1, 31, 33, 52, 36, 39, 51, 31, 29, 38, 36, 24, 8, 4, 2, 24, 9, 54, 43, 32, 29, 35, 30, 26, 35, 38, 32, 17, 6, 4, 2, 13, 25, 21, 37, 36, 30, 43, 41, 41, 40, 31, 32, 50, 46, 26, 25, 32, 35, 38, 30, 51, 40, 36, 31, 35, 34, 33, 31, 20, 5, 4, 28, 70, 60, 25, 45, 40, 54, 69, 63, 53, 41, 34, 27, 27, 31, 32, 32, 35, 44, 44, 41, 50, 43, 47, 32, 8, 5, 29, 57, 86, 74, 60, 62, 51, 51, 48, 54, 54, 49, 44, 45, 43, 50, 46, 58, 72, 44, 42, 16, 7, 4, 22, 46, 46, 44, 54, 68, 66, 87, 45, 43, 22, 9, 5, 22, 36, 44, 39, 30, 29, 29, 35, 30, 38, 55, 50, 45, 35, 11, 7, 29, 61, 40, 19, 36, 31, 30, 37, 39, 43, 53, 43, 38, 30, 8, 6, 3, 26, 49, 65, 68, 57, 47, 50, 36, 39, 35, 39, 48, 51, 40, 42, 13, 6, 4, 22, 51, 54, 53, 62, 94, 79, 35, 39, 28, 39, 47, 20, 50, 71, 67, 18, 12, 23, 73, 22, 51, 76, 60, 41, 48, 41, 42, 58, 49, 51, 56, 81, 25, 12, 16, 64, 64, 90, 69, 51, 49, 19, 53, 48, 50, 23, 7, 36, 63, 76, 82, 42, 35, 43, 46, 35, 46, 34, 40, 18, 6, 4, 53, 48, 79, 67, 53, 56, 71, 72, 70, 89, 71, 49, 41, 58, 39, 48, 48, 52, 32, 44, 59, 50, 57, 10, 7, 5, 70, 59, 26, 56, 73, 91, 86, 70, 74, 78, 79, 89, 56, 49, 39, 53, 46, 47, 49, 10, 9, 8, 59, 63, 60, 45, 69, 90, 61, 63, 42, 56, 47, 60, 28, 9, 5, 48, 46, 68, 55, 65, 40, 58, 40, 44, 52, 50, 50, 14, 8, 36, 59, 17, 31, 32, 36, 34, 33, 35, 47, 69, 88, 86, 100, 96, 95, 97, 72, 68, 66, 68, 45, 62, 53, 44, 26, 26, 5, 11, 43, 40, 74, 56, 36, 32, 29, 32, 32, 45, 35, 39, 32, 33, 8, 5, 50, 57, 71, 77, 64, 46, 31, 40, 41, 78, 63, 55, 55, 54, 40, 39, 17, 7, 7, 55, 57, 28, 32, 42, 39, 38, 86, 82, 66, 62, 55, 55, 54, 41, 41, 14, 43, 13, 6, 4, 31, 43, 46, 41, 42, 61, 49, 64, 45, 55, 54, 56, 66, 66, 65, 73, 53, 54, 88, 76, 62, 40, 13, 7, 21, 39, 44, 41, 46, 61, 53, 42, 35, 35, 37, 42, 53, 55, 36, 43, 56, 34, 23, 47, 46, 42, 42, 36, 9, 8, 4, 2, 1, 0, 0, 0]}, "89": {"duration": 212.98, "speechRatio": 0.992, "pauses": 0, "segments": 3, "envelope": [0, 19, 22, 56, 60, 62, 37, 19, 26, 23, 26, 27, 13, 11, 10, 15, 14, 14, 14, 15, 13, 11, 13, 11, 10, 3, 2, 14, 21, 41, 19, 6, 5, 36, 52, 42, 36, 32, 34, 31, 7, 5, 2, 31, 17, 28, 14, 23, 22, 27, 10, 4, 3, 33, 31, 44, 34, 22, 27, 21, 21, 15, 4, 2, 1, 15, 12, 25, 29, 53, 49, 34, 34, 29, 35, 35, 31, 26, 28, 31, 13, 5, 4, 41, 40, 26, 39, 32, 36, 24, 22, 35, 37, 30, 15, 25, 23, 26, 23, 29, 29, 29, 28, 24, 25, 20, 4, 3, 23, 43, 35, 43, 34, 24, 27, 29, 23, 19, 21, 25, 26, 25, 25, 26, 19, 4, 4, 34, 34, 30, 55, 53, 39, 36, 17, 24, 26, 21, 23, 32, 42, 27, 44, 38, 44, 45, 45, 42, 40, 44, 42, 40, 37, 9, 7, 36, 43, 53, 58, 50, 42, 49, 46, 42, 34, 58, 40, 19, 33, 16, 41, 35, 40, 55, 41, 38, 37, 43, 43, 40, 35, 40, 34, 36, 7, 33, 34, 26, 44, 34, 39, 44, 38, 40, 24, 45, 41, 39, 34, 42, 44, 39, 39, 37, 36, 29, 7, 32, 52, 54, 43, 41, 45, 67, 50, 33, 42, 45, 49, 47, 51, 55, 53, 49, 49, 44, 44, 36, 23, 5, 59, 30, 36, 81, 73, 30, 40, 37, 24, 31, 40, 39, 37, 41, 40, 39, 39, 39, 40, 41, 10, 7, 50, 48, 52, 76, 72, 43, 41, 37, 49, 23, 60, 44, 75, 48, 66, 58, 60, 58, 50, 53, 51, 49, 53, 54, 53, 35, 8, 40, 38, 45, 46, 51, 81, 46, 57, 45, 58, 44, 44, 42, 22, 65, 47, 56, 58, 56, 56, 57, 55, 59, 50, 11, 6, 7, 60, 58, 53, 46, 48, 40, 63, 57, 57, 64, 60, 57, 54, 64, 47, 36, 51, 59, 55, 56, 65, 86, 73, 78, 28, 72, 73, 50, 56, 27, 56, 51, 40, 41, 49, 43, 24, 49, 60, 78, 45, 45, 40, 69, 76, 63, 22, 46, 42, 38, 41, 46, 43, 42, 41, 43, 43, 34, 56, 42, 23, 6, 6, 32, 75, 50, 47, 43, 44, 49, 76, 79, 89, 83, 82, 85, 74, 43, 87, 75, 80, 74, 78, 80, 55, 57, 66, 85, 88, 91, 51, 50, 44, 22, 73, 86, 43, 63, 53, 76, 64, 61, 26, 35, 40, 45, 43, 42, 39, 38, 36, 47, 69, 68, 52, 18, 9, 49, 62, 77, 100, 40, 16, 70, 61, 92, 50, 37, 41, 61, 73, 68, 69, 52, 41, 47, 38, 44, 45, 48, 46, 45, 51, 47, 47, 27, 9, 41, 98, 91, 54, 50, 81, 85, 77, 80, 78, 79, 76, 74, 79, 72, 38, 43, 58, 50, 64, 70, 53, 77, 96, 76, 50, 44, 17, 22, 36, 31, 30, 31, 27, 34, 37, 38, 40, 43, 8, 50, 72, 28, 54, 61, 52, 38, 19, 56, 58, 44, 38, 18, 38, 38, 33, 35, 36, 30, 35, 41, 52, 27, 8, 10, 50, 35, 33, 57, 86, 56, 49, 63, 50, 43, 36, 37, 34, 34, 35, 33, 29, 32, 36, 26, 29, 32, 31, 41, 56, 37, 11, 6, 44, 42, 30, 16, 6, 4, 24, 42, 35, 8, 38, 38, 39, 33, 30, 40, 11, 29, 30, 34, 30, 25, 24, 24, 6, 52, 54, 13, 7, 38, 41, 58, 61, 61, 62, 61, 56, 39, 48, 32, 36, 37, 52, 49, 48, 46, 30, 28, 17, 41, 33, 40, 36, 34, 27, 8, 46, 59, 28, 9, 60, 41, 43, 46, 53, 53, 45, 38, 41, 41, 51, 56, 59, 42, 32, 28, 26, 30, 35, 41, 35, 33, 33, 34, 35, 35, 30, 34, 36, 11, 6, 47, 79, 68, 51, 47, 46, 49, 53, 51, 66, 72, 39, 67, 90, 55, 43, 46, 56, 54, 45, 49, 77, 64, 61, 58, 48, 53, 55, 53, 84, 72, 64, 42, 36, 30, 74, 87, 51, 15, 9, 54, 80, 82, 75, 93, 84, 60, 62, 52, 56, 56, 23, 73, 41, 68, 61, 75, 72, 32, 50, 46, 13, 25, 69, 77, 70, 52, 54, 56, 95, 78, 90, 75, 36, 57, 89, 85, 95, 65, 56, 72, 57, 54, 51, 53, 54, 62, 54, 62, 63, 25, 17, 77, 90, 74, 90, 50, 73, 73, 52, 73, 65, 69, 73, 83, 82, 61, 58, 74, 55, 62, 62, 30, 10, 56, 73, 91, 73, 73, 83, 67, 66, 56, 37, 49, 42, 60, 39, 38, 29, 33, 45, 23, 31, 39, 49, 52, 46, 38, 40, 37, 31, 36, 34, 34, 27, 6, 6, 49, 21, 44, 41, 45, 52, 40, 34, 38, 50, 48, 71, 88, 69, 26, 38, 44, 69, 43, 40, 41, 40, 36, 36, 31, 37, 23, 32, 28, 32, 9, 5, 38, 41, 40, 48, 35, 39, 50, 42, 59, 46, 33, 28, 7, 10, 58, 48, 52, 47, 43, 38, 39, 44, 33, 33, 38, 25, 35, 18, 5, 5, 2, 1, 0, 0, 0]}, "90": {"duration": 120.03, "speechRatio": 0.99, "pauses": 0, "segments": 1, "envelope": [0, 33, 40, 48, 60, 93, 92, 59, 38, 53, 55, 64, 51, 45, 58, 36, 36, 41, 42, 39, 37, 41, 46, 43, 48, 36, 40, 39, 35, 8, 6, 51, 92, 84, 86, 87, 66, 78, 82, 81, 88, 89, 68, 62, 43, 47, 47, 66, 62, 57, 49, 54, 41, 27, 8, 23, 52, 61, 55, 45, 52, 53, 47, 36, 45, 46, 38, 38, 40, 38, 60, 62, 66, 65, 53, 54, 45, 12, 9, 49, 86, 76, 59, 57, 59, 55, 57, 60, 66, 90, 74, 71, 61, 29, 11, 22, 63, 88, 64, 82, 59, 56, 40, 43, 48, 51, 44, 42, 47, 75, 50, 31, 42, 52, 48, 35, 10, 7, 32, 54, 22, 59, 67, 55, 63, 39, 40, 40, 37, 47, 50, 49, 70, 67, 51, 44, 43, 36, 42, 9, 6, 25, 41, 77, 73, 60, 41, 51, 34, 50, 65, 60, 50, 51, 48, 53, 66, 34, 11, 8, 69, 51, 44, 59, 61, 64, 74, 58, 87, 94, 82, 65, 68, 54, 42, 54, 66, 66, 37, 46, 12, 7, 55, 69, 55, 68, 87, 78, 90, 74, 70, 78, 49, 56, 51, 53, 47, 46, 47, 51, 53, 54, 53, 37, 10, 18, 98, 53, 74, 62, 62, 63, 65, 60, 44, 52, 49, 48, 38, 40, 41, 41, 37, 39, 39, 40, 41, 44, 37, 8, 19, 71, 75, 60, 64, 70, 59, 48, 46, 51, 50, 52, 59, 52, 43, 37, 42, 46, 52, 50, 46, 45, 43, 35, 9, 42, 86, 85, 82, 72, 76, 72, 73, 71, 51, 16, 9, 58, 69, 75, 70, 77, 81, 87, 92, 85, 66, 79, 100, 88, 76, 75, 79, 59, 62, 45, 12, 9, 57, 21, 74, 56, 62, 40, 13, 7, 70, 58, 62, 93, 82, 56, 39, 35, 36, 37, 36, 46, 52, 46, 40, 43, 38, 43, 34, 36, 40, 22, 50, 55, 24, 9, 28, 56, 46, 56, 53, 44, 44, 42, 90, 71, 61, 70, 64, 32, 13, 7, 73, 54, 39, 27, 50, 54, 44, 47, 41, 38, 45, 61, 48, 29, 55, 47, 24, 9, 5, 51, 49, 54, 57, 46, 88, 82, 78, 73, 74, 93, 49, 46, 51, 63, 60, 58, 59, 79, 69, 73, 85, 62, 67, 48, 17, 53, 59, 46, 52, 69, 74, 49, 55, 44, 35, 51, 26, 40, 40, 12, 6, 4, 41, 86, 77, 76, 79, 84, 80, 79, 83, 72, 43, 59, 54, 40, 67, 65, 65, 50, 39, 41, 43, 23, 9, 5, 36, 82, 74, 55, 58, 62, 79, 95, 89, 54, 56, 78, 77, 99, 47, 74, 71, 53, 38, 49, 45, 71, 66, 55, 50, 21, 46, 52, 18, 8, 5, 69, 58, 62, 60, 63, 76, 81, 56, 45, 47, 55, 54, 47, 51, 23, 50, 56, 16, 9, 5, 3, 2, 0, 0, 0, 0]}, "91": {"duration": 84.43, "speechRatio": 0.986, "pauses": 0, "segments": 1, "envelope": [0, 34, 14, 38, 35, 68, 68, 41, 42, 29, 33, 43, 40, 31, 36, 24, 38, 38, 36, 36, 38, 35, 45, 38, 37, 39, 36, 9, 5, 3, 41, 20, 52, 39, 55, 47, 44, 78, 56, 68, 65, 18, 11, 53, 45, 59, 65, 38, 44, 54, 43, 62, 74, 53, 60, 65, 19, 30, 59, 48, 52, 43, 42, 48, 44, 48, 42, 28, 47, 41, 43, 46, 45, 48, 48, 55, 14, 28, 53, 55, 42, 45, 44, 51, 44, 47, 29, 30, 46, 37, 52, 35, 10, 36, 10, 40, 42, 49, 55, 54, 47, 48, 49, 45, 40, 41, 47, 42, 42, 39, 40, 45, 28, 8, 37, 41, 44, 24, 46, 40, 47, 40, 37, 43, 38, 57, 33, 10, 46, 31, 17, 35, 31, 34, 32, 50, 58, 45, 58, 55, 69, 48, 43, 53, 17, 9, 38, 36, 53, 45, 47, 59, 42, 44, 43, 48, 56, 83, 63, 54, 38, 55, 50, 39, 62, 41, 11, 8, 56, 66, 46, 59, 69, 81, 69, 68, 68, 55, 53, 40, 86, 74, 79, 61, 14, 43, 48, 63, 81, 82, 81, 71, 44, 39, 45, 53, 61, 47, 75, 52, 81, 60, 13, 40, 39, 63, 42, 11, 41, 66, 48, 49, 42, 54, 53, 57, 43, 55, 41, 10, 41, 37, 37, 42, 48, 50, 85, 68, 54, 40, 28, 54, 41, 53, 40, 10, 33, 57, 77, 81, 79, 74, 50, 50, 60, 70, 53, 69, 74, 49, 50, 53, 47, 62, 47, 81, 75, 39, 42, 33, 38, 48, 38, 52, 56, 21, 8, 38, 56, 23, 70, 74, 96, 68, 78, 72, 96, 83, 77, 94, 54, 57, 36, 66, 57, 68, 50, 48, 43, 57, 19, 72, 59, 36, 29, 28, 31, 45, 41, 35, 41, 42, 51, 42, 49, 48, 49, 72, 80, 63, 100, 83, 23, 26, 74, 85, 84, 58, 76, 70, 37, 44, 40, 46, 45, 36, 34, 44, 48, 23, 8, 6, 3, 2, 1, 0, 0, 0]}, "92": {"duration": 111.62, "speechRatio": 0.987, "pauses": 0, "segments": 3, "envelope": [0, 17, 8, 40, 45, 57, 34, 26, 31, 11, 27, 30, 23, 15, 10, 12, 11, 11, 11, 10, 13, 11, 11, 9, 2, 1, 11, 15, 31, 29, 32, 42, 48, 41, 31, 26, 46, 41, 8, 7, 30, 31, 32, 38, 37, 34, 45, 49, 32, 46, 50, 29, 32, 35, 46, 51, 26, 10, 8, 42, 42, 36, 53, 44, 26, 34, 43, 55, 45, 35, 36, 35, 44, 37, 28, 41, 48, 20, 9, 7, 35, 35, 36, 36, 45, 38, 29, 43, 33, 32, 38, 28, 21, 48, 53, 11, 9, 8, 52, 40, 45, 43, 34, 51, 57, 43, 30, 51, 30, 59, 54, 16, 42, 63, 88, 43, 13, 10, 27, 31, 39, 45, 39, 40, 33, 21, 53, 51, 12, 8, 36, 47, 43, 28, 31, 52, 44, 52, 38, 38, 15, 45, 54, 44, 13, 8, 52, 36, 31, 27, 33, 31, 37, 35, 31, 32, 32, 42, 44, 51, 20, 38, 29, 40, 44, 15, 13, 45, 55, 41, 62, 45, 43, 49, 30, 56, 64, 20, 24, 53, 52, 52, 14, 62, 78, 79, 63, 47, 41, 29, 70, 90, 54, 13, 55, 86, 65, 51, 38, 37, 48, 37, 46, 66, 60, 51, 58, 45, 42, 41, 33, 34, 38, 36, 34, 51, 35, 46, 19, 41, 54, 38, 8, 26, 41, 45, 46, 72, 83, 69, 37, 44, 53, 45, 45, 55, 76, 61, 15, 52, 41, 43, 48, 40, 53, 66, 42, 65, 44, 40, 55, 37, 46, 39, 42, 41, 32, 43, 48, 54, 32, 11, 6, 59, 63, 52, 50, 60, 74, 69, 68, 36, 48, 36, 57, 100, 83, 71, 57, 59, 55, 63, 47, 51, 78, 72, 18, 15, 86, 89, 64, 64, 88, 64, 66, 86, 72, 55, 48, 39, 56, 64, 37, 55, 59, 57, 28, 63, 94, 65, 19, 57, 53, 69, 43, 47, 49, 49, 71, 53, 39, 45, 47, 53, 70, 34, 11, 6, 60, 52, 48, 71, 50, 45, 45, 26, 31, 45, 69, 49, 66, 39, 50, 12, 82, 87, 26, 56, 44, 69, 47, 55, 48, 15, 37, 52, 76, 70, 62, 66, 50, 47, 50, 12, 55, 76, 51, 12, 53, 61, 71, 50, 54, 59, 48, 61, 46, 50, 51, 53, 49, 54, 45, 42, 39, 32, 38, 40, 23, 39, 21, 20, 23, 30, 37, 33, 40, 29, 52, 51, 9, 31, 48, 68, 76, 47, 59, 68, 66, 89, 80, 79, 61, 63, 65, 58, 47, 52, 50, 42, 33, 38, 34, 41, 24, 42, 48, 17, 11, 74, 57, 51, 41, 44, 44, 22, 37, 50, 25, 7, 4, 3, 2, 0, 0, 0, 0]}, "93": {"duration": 65.12, "speechRatio": 0.984, "pauses": 0, "segments": 1, "envelope": [5, 43, 38, 56, 60, 66, 44, 24, 38, 28, 66, 52, 45, 49, 29, 48, 46, 40, 50, 50, 42, 49, 48, 42, 12, 8, 57, 20, 62, 54, 73, 28, 12, 27, 61, 68, 46, 55, 51, 53, 39, 39, 52, 66, 17, 9, 38, 74, 65, 26, 83, 73, 62, 60, 25, 45, 59, 47, 41, 40, 59, 60, 46, 11, 16, 71, 60, 52, 90, 67, 98, 79, 67, 52, 59, 58, 55, 56, 40, 56, 51, 71, 61, 99, 59, 19, 56, 78, 58, 62, 53, 52, 21, 34, 52, 58, 75, 24, 63, 61, 48, 58, 22, 60, 73, 32, 12, 54, 91, 49, 68, 58, 52, 62, 55, 44, 48, 59, 44, 41, 47, 39, 48, 61, 69, 70, 88, 42, 14, 33, 76, 69, 78, 59, 66, 95, 95, 88, 94, 79, 77, 77, 73, 74, 88, 93, 90, 63, 72, 38, 41, 44, 45, 39, 58, 65, 91, 52, 16, 31, 90, 82, 83, 61, 75, 85, 71, 68, 65, 69, 75, 85, 55, 56, 40, 40, 44, 39, 65, 41, 51, 74, 47, 15, 9, 56, 49, 58, 61, 64, 66, 79, 60, 74, 33, 54, 72, 62, 100, 70, 55, 73, 64, 17, 10, 16, 74, 45, 57, 56, 57, 52, 29, 92, 90, 87, 84, 83, 70, 78, 77, 79, 47, 51, 58, 60, 43, 44, 53, 45, 9, 8, 50, 60, 46, 51, 51, 52, 59, 60, 55, 38, 53, 43, 79, 40, 45, 50, 40, 34, 24, 42, 27, 9, 6, 2, 2, 0, 0, 0, 0]}, "94": {"duration": 43.02, "speechRatio": 0.971, "pauses": 0, "segments": 1, "envelope": [0, 11, 29, 28, 41, 56, 68, 43, 32, 46, 22, 59, 42, 35, 33, 21, 33, 33, 31, 34, 31, 30, 30, 32, 27, 9, 5, 3, 52, 52, 33, 38, 29, 26, 37, 33, 27, 43, 49, 15, 8, 5, 2, 56, 64, 59, 28, 50, 47, 36, 29, 31, 25, 26, 23, 38, 19, 48, 14, 7, 5, 42, 51, 61, 36, 41, 48, 48, 40, 38, 32, 39, 36, 36, 37, 40, 47, 41, 47, 49, 23, 41, 9, 6, 4, 48, 45, 41, 26, 42, 44, 30, 37, 15, 36, 13, 5, 4, 2, 42, 42, 51, 45, 41, 44, 55, 78, 94, 68, 61, 25, 52, 42, 51, 100, 98, 25, 23, 35, 39, 35, 35, 32, 47, 42, 41, 35, 33, 30, 40, 20, 68, 99, 58, 19, 18, 60, 49, 76, 44, 62, 41, 43, 42, 33, 31, 39, 42, 40, 36, 35, 7, 6, 28, 42, 55, 76, 75, 22, 36, 39, 43, 29, 43, 27, 8, 5, 2, 2, 0, 0, 0, 0]}, "95": {"duration": 64.94, "speechRatio": 0.985, "pauses": 0, "segments": 3, "envelope": [0, 23, 21, 50, 52, 62, 42, 36, 33, 33, 36, 37, 22, 20, 27, 28, 25, 32, 31, 30, 30, 24, 27, 27, 24, 6, 3, 2, 40, 27, 33, 45, 52, 43, 40, 33, 35, 48, 54, 58, 48, 50, 52, 50, 48, 42, 23, 7, 35, 46, 70, 47, 29, 35, 32, 29, 26, 25, 27, 26, 25, 26, 25, 25, 6, 8, 49, 80, 64, 51, 67, 59, 43, 42, 36, 36, 34, 32, 32, 31, 30, 28, 29, 31, 27, 8, 42, 64, 46, 79, 52, 42, 38, 31, 34, 36, 33, 25, 43, 35, 21, 29, 34, 36, 35, 34, 42, 29, 13, 35, 34, 33, 33, 27, 26, 24, 23, 26, 25, 27, 18, 5, 3, 68, 51, 42, 46, 49, 73, 68, 79, 66, 70, 59, 52, 35, 58, 44, 48, 34, 37, 34, 37, 36, 35, 35, 34, 29, 33, 35, 10, 6, 17, 39, 67, 52, 76, 50, 56, 62, 68, 44, 44, 53, 67, 53, 61, 13, 65, 79, 50, 81, 35, 44, 59, 49, 51, 59, 54, 42, 57, 45, 44, 37, 53, 45, 48, 34, 33, 34, 34, 37, 35, 33, 34, 24, 7, 31, 53, 55, 37, 50, 30, 51, 64, 71, 38, 41, 23, 26, 39, 41, 43, 46, 40, 38, 37, 39, 39, 40, 44, 16, 7, 82, 79, 49, 78, 76, 100, 76, 50, 54, 18, 50, 45, 49, 77, 69, 38, 52, 51, 42, 36, 36, 32, 30, 33, 38, 38, 31, 35, 34, 16, 6, 4, 2, 2, 1, 0, 0]}, "96": {"duration": 95.14, "speechRatio": 0.987, "pauses": 0, "segments": 3, "envelope": [0, 35, 18, 44, 54, 100, 58, 37, 43, 15, 39, 37, 31, 37, 25, 22, 25, 20, 20, 24, 22, 22, 18, 22, 23, 24, 17, 3, 4, 52, 55, 38, 29, 15, 41, 40, 37, 30, 42, 41, 33, 26, 32, 24, 15, 4, 3, 4, 47, 29, 44, 27, 32, 26, 27, 21, 24, 27, 27, 28, 22, 26, 16, 5, 3, 1, 20, 51, 31, 50, 43, 25, 27, 34, 23, 12, 22, 14, 5, 2, 45, 47, 41, 39, 34, 28, 32, 30, 27, 18, 21, 19, 6, 3, 12, 40, 42, 38, 32, 37, 29, 31, 27, 28, 27, 42, 34, 43, 44, 35, 35, 24, 35, 21, 6, 4, 49, 43, 45, 48, 45, 44, 43, 43, 50, 39, 26, 27, 27, 30, 38, 23, 26, 30, 30, 21, 44, 36, 43, 49, 44, 63, 87, 38, 15, 10, 44, 59, 74, 76, 38, 14, 40, 29, 41, 41, 13, 7, 30, 27, 26, 29, 36, 32, 56, 70, 39, 35, 44, 25, 39, 36, 46, 49, 15, 8, 39, 62, 55, 33, 66, 65, 50, 44, 50, 34, 50, 66, 28, 11, 56, 55, 46, 25, 43, 62, 38, 49, 54, 57, 38, 11, 31, 82, 69, 38, 63, 44, 39, 34, 32, 47, 41, 43, 52, 48, 44, 42, 44, 26, 8, 45, 46, 46, 44, 40, 22, 32, 55, 49, 52, 30, 8, 37, 73, 50, 31, 52, 42, 39, 30, 27, 43, 26, 50, 44, 40, 38, 34, 40, 39, 8, 12, 70, 48, 69, 36, 65, 35, 41, 38, 36, 46, 39, 31, 28, 28, 44, 40, 68, 49, 45, 42, 54, 39, 10, 48, 50, 78, 89, 26, 15, 54, 34, 51, 59, 51, 58, 51, 61, 43, 61, 47, 52, 18, 70, 65, 42, 38, 32, 32, 33, 33, 36, 32, 32, 50, 66, 45, 62, 20, 8, 6, 54, 42, 49, 41, 38, 35, 35, 29, 65, 53, 43, 39, 37, 55, 71, 49, 53, 19, 8, 27, 58, 65, 69, 71, 78, 66, 40, 51, 15, 9, 53, 60, 79, 59, 58, 72, 81, 51, 55, 33, 9, 7, 56, 48, 72, 69, 95, 63, 49, 43, 25, 51, 42, 19, 39, 51, 44, 35, 41, 32, 15, 5, 3, 2, 1, 0, 0, 0]}, "97": {"duration": 45.17, "speechRatio": 0.96, "pauses": 0, "segments": 3, "envelope": [0, 27, 13, 47, 46, 92, 78, 42, 39, 31, 25, 54, 31, 18, 22, 16, 26, 24, 26, 25, 20, 26, 22, 28, 9, 4, 2, 19, 48, 50, 46, 43, 46, 73, 76, 89, 94, 88, 87, 90, 78, 52, 31, 28, 29, 30, 32, 39, 55, 40, 23, 30, 40, 35, 30, 22, 18, 23, 7, 4, 2, 54, 68, 94, 84, 84, 79, 96, 100, 95, 58, 82, 86, 65, 58, 80, 67, 41, 49, 44, 26, 49, 17, 9, 4, 2, 22, 55, 47, 35, 41, 56, 55, 31, 51, 40, 30, 26, 28, 30, 31, 22, 37, 24, 30, 39, 15, 5, 2, 1, 36, 24, 46, 48, 35, 44, 61, 55, 50, 47, 46, 58, 61, 60, 31, 41, 51, 44, 57, 66, 46, 30, 35, 47, 38, 35, 24, 46, 47, 24, 34, 32, 34, 30, 31, 28, 30, 31, 25, 22, 35, 38, 49, 41, 14, 9, 4, 23, 38, 45, 37, 28, 37, 30, 10, 35, 34, 30, 40, 35, 29, 24, 18, 12, 4, 2, 1, 0, 0, 0, 0]}, "98": {"duration": 126.46, "speechRatio": 0.981, "pauses": 0, "segments": 6, "envelope": [0, 0, 36, 26, 47, 56, 50, 43, 26, 28, 27, 37, 28, 14, 23, 19, 28, 31, 34, 30, 27, 29, 38, 31, 27, 9, 5, 4, 2, 55, 51, 31, 36, 38, 46, 47, 45, 32, 38, 42, 39, 34, 29, 17, 34, 25, 33, 48, 27, 30, 34, 24, 29, 26, 35, 40, 32, 30, 26, 26, 27, 30, 8, 29, 33, 26, 14, 39, 37, 26, 9, 38, 35, 33, 30, 26, 29, 25, 16, 5, 3, 31, 38, 66, 61, 42, 40, 34, 35, 46, 59, 67, 84, 56, 42, 17, 42, 32, 24, 27, 24, 22, 29, 30, 40, 43, 21, 48, 45, 10, 7, 4, 41, 39, 49, 34, 38, 36, 30, 29, 32, 36, 43, 32, 28, 32, 11, 5, 2, 42, 56, 48, 45, 46, 44, 50, 34, 60, 31, 42, 47, 45, 39, 31, 34, 59, 64, 38, 39, 60, 48, 46, 47, 41, 33, 70, 60, 38, 55, 35, 46, 40, 43, 44, 42, 46, 59, 54, 31, 35, 40, 29, 44, 26, 30, 24, 7, 4, 2, 44, 63, 77, 86, 88, 88, 98, 77, 57, 78, 78, 79, 77, 70, 62, 63, 45, 54, 90, 69, 58, 36, 55, 56, 57, 73, 75, 62, 28, 45, 48, 52, 63, 47, 21, 42, 46, 39, 44, 40, 60, 58, 54, 60, 63, 65, 62, 60, 53, 37, 33, 49, 21, 53, 64, 34, 45, 41, 27, 24, 16, 30, 24, 39, 44, 46, 45, 47, 48, 43, 19, 8, 37, 64, 71, 57, 47, 35, 41, 41, 23, 28, 31, 31, 11, 4, 3, 16, 42, 35, 41, 45, 39, 43, 55, 71, 43, 43, 51, 54, 64, 58, 40, 33, 38, 35, 37, 27, 48, 49, 44, 43, 38, 21, 31, 37, 37, 38, 35, 51, 65, 46, 54, 48, 38, 39, 38, 37, 40, 49, 47, 54, 71, 39, 34, 34, 23, 32, 40, 59, 30, 9, 7, 60, 70, 76, 99, 98, 96, 91, 98, 53, 61, 57, 39, 50, 57, 42, 70, 32, 37, 47, 15, 9, 4, 43, 44, 50, 54, 40, 58, 66, 79, 51, 48, 79, 86, 82, 85, 84, 93, 100, 62, 81, 19, 86, 86, 58, 91, 44, 63, 79, 93, 88, 88, 97, 98, 98, 77, 58, 45, 46, 34, 33, 47, 43, 29, 33, 26, 26, 21, 6, 3, 2, 26, 62, 72, 71, 69, 69, 66, 72, 72, 76, 68, 64, 47, 61, 52, 55, 57, 57, 49, 87, 68, 28, 44, 41, 45, 41, 41, 43, 39, 51, 53, 60, 55, 46, 43, 41, 48, 50, 44, 70, 55, 49, 45, 44, 43, 43, 51, 19, 40, 62, 60, 47, 62, 89, 93, 57, 85, 47, 40, 50, 43, 38, 55, 80, 80, 86, 95, 74, 78, 65, 67, 61, 61, 47, 54, 61, 55, 56, 76, 67, 61, 39, 46, 37, 55, 60, 52, 61, 46, 24, 9, 4, 30, 61, 40, 35, 43, 42, 29, 34, 30, 32, 25, 19, 23, 5, 3, 2, 1, 0, 0, 0, 0]}, "99": {"duration": 60.0, "speechRatio": 0.978, "pauses": 0, "segments": 1, "envelope": [0, 25, 34, 52, 67, 92, 88, 55, 40, 49, 36, 59, 50, 29, 31, 18, 36, 42, 43, 38, 34, 41, 45, 43, 42, 40, 8, 6, 26, 54, 63, 53, 47, 54, 34, 44, 49, 19, 45, 36, 31, 56, 49, 29, 35, 29, 8, 4, 31, 29, 10, 38, 34, 32, 38, 31, 46, 41, 9, 55, 60, 40, 37, 41, 16, 7, 4, 24, 42, 62, 54, 44, 43, 38, 34, 33, 35, 33, 33, 44, 33, 43, 48, 41, 31, 23, 6, 4, 24, 39, 39, 33, 34, 34, 31, 31, 26, 30, 31, 21, 41, 36, 28, 25, 56, 41, 23, 38, 35, 7, 6, 44, 46, 35, 38, 41, 39, 45, 55, 36, 40, 35, 44, 38, 40, 65, 36, 32, 38, 9, 6, 25, 38, 32, 33, 34, 35, 41, 41, 35, 35, 31, 45, 32, 31, 28, 34, 45, 47, 32, 37, 15, 53, 33, 36, 33, 35, 50, 50, 42, 21, 40, 50, 25, 27, 27, 5, 4, 34, 44, 39, 46, 47, 52, 43, 52, 47, 38, 10, 87, 100, 76, 83, 83, 54, 44, 55, 53, 66, 36, 38, 35, 36, 62, 56, 14, 9, 4, 58, 54, 51, 50, 45, 45, 44, 56, 35, 42, 36, 17, 54, 77, 55, 51, 26, 43, 23, 34, 34, 36, 38, 39, 31, 29, 32, 28, 26, 30, 32, 34, 37, 32, 10, 3, 2, 1, 0, 0, 0, 0, 0]}, "100": {"duration": 70.01, "speechRatio": 0.983, "pauses": 0, "segments": 2, "envelope": [0, 26, 18, 42, 56, 65, 46, 29, 43, 19, 54, 42, 30, 45, 19, 29, 32, 33, 32, 31, 29, 33, 32, 31, 16, 5, 12, 48, 46, 62, 47, 51, 57, 36, 43, 55, 37, 55, 32, 8, 36, 34, 46, 52, 39, 52, 33, 40, 53, 35, 54, 43, 10, 7, 48, 40, 38, 45, 65, 64, 29, 38, 33, 45, 55, 13, 11, 61, 43, 39, 36, 32, 31, 35, 26, 33, 40, 45, 14, 13, 40, 26, 29, 38, 28, 27, 20, 24, 35, 39, 41, 9, 6, 23, 39, 40, 40, 39, 63, 53, 44, 46, 51, 45, 43, 51, 81, 94, 79, 73, 29, 50, 45, 57, 49, 48, 58, 58, 56, 61, 58, 51, 47, 46, 14, 7, 61, 36, 41, 40, 42, 52, 60, 68, 72, 70, 74, 64, 68, 36, 53, 32, 43, 35, 37, 34, 31, 35, 33, 31, 31, 33, 20, 5, 14, 49, 37, 45, 37, 39, 46, 38, 43, 42, 38, 19, 40, 36, 53, 38, 54, 43, 34, 41, 42, 34, 37, 35, 30, 32, 36, 36, 29, 7, 6, 62, 81, 100, 69, 95, 87, 74, 47, 76, 75, 77, 23, 60, 67, 88, 40, 53, 37, 53, 71, 78, 70, 67, 64, 64, 71, 75, 61, 14, 41, 60, 34, 50, 74, 84, 60, 43, 22, 50, 82, 71, 68, 62, 64, 76, 70, 74, 70, 31, 12, 40, 40, 36, 40, 43, 66, 61, 33, 59, 47, 41, 36, 42, 42, 46, 39, 36, 43, 44, 46, 32, 40, 56, 45, 51, 36, 32, 36, 27, 30, 34, 29, 33, 32, 28, 23, 26, 8, 7, 3, 1, 1, 0, 0, 0, 0]}, "101": {"duration": 62.54, "speechRatio": 0.983, "pauses": 0, "segments": 1, "envelope": [3, 29, 28, 51, 68, 80, 61, 42, 56, 25, 69, 54, 40, 41, 23, 36, 43, 40, 40, 41, 37, 37, 34, 34, 28, 35, 24, 5, 3, 2, 52, 47, 80, 69, 81, 83, 21, 15, 7, 14, 68, 59, 85, 66, 81, 68, 20, 11, 6, 63, 75, 99, 90, 92, 70, 95, 82, 85, 86, 84, 55, 68, 80, 49, 62, 43, 63, 86, 58, 49, 17, 8, 13, 72, 53, 69, 43, 72, 57, 46, 45, 46, 43, 64, 48, 45, 56, 46, 76, 83, 46, 45, 62, 70, 42, 63, 64, 70, 66, 67, 73, 72, 50, 11, 10, 22, 65, 39, 82, 68, 59, 50, 100, 76, 48, 65, 71, 48, 35, 48, 69, 56, 58, 61, 54, 45, 61, 54, 62, 57, 52, 64, 60, 61, 51, 26, 9, 33, 68, 44, 52, 53, 51, 43, 81, 68, 71, 65, 71, 59, 50, 60, 53, 21, 53, 66, 39, 40, 44, 42, 9, 13, 67, 67, 39, 43, 48, 45, 45, 50, 48, 67, 68, 47, 48, 28, 8, 14, 64, 41, 48, 52, 53, 38, 52, 44, 42, 47, 38, 48, 17, 60, 66, 50, 32, 39, 52, 18, 10, 57, 51, 38, 32, 34, 51, 74, 68, 54, 69, 49, 49, 36, 9, 28, 67, 66, 83, 73, 76, 80, 80, 76, 65, 75, 84, 64, 57, 64, 52, 40, 44, 13, 16, 74, 84, 79, 35, 76, 78, 46, 52, 32, 11, 7, 3, 3, 1, 0, 0, 0, 0]}, "102": {"duration": 62.59, "speechRatio": 0.977, "pauses": 1, "segments": 3, "envelope": [1, 38, 29, 42, 67, 100, 69, 74, 76, 27, 81, 79, 61, 43, 56, 38, 46, 40, 38, 42, 47, 42, 40, 47, 47, 44, 20, 5, 4, 2, 1, 76, 61, 84, 48, 54, 29, 57, 52, 74, 40, 32, 7, 5, 4, 42, 7, 71, 65, 51, 32, 58, 56, 64, 54, 75, 57, 41, 11, 6, 4, 3, 68, 73, 88, 54, 72, 55, 54, 56, 62, 58, 58, 55, 60, 59, 61, 68, 61, 63, 66, 48, 12, 10, 42, 49, 33, 35, 35, 38, 52, 54, 68, 69, 72, 46, 52, 42, 47, 24, 42, 40, 52, 52, 46, 50, 49, 45, 45, 41, 10, 6, 4, 64, 53, 90, 77, 67, 64, 92, 75, 50, 63, 84, 56, 53, 44, 59, 29, 29, 31, 31, 33, 29, 28, 27, 27, 17, 5, 3, 20, 78, 77, 72, 47, 36, 42, 42, 37, 69, 49, 57, 31, 36, 40, 38, 35, 36, 33, 33, 31, 34, 20, 6, 7, 2, 44, 47, 44, 45, 61, 69, 64, 74, 61, 40, 40, 39, 38, 54, 65, 75, 82, 58, 58, 54, 59, 33, 46, 41, 44, 44, 44, 38, 41, 41, 41, 31, 8, 4, 32, 46, 45, 50, 50, 52, 71, 70, 47, 17, 66, 58, 54, 51, 46, 48, 75, 73, 67, 70, 46, 48, 64, 54, 52, 47, 46, 47, 47, 63, 44, 45, 41, 40, 41, 42, 40, 40, 35, 38, 35, 37, 13, 11, 6, 3, 2, 1, 0, 0, 0]}, "103": {"duration": 27.4, "speechRatio": 0.958, "pauses": 0, "segments": 1, "envelope": [7, 45, 50, 78, 86, 98, 66, 44, 70, 29, 90, 91, 70, 80, 36, 44, 49, 52, 44, 45, 45, 46, 47, 38, 45, 20, 11, 5, 88, 78, 88, 17, 15, 6, 5, 40, 49, 51, 53, 58, 71, 48, 56, 61, 53, 51, 50, 56, 37, 73, 69, 74, 42, 55, 55, 25, 11, 7, 3, 36, 55, 73, 61, 88, 46, 44, 100, 97, 97, 83, 64, 78, 98, 86, 64, 43, 57, 94, 69, 50, 73, 32, 63, 71, 72, 59, 61, 44, 64, 47, 26, 37, 63, 50, 67, 91, 59, 67, 45, 17, 61, 27, 10, 6, 3, 2, 1, 0, 0, 0]}, "104": {"duration": 58.02, "speechRatio": 0.978, "pauses": 0, "segments": 1, "envelope": [0, 36, 19, 40, 47, 94, 81, 49, 50, 55, 32, 80, 95, 49, 67, 65, 41, 44, 43, 37, 37, 35, 36, 40, 35, 33, 36, 43, 33, 9, 7, 23, 71, 46, 53, 44, 36, 46, 40, 60, 65, 62, 47, 38, 52, 56, 55, 31, 12, 8, 4, 66, 65, 73, 45, 40, 68, 84, 70, 85, 73, 50, 46, 43, 42, 70, 62, 20, 64, 53, 25, 10, 6, 39, 61, 45, 55, 48, 33, 33, 34, 36, 43, 55, 73, 67, 43, 48, 48, 43, 50, 42, 44, 48, 53, 25, 43, 36, 20, 8, 4, 29, 66, 55, 97, 61, 18, 15, 77, 62, 44, 44, 42, 44, 40, 85, 54, 32, 29, 37, 37, 55, 33, 38, 43, 41, 42, 22, 7, 5, 66, 72, 83, 75, 76, 82, 79, 87, 65, 73, 63, 74, 58, 48, 42, 35, 61, 47, 21, 8, 5, 51, 82, 90, 61, 79, 92, 55, 40, 64, 57, 63, 55, 19, 9, 8, 67, 69, 49, 42, 53, 33, 64, 56, 52, 69, 59, 43, 44, 21, 42, 32, 13, 5, 21, 29, 27, 29, 34, 71, 78, 100, 95, 81, 44, 42, 35, 31, 31, 32, 37, 52, 28, 51, 62, 32, 12, 7, 28, 45, 71, 72, 39, 39, 37, 35, 34, 38, 40, 47, 36, 45, 47, 35, 13, 6, 3, 2, 1, 0, 0, 0, 0]}, "105": {"duration": 48.69, "speechRatio": 0.971, "pauses": 0, "segments": 4, "envelope": [0, 26, 20, 38, 56, 87, 55, 63, 57, 20, 50, 65, 39, 39, 42, 37, 35, 30, 34, 32, 29, 28, 27, 29, 30, 7, 5, 2, 74, 71, 40, 78, 65, 60, 41, 51, 96, 89, 87, 32, 52, 44, 48, 46, 16, 70, 61, 46, 29, 31, 35, 38, 36, 33, 30, 30, 28, 26, 6, 3, 2, 1, 92, 68, 53, 75, 96, 69, 59, 39, 68, 55, 27, 42, 46, 38, 30, 31, 34, 31, 32, 32, 33, 31, 31, 8, 5, 3, 49, 77, 37, 60, 84, 86, 51, 47, 41, 52, 53, 69, 43, 60, 75, 42, 36, 37, 36, 35, 34, 32, 38, 31, 36, 34, 15, 8, 4, 59, 36, 40, 45, 40, 40, 35, 40, 45, 40, 34, 66, 74, 57, 36, 30, 32, 32, 34, 34, 39, 41, 39, 36, 26, 21, 26, 34, 29, 31, 32, 34, 31, 36, 43, 44, 38, 7, 5, 3, 66, 100, 91, 69, 47, 59, 78, 27, 27, 46, 45, 36, 33, 34, 33, 28, 27, 54, 57, 54, 53, 52, 49, 45, 43, 42, 42, 41, 43, 31, 14, 11, 5, 3, 1, 1, 0, 0]}, "106": {"duration": 42.53, "speechRatio": 0.969, "pauses": 0, "segments": 1, "envelope": [4, 39, 41, 62, 87, 100, 61, 37, 47, 25, 50, 46, 38, 27, 31, 27, 28, 30, 32, 28, 31, 34, 39, 33, 33, 27, 9, 5, 27, 34, 37, 65, 59, 30, 59, 53, 38, 39, 39, 40, 38, 36, 35, 35, 17, 6, 3, 2, 32, 47, 79, 54, 44, 38, 36, 17, 37, 36, 18, 29, 40, 39, 32, 34, 32, 37, 40, 47, 46, 36, 11, 42, 35, 41, 42, 37, 37, 33, 31, 31, 37, 36, 22, 7, 3, 2, 53, 54, 48, 66, 69, 75, 74, 52, 60, 57, 58, 49, 40, 34, 34, 31, 31, 34, 32, 31, 35, 32, 8, 6, 2, 70, 71, 53, 40, 42, 42, 40, 37, 41, 53, 54, 56, 47, 41, 26, 28, 32, 31, 35, 31, 38, 41, 39, 52, 51, 39, 45, 44, 43, 45, 49, 55, 45, 41, 40, 42, 29, 27, 26, 35, 35, 19, 32, 26, 25, 23, 23, 23, 22, 21, 20, 17, 4, 2, 1, 0, 0, 0, 0, 0]}, "107": {"duration": 57.55, "speechRatio": 0.976, "pauses": 1, "segments": 2, "envelope": [0, 40, 21, 52, 53, 76, 52, 45, 43, 22, 37, 43, 38, 26, 31, 29, 29, 31, 32, 33, 31, 35, 38, 31, 24, 7, 5, 2, 41, 75, 68, 46, 78, 70, 54, 58, 69, 54, 25, 46, 43, 40, 25, 42, 42, 45, 45, 43, 47, 39, 44, 37, 16, 8, 3, 64, 73, 79, 58, 59, 67, 36, 45, 52, 43, 21, 46, 49, 31, 40, 43, 35, 35, 37, 33, 32, 35, 35, 37, 26, 7, 5, 26, 61, 63, 55, 33, 22, 40, 50, 61, 47, 48, 61, 46, 41, 41, 27, 23, 31, 34, 39, 42, 43, 35, 37, 43, 42, 45, 42, 15, 9, 4, 74, 58, 49, 42, 39, 38, 33, 32, 39, 42, 38, 38, 37, 39, 46, 42, 44, 44, 46, 50, 50, 38, 8, 5, 58, 60, 52, 50, 55, 51, 43, 53, 48, 54, 60, 41, 75, 76, 38, 48, 37, 43, 43, 35, 37, 41, 37, 31, 41, 38, 34, 33, 33, 10, 6, 4, 50, 51, 60, 45, 56, 60, 45, 66, 84, 92, 85, 84, 100, 84, 69, 78, 97, 52, 65, 75, 70, 54, 61, 65, 57, 53, 58, 52, 47, 29, 10, 7, 75, 61, 57, 78, 83, 64, 71, 65, 72, 62, 62, 54, 50, 41, 39, 43, 42, 41, 42, 52, 61, 28, 10, 8, 4, 2, 1, 0, 0, 0]}, "108": {"duration": 24.5, "speechRatio": 0.941, "pauses": 0, "segments": 2, "envelope": [0, 39, 23, 54, 58, 100, 68, 39, 55, 16, 56, 52, 29, 22, 22, 28, 29, 33, 31, 32, 30, 36, 34, 34, 35, 26, 9, 6, 1, 48, 43, 41, 39, 34, 33, 62, 65, 58, 54, 56, 53, 56, 69, 64, 46, 15, 54, 40, 54, 37, 35, 31, 31, 22, 9, 4, 3, 28, 41, 50, 52, 54, 59, 24, 30, 45, 33, 23, 32, 5, 4, 2, 21, 29, 39, 41, 41, 40, 39, 35, 57, 45, 41, 37, 33, 32, 26, 29, 26, 18, 13, 3, 3, 1, 1, 0, 0, 0, 0]}, "109": {"duration": 54.26, "speechRatio": 0.973, "pauses": 0, "segments": 2, "envelope": [0, 24, 16, 38, 39, 61, 41, 25, 32, 11, 33, 33, 23, 19, 15, 19, 20, 22, 21, 24, 20, 23, 23, 18, 12, 3, 3, 1, 48, 42, 43, 41, 45, 55, 60, 59, 59, 55, 52, 44, 47, 46, 33, 40, 34, 27, 38, 46, 50, 48, 45, 47, 52, 44, 34, 42, 24, 6, 4, 5, 76, 75, 72, 70, 100, 92, 91, 84, 61, 60, 62, 42, 41, 47, 51, 46, 40, 19, 28, 37, 49, 43, 51, 48, 39, 38, 41, 37, 39, 23, 9, 41, 54, 41, 43, 42, 45, 55, 47, 52, 52, 55, 38, 40, 46, 46, 36, 66, 57, 37, 43, 39, 30, 33, 33, 37, 35, 38, 37, 38, 33, 30, 21, 33, 7, 5, 45, 47, 41, 43, 43, 44, 44, 45, 46, 36, 37, 48, 44, 40, 33, 22, 27, 30, 33, 34, 38, 26, 31, 9, 24, 11, 4, 2, 33, 45, 51, 47, 48, 45, 50, 46, 47, 39, 30, 31, 32, 29, 28, 29, 37, 34, 31, 33, 34, 32, 24, 24, 23, 25, 25, 27, 28, 29, 27, 12, 22, 20, 4, 36, 33, 41, 29, 40, 41, 31, 38, 39, 41, 36, 27, 30, 28, 31, 24, 25, 27, 31, 31, 17, 5, 4, 1, 0, 0, 0, 0, 0]}, "110": {"duration": 34.93, "speechRatio": 0.961, "pauses": 0, "segments": 2, "envelope": [0, 43, 37, 70, 100, 91, 63, 38, 45, 30, 53, 41, 31, 28, 20, 25, 24, 24, 22, 27, 28, 31, 32, 24, 31, 31, 37, 18, 7, 5, 2, 31, 49, 63, 51, 74, 73, 69, 68, 86, 80, 52, 64, 69, 98, 81, 57, 37, 67, 49, 73, 46, 42, 51, 32, 38, 11, 7, 3, 2, 52, 67, 68, 38, 75, 45, 51, 43, 47, 66, 44, 57, 67, 61, 70, 62, 49, 37, 42, 42, 30, 37, 43, 63, 54, 44, 12, 61, 64, 46, 61, 48, 13, 7, 7, 54, 37, 42, 20, 52, 40, 46, 76, 50, 38, 39, 50, 20, 38, 27, 30, 12, 4, 3, 28, 35, 39, 34, 35, 41, 39, 38, 43, 48, 36, 42, 35, 30, 32, 30, 52, 47, 13, 6, 4, 2, 1, 0, 0, 0]}, "111": {"duration": 41.56, "speechRatio": 0.968, "pauses": 0, "segments": 2, "envelope": [0, 56, 27, 52, 66, 74, 51, 34, 48, 20, 48, 49, 38, 39, 23, 33, 37, 34, 39, 32, 35, 36, 24, 33, 33, 16, 9, 4, 2, 49, 26, 69, 47, 60, 65, 60, 53, 50, 41, 45, 56, 70, 58, 54, 53, 57, 53, 44, 44, 45, 49, 58, 55, 61, 43, 34, 14, 20, 5, 3, 34, 65, 66, 54, 54, 48, 46, 46, 55, 53, 57, 32, 51, 59, 44, 33, 41, 51, 55, 56, 52, 50, 48, 44, 32, 29, 28, 6, 4, 2, 20, 69, 33, 73, 82, 54, 81, 77, 52, 58, 61, 46, 42, 69, 55, 56, 63, 55, 45, 12, 8, 4, 47, 43, 75, 59, 61, 100, 85, 49, 48, 51, 53, 58, 59, 83, 93, 71, 66, 38, 47, 62, 40, 11, 7, 3, 42, 68, 48, 58, 50, 72, 60, 48, 90, 42, 57, 53, 59, 58, 51, 59, 49, 57, 69, 62, 34, 35, 28, 7, 5, 2, 1, 1, 0, 0, 0]}, "112": {"duration": 21.68, "speechRatio": 0.935, "pauses": 0, "segments": 2, "envelope": [0, 28, 27, 55, 70, 100, 76, 33, 47, 16, 40, 42, 30, 27, 15, 24, 24, 24, 27, 23, 24, 20, 21, 28, 27, 11, 5, 3, 24, 45, 62, 71, 59, 88, 85, 62, 41, 38, 23, 7, 5, 48, 53, 79, 73, 33, 46, 52, 41, 10, 7, 21, 66, 48, 60, 67, 60, 52, 31, 34, 36, 40, 15, 7, 60, 49, 28, 35, 33, 32, 45, 35, 36, 31, 37, 34, 24, 19, 22, 13, 4, 2, 1, 0, 0, 0, 0]}, "113": {"duration": 33.04, "speechRatio": 0.958, "pauses": 0, "segments": 1, "envelope": [0, 31, 22, 59, 70, 100, 71, 53, 68, 25, 74, 82, 50, 45, 60, 38, 42, 41, 42, 37, 40, 46, 44, 31, 39, 41, 28, 8, 4, 71, 60, 74, 85, 77, 67, 95, 46, 48, 52, 76, 66, 47, 15, 9, 40, 47, 54, 63, 68, 57, 70, 35, 73, 93, 61, 79, 59, 26, 11, 59, 40, 45, 53, 58, 57, 38, 62, 38, 55, 70, 33, 33, 34, 27, 66, 56, 35, 46, 25, 7, 30, 44, 44, 41, 44, 39, 31, 56, 24, 29, 29, 34, 36, 34, 31, 49, 38, 72, 41, 36, 54, 41, 66, 41, 11, 8, 42, 41, 40, 51, 53, 37, 38, 33, 27, 61, 30, 35, 34, 35, 54, 38, 24, 27, 19, 4, 4, 2, 1, 0, 0, 0, 0]}, "114": {"duration": 50.02, "speechRatio": 0.988, "pauses": 0, "segments": 1, "envelope": [0, 35, 22, 48, 56, 88, 58, 44, 61, 23, 73, 84, 55, 43, 48, 34, 36, 37, 30, 32, 34, 27, 29, 34, 31, 7, 6, 5, 73, 58, 75, 72, 51, 58, 65, 31, 44, 45, 36, 34, 34, 39, 51, 59, 56, 57, 60, 58, 56, 67, 57, 27, 15, 6, 59, 44, 42, 36, 46, 38, 37, 40, 60, 74, 75, 90, 93, 80, 83, 82, 83, 85, 85, 80, 23, 12, 38, 93, 83, 46, 48, 56, 40, 41, 63, 84, 78, 84, 88, 89, 91, 86, 86, 77, 72, 68, 41, 16, 7, 47, 50, 64, 83, 72, 68, 64, 40, 47, 66, 49, 47, 72, 34, 52, 50, 38, 36, 42, 45, 45, 81, 65, 59, 66, 73, 72, 70, 75, 71, 60, 16, 12, 25, 76, 81, 56, 61, 66, 79, 38, 52, 46, 47, 40, 48, 85, 67, 49, 53, 44, 53, 52, 75, 83, 84, 74, 80, 90, 90, 95, 100, 95, 93, 82, 35, 15, 45, 60, 62, 45, 50, 75, 65, 47, 49, 58, 32, 57, 36, 35, 32, 32, 32, 37, 45, 44, 45, 44, 45, 45, 44, 41, 41, 45, 33, 9, 6, 3, 2, 1, 0]}};
+const BISMILLAH_TEXT = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+
+/* ============ helpers ============ */
+const $ = (sel, el) => (el || document).querySelector(sel);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function pct(n, d) { return d <= 0 ? 0 : Math.round((n / d) * 100); }
+function fmtDur(sec) { const m = Math.round(sec / 60); return m >= 1 ? m + " د" : "أقل من دقيقة"; }
+function fmtClock(sec) { const m = Math.floor(sec / 60), s = Math.round(sec % 60); return m + ":" + String(s).padStart(2, "0"); }
+
+const ICONS = {
+  arrowRight: '<path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/>',
+  star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77 5.82 21l1.18-6.88-5-4.87 6.91-1.01L12 2z"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 15v-4"/><path d="M12 15V7"/><path d="M17 15v-6"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  list: '<path d="M3 6h13"/><path d="M3 12h13"/><path d="M3 18h9"/><circle cx="17" cy="16" r="3"/><path d="M20 16V5l-3 1"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  cap: '<path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5"/>',
+  mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v4"/>',
+  micOff: '<path d="M2 2l20 20"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.14"/><path d="M12 19v3"/><path d="M8 22h8"/>',
+  externalLink: '<path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  square: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
+  play: '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
+  pause: '<path d="M7 5h4v14H7z" fill="currentColor" stroke="none"/><path d="M13 5h4v14h-4z" fill="currentColor" stroke="none"/>',
+  gauge: '<path d="M4 14a8 8 0 1 1 16 0"/><path d="M12 14l4-4"/><path d="M2 20h20"/>',
+  volume: '<path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9.5 9.5 0 0 1 0 13"/>',
+  eyeOff: '<path d="M3 3l18 18"/><path d="M10.6 5.1c.46-.06.93-.1 1.4-.1 5 0 9 4.5 10 7-.35.88-1.1 2.1-2.3 3.3"/><path d="M6.6 6.6C4.1 8.1 2.5 10.5 2 12c1 2.5 5 7 10 7 1.9 0 3.6-.6 5.1-1.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  rotate: '<path d="M1 4v6h6"/><path d="M3.5 15a9 9 0 1 0 .5-6.5L1 10"/>',
+  send: '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>',
+  loader: '<path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><path d="M5.6 5.6l2.1 2.1"/><path d="M16.3 16.3l2.1 2.1"/><path d="M5.6 18.4l2.1-2.1"/><path d="M16.3 7.7l2.1-2.1"/>',
+  home: '<path d="M3 10.5L12 3l9 7.5"/><path d="M5 10v10h14V10"/>',
+  trash: '<path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6"/><path d="M14 11v6"/>',
+  trophy: '<path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4"/><path d="M17 6h3a3 3 0 0 1-3 4"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M12 12v5"/>',
+  alert: '<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v5"/><path d="M12 17h.01"/>',
+  book: '<path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2V4z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7V4z"/>'
+};
+function icon(name, size, cls) {
+  size = size || 16;
+  return '<svg class="' + (cls || "") + '" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + "</svg>";
+}
+
+/* ============ storage (same keys as the Next.js app) ============ */
+const KEY = "mutqin:v1", PROFILE_KEY = "mutqin:profile", EVENT = "mutqin:changed";
+function getAttemptsRaw() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+function parseAttempts(raw) {
+  if (!raw) return [];
+  try { const d = JSON.parse(raw); return Array.isArray(d.attempts) ? d.attempts : []; } catch (e) { return []; }
+}
+function loadAttempts() { return parseAttempts(getAttemptsRaw()); }
+function saveAttempt(a) {
+  const att = Object.assign({}, a, { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), date: new Date().toISOString() });
+  const list = loadAttempts().concat([att]);
+  try { localStorage.setItem(KEY, JSON.stringify({ attempts: list })); window.dispatchEvent(new Event(EVENT)); } catch (e) {}
+  return att;
+}
+function clearProgress() { try { localStorage.removeItem(KEY); window.dispatchEvent(new Event(EVENT)); } catch (e) {} }
+function getProfileRaw() { try { return localStorage.getItem(PROFILE_KEY) || ""; } catch (e) { return ""; } }
+function parseProfile(raw) {
+  if (!raw) return { name: "", classroom: "" };
+  try {
+    const d = JSON.parse(raw);
+    return { name: typeof d.name === "string" ? d.name : "", classroom: typeof d.classroom === "string" ? d.classroom : "" };
+  } catch (e) { return { name: "", classroom: "" }; }
+}
+function saveProfile(p) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); window.dispatchEvent(new Event(EVENT)); } catch (e) {} }
+
+/* ============ microphone state — one-time activation, direct recording after ============ */
+const mic = { state: "prompt", busy: false };
+const IN_FRAME = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+function micSupported() { return !!(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === "function"); }
+function micRender() { if (app.view === "home" || app.view === "recite") render(); }
+function micMsgFor(state) {
+  if (typeof window !== "undefined" && window.isSecureContext === false)
+    return "الصفحة مفتوحة بدون اتصال آمن (HTTPS) — المتصفحات تمنع المايكروفون كلياً في هذه الحالة. افتحي رابط التطبيق الذي يبدأ بـ https:// ثم أعيدي المحاولة";
+  return state === "granted"
+    ? "مُفعّل ✓ — التسجيل يبدأ مباشرة عند الضغط على زر الميكروفون، بدون أي نوافذ"
+    : state === "denied"
+      ? "محظور من إعدادات المتصفح — اتبعي خطوات السماح في الدليل أدناه ثم اضغطي «أعيدي المحاولة»"
+      : state === "nodevice"
+        ? "لم يُعثر على مايكروفون — تأكدي من توصيله وأنه غير مشغول بتطبيق آخر ثم أعيدي المحاولة"
+        : state === "unsupported"
+          ? "متصفحك لا يدعم التسجيل الصوتي — استخدمي Chrome أو Safari حديث"
+          : "وافقي مرة واحدة فقط، ويتذكّره المتصفح — بعدها يبدأ كل تسجيل مباشرة دون أي إذن";
+}
+function micIcoFor(state) {
+  return state === "denied" || state === "nodevice"
+    ? { ico: "micOff", bg: "#f9e3e1", color: "#b3261e" }
+    : state === "granted"
+      ? { ico: "mic", bg: "#e2f0e8", color: "#1e4d3b" }
+      : { ico: "mic", bg: "#f5ebd0", color: "#8a6d1a" };
+}
+async function micQuery() {
+  if (!micSupported()) { mic.state = "unsupported"; micRender(); return; }
+  try {
+    const st = await navigator.permissions.query({ name: "microphone" });
+    mic.state = st.state;
+    st.onchange = function () { mic.state = st.state; micRender(); };
+  } catch (e) { /* Permissions API غير متاح — تبقى الحالة prompt حتى أول تفعيل */ }
+  micRender();
+}
+async function micActivate() {
+  if (mic.busy) return;
+  if (!micSupported()) { mic.state = "unsupported"; micRender(); return; }
+  mic.busy = true; micRender();
+  let stream = null;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+    mic.state = "granted";
+  } catch (e) {
+    const name = e && e.name;
+    if (name === "NotAllowedError" || name === "SecurityError") mic.state = "denied";
+    else if (name === "NotFoundError" || name === "NotReadableError") mic.state = "nodevice";
+    else mic.state = "prompt";
+  }
+  if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+  mic.busy = false; micRender();
+}
+function micSetFromError(name) {
+  if (name === "NotAllowedError" || name === "SecurityError") mic.state = "denied";
+  else if (name === "NotFoundError" || name === "NotReadableError") mic.state = "nodevice";
+}
+function openStandalone() { window.open(window.location.href, "_blank", "noopener,noreferrer"); }
+function micHelpHtml() {
+  return (
+    '<details class="mic-help">' +
+      "<summary>المايكروفون محظور — كيف أسمح له؟ اضغطي هنا لخطوات مفصّلة</summary>" +
+      '<ol class="mic-help-steps">' +
+        "<li>افتحي تطبيق <b>إعدادات الهاتف</b> ← «التطبيقات» ← <b>Chrome</b> ← «الأذونات» ← «الميكروفون» واختاري <b>«السماح فقط عند استخدام التطبيق»</b>. إن كان كروم بلا إذن المايكروفون فلن يظهر طلب الإذن أبداً — وهذا السبب الأشهر للمشكلة.</li>" +
+        "<li>ارجعي إلى صفحة التطبيق واضغطي على <b>الأيقونة بجانب عنوان الموقع</b> في شريط العنوان أعلى الشاشة (أيقونة قفل أو ميكروفون مشطوب أو (i)).</li>" +
+        "<li>اختاري «الأذونات» ← «الميكروفون» ← <b>«السماح»</b>. إن لم تجدي الميكروفون هناك فانتقي إلى الخطوة التالية.</li>" +
+        "<li>أو من قائمة كروم (⋮) ← «الإعدادات» ← «إعدادات المواقع» ← «الميكروفون» — تأكدي أن الموقع غير موجود ضمن «محظور»، واضغطي عليه واختاري «السماح».</li>" +
+        "<li>على آيفون (Safari): اضغطي «aA» في شريط العنوان ← «إعدادات الموقع» ← «المايكروفون» ← «السماح».</li>" +
+        "<li><b>أعيدي تحميل الصفحة</b> (اسحبيها للأسفل) ثم اضغطي «أعيدي المحاولة» أعلى الشاشة.</li>" +
+      "</ol>" +
+      '<p class="mic-help-note">بعد أول موافقة يتذكّرها المتصفح، فيبدأ كل تسجيل لاحق مباشرةً بدون أي نوافذ. أمان المتصفحات لا يسمح لأي موقع بتخطّي طلب الإذن الأول — لكنه طلب يظهر مرة واحدة فقط.</p>' +
+    "</details>"
+  );
+}
+function micCardHtml() {
+  const ico = micIcoFor(mic.state);
+  const btn = (mic.state !== "granted" && mic.state !== "unsupported")
+    ? '<button class="mic-pill' + (mic.state === "denied" || mic.state === "nodevice" ? " mic-pill-alt" : "") + '" data-action="mic-activate" aria-label="تفعيل المايكروفون الآن"' + (mic.busy ? " disabled" : "") + ">" +
+      (mic.busy ? icon("loader", 14, "spin") : icon("mic", 14)) + " " +
+      (mic.busy ? "جارٍ التفعيل…" : (mic.state === "denied" || mic.state === "nodevice") ? "أعيدي المحاولة" : "تفعيل الآن") + "</button>"
+    : "";
+  const hint = IN_FRAME && mic.state !== "granted"
+    ? '<div class="frame-hint"><p>إن لم يظهر طلب الإذن، فالتطبيق مفتوح داخل إطار مدمج يحجب المايكروفون — افتحيه في نافذة مستقلة:</p>' +
+      '<button class="mic-pill mic-pill-ghost" data-action="open-standalone">' + icon("externalLink", 12) + " فتح في نافذة مستقلة</button></div>"
+    : "";
+  const help = mic.state === "denied" ? micHelpHtml() : "";
+  return (
+    '<section class="card card-p" style="margin-top:1rem">' +
+      '<div class="mic-row">' +
+        '<div class="mic-info">' +
+          '<span class="mic-ico" style="background:' + ico.bg + ";color:" + ico.color + '">' + icon(ico.ico, 20) + "</span>" +
+          "<div><h2>المايكروفون</h2><p>" + micMsgFor(mic.state) + "</p></div>" +
+        "</div>" + btn +
+      "</div>" + hint + help +
+    "</section>"
+  );
+}
+function micBannerHtml() {
+  if (mic.state !== "denied" && mic.state !== "nodevice") return "";
+  const msg = mic.state === "denied"
+    ? "المايكروفون محظور من إعدادات المتصفح — اسمحي به من أيقونة المايكروفون في شريط العنوان ثم أحملي الصفحة."
+    : "لم يُعثر على مايكروفون — تأكدي من توصيله وأنه غير مشغول بتطبيق آخر ثم أعيدي المحاولة.";
+  return '<div class="alert mic-banner" role="alert"><span>' + msg + "</span>" +
+    '<button class="mic-pill mic-pill-ghost danger" data-action="open-standalone">فتح في نافذة مستقلة</button></div>' +
+    (mic.state === "denied" ? micHelpHtml() : "");
+}
+
+function bestBySurah(attempts) {
+  const map = new Map();
+  for (const a of attempts) { const cur = map.get(a.surahId); if (!cur || a.score > cur.score) map.set(a.surahId, a); }
+  return map;
+}
+function overallStats(attempts) {
+  const best = bestBySurah(attempts);
+  const mastered = Array.from(best.values()).filter((a) => a.score >= 90).length;
+  const avg = attempts.length === 0 ? 0 : Math.round(attempts.reduce((s, a) => s + a.score, 0) / attempts.length);
+  return { total: attempts.length, avg, mastered, surahsTried: best.size };
+}
+function computeBadges(attempts) {
+  const best = bestBySurah(attempts);
+  const mastered = Array.from(best.values()).filter((a) => a.score >= 90).length;
+  const growth = (() => {
+    const bySurah = new Map();
+    for (const a of attempts) { const arr = bySurah.get(a.surahId) || []; arr.push(a); bySurah.set(a.surahId, arr); }
+    return Array.from(bySurah.values()).some((arr) => {
+      if (arr.length < 2) return false;
+      const sorted = arr.slice().sort((x, y) => new Date(x.date).getTime() - new Date(y.date).getTime());
+      return sorted[sorted.length - 1].score - sorted[0].score >= 15;
+    });
+  })();
+  return [
+    { id: "first", name: "بداية موفقة", desc: "أكملتِ أول تسميع", icon: "🌱", earned: attempts.length >= 1 },
+    { id: "master1", name: "إتقان سورة", desc: "علامة 90 فأكثر في سورة", icon: "⭐", earned: mastered >= 1 },
+    { id: "master5", name: "خمس سور", desc: "أتقنتِ 5 سور بعلامة 90+", icon: "🌟", earned: mastered >= 5 },
+    { id: "master10", name: "عشر سور", desc: "أتقنتِ 10 سور بعلامة 90+", icon: "🏅", earned: mastered >= 10 },
+    { id: "perfect", name: "إتقان تام", desc: "علامة 95 فأكثر في سورة", icon: "💎", earned: attempts.some((a) => a.score >= 95) },
+    { id: "persistence", name: "مواظبة", desc: "10 محاولات تسميع", icon: "🔥", earned: attempts.length >= 10 },
+    { id: "growth", name: "نمو وتطور", desc: "تحسن 15 نقطة في سورة بين محاولتين", icon: "📈", earned: growth },
+    { id: "juz", name: "حافظة جزء عمّ", desc: "أتقنتِ 20 سورة من الجزء", icon: "👑", earned: mastered >= 20 }
+  ];
+}
+
+/* ============ quran text utils ============ */
+const DIACRITICS = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08FF\u0640\u0674]/g;
+function normalizeArabic(text) {
+  return String(text)
+    .replace(DIACRITICS, "")
+    .replace(/\u0671/g, "\u0627")
+    .replace(/[\u0622\u0623\u0625]/g, "\u0627")
+    .replace(/\u0624/g, "\u0648")
+    .replace(/\u0626/g, "\u064A")
+    .replace(/\u0649/g, "\u064A")
+    .replace(/\u0629/g, "\u0647")
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function toWords(text) {
+  const n = normalizeArabic(text);
+  return n.length ? n.split(" ").filter(Boolean) : [];
+}
+const BISMILLAH_NORM = ["بسم", "الله", "الرحمن", "الرحيم"];
+function stripBismillah(words) {
+  if (words.length >= 4 && BISMILLAH_NORM.every((b, i) => words[i] === b)) return words.slice(4);
+  if (words.length >= 2 && words[0] === "بسم" && words[1] === "الله") return words.slice(2);
+  return words;
+}
+function alignWords(refWords, hypWords) {
+  const m = refWords.length, n = hypWords.length;
+  const refStatus = new Array(m).fill("missing");
+  const spoken = new Array(m).fill(null);
+  const extras = [];
+  if (m === 0 && n === 0) return { refStatus, spoken, extras, matched: 0, refWords, hypWords };
+  const dp = [];
+  for (let i = 0; i <= m; i++) dp.push(new Uint16Array(n + 1));
+  for (let i = 1; i <= m; i++) {
+    const ri = refWords[i - 1];
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = ri === hypWords[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  const matched = dp[m][n];
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (refWords[i - 1] === hypWords[j - 1] && dp[i][j] === dp[i - 1][j - 1] + 1) { refStatus[i - 1] = "correct"; i--; j--; }
+    else if (dp[i - 1][j] >= dp[i][j - 1]) i--;
+    else j--;
+  }
+  const unmatchedHyp = [];
+  const hypUsed = new Array(n).fill(false);
+  const refMatchedFlags = refStatus.map((s) => s === "correct");
+  let hj = 0;
+  for (let ri = 0; ri < m; ri++) {
+    if (!refMatchedFlags[ri]) continue;
+    while (hj < n && hypWords[hj] !== refWords[ri]) hj++;
+    if (hj < n) { hypUsed[hj] = true; hj++; }
+  }
+  for (let k = 0; k < n; k++) if (!hypUsed[k]) unmatchedHyp.push(hypWords[k]);
+  let ui = 0;
+  for (let ri = 0; ri < m && ui < unmatchedHyp.length; ri++) {
+    if (refStatus[ri] === "missing") { refStatus[ri] = "sub"; spoken[ri] = unmatchedHyp[ui]; ui++; }
+  }
+  for (; ui < unmatchedHyp.length; ui++) extras.push(unmatchedHyp[ui]);
+  return { refStatus, spoken, extras, matched, refWords, hypWords };
+}
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  let prev = new Array(n + 1), cur = new Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) {
+    cur[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+    }
+    const tmp = prev; prev = cur; cur = tmp;
+  }
+  return prev[n];
+}
+function wordSim(a, b) { if (a === b) return 1; const d = levenshtein(a, b); return 1 - d / Math.max(a.length, b.length); }
+function gradeFor(score) {
+  if (score >= 95) return { label: "تلاوة متقنة", color: "#8A6D1A", bg: "#F5EBD0" };
+  if (score >= 90) return { label: "ممتازة", color: "#1E4D3B", bg: "#E2F0E8" };
+  if (score >= 80) return { label: "جيدة جداً", color: "#2E6B54", bg: "#E8F3EC" };
+  if (score >= 70) return { label: "جيدة", color: "#4A7A5C", bg: "#EDF5EF" };
+  if (score >= 60) return { label: "مقبولة", color: "#8A6D1A", bg: "#F5EBD0" };
+  return { label: "تحتاج مراجعة", color: "#B3261E", bg: "#F9E3E1" };
+}
+
+/* ============ audio metrics (50ms RMS frames, adaptive threshold) ============ */
+const FRAME_MS = 50;
+function framesRms(x, frameLen) {
+  const n = Math.floor(x.length / frameLen);
+  const out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let sum = 0; const off = i * frameLen;
+    for (let k = 0; k < frameLen; k++) { const v = x[off + k]; sum += v * v; }
+    out[i] = Math.sqrt(sum / frameLen);
+  }
+  return out;
+}
+function cleanBursts(mask, minFrames) {
+  const out = mask.slice();
+  let i = 0;
+  while (i < out.length) {
+    if (out[i]) {
+      let j = i;
+      while (j < out.length && out[j]) j++;
+      if (j - i < minFrames) for (let k = i; k < j; k++) out[k] = false;
+      i = j;
+    } else i++;
+  }
+  return out;
+}
+function computeMetrics(x, sampleRate) {
+  const frameLen = Math.max(1, Math.round((FRAME_MS / 1000) * sampleRate));
+  const rms = framesRms(x, frameLen);
+  if (rms.length === 0) return { duration: 0, speechRatio: 0, pauses: 0, segments: 0, envelope: [], speechDuration: 0, peakDb: -100, longGaps: 0 };
+  const db = new Float32Array(rms.length);
+  for (let i = 0; i < rms.length; i++) db[i] = 20 * Math.log10(rms[i] + 1e-9);
+  const sorted = Float32Array.from(db).sort();
+  const peakDb = sorted[Math.floor(sorted.length * 0.97)];
+  const thr = Math.max(peakDb - 35, -55);
+  let speech = Array.from(db).map((v) => v > thr);
+  const minSpeechFrames = Math.round(150 / FRAME_MS);
+  speech = cleanBursts(speech, minSpeechFrames);
+  const segments = [];
+  let i = 0;
+  while (i < speech.length) {
+    if (speech[i]) { let j = i; while (j < speech.length && speech[j]) j++; segments.push([i, j]); i = j; }
+    else i++;
+  }
+  let pauses = 0, longGaps = 0;
+  for (let k = 0; k < segments.length - 1; k++) {
+    const gap = segments[k + 1][0] - segments[k][1];
+    if (gap >= 6) pauses++;
+    if (gap >= 80) longGaps++;
+  }
+  let speechFrames = 0;
+  for (const s of speech) if (s) speechFrames++;
+  const win = Math.round(0.25 * sampleRate);
+  const nWin = Math.ceil(x.length / win);
+  const env = [];
+  for (let w = 0; w < nWin; w++) {
+    let sum = 0; const off = w * win; const end = Math.min(off + win, x.length);
+    for (let k = off; k < end; k++) sum += x[k] * x[k];
+    env.push(Math.sqrt(sum / Math.max(1, end - off)));
+  }
+  const maxEnv = Math.max.apply(null, env.concat([1e-9]));
+  const envNorm = env.map((v) => Math.min(100, Math.round((v / maxEnv) * 100)));
+  return {
+    duration: Math.round((x.length / sampleRate) * 100) / 100,
+    speechRatio: Math.round((speechFrames / speech.length) * 1000) / 1000,
+    pauses, segments: segments.length, envelope: envNorm,
+    speechDuration: Math.round(((speechFrames * FRAME_MS) / 1000) * 10) / 10,
+    peakDb: Math.round(peakDb), longGaps
+  };
+}
+async function analyzeBlob(blob) {
+  const arr = await blob.arrayBuffer();
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctx = new Ctx();
+  try {
+    const buf = await ctx.decodeAudioData(arr.slice(0));
+    const ch = buf.numberOfChannels;
+    const x = new Float32Array(buf.length);
+    for (let c = 0; c < ch; c++) {
+      const d = buf.getChannelData(c);
+      for (let i = 0; i < buf.length; i++) x[i] += d[i] / ch;
+    }
+    return computeMetrics(x, buf.sampleRate);
+  } finally { ctx.close().catch(() => {}); }
+}
+function encodeWav(samples, sampleRate) {
+  const buf = new ArrayBuffer(44 + samples.length * 2);
+  const v = new DataView(buf);
+  const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) v.setUint8(off + i, s.charCodeAt(i)); };
+  writeStr(0, "RIFF"); v.setUint32(4, 36 + samples.length * 2, true); writeStr(8, "WAVE");
+  writeStr(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sampleRate, true); v.setUint32(28, sampleRate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  writeStr(36, "data"); v.setUint32(40, samples.length * 2, true);
+  let off = 44;
+  for (let i = 0; i < samples.length; i++, off += 2) {
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: "audio/wav" });
+}
+
+/* ============ evaluation (same weights and notes as the app) ============ */
+function pacingScore(ratio) {
+  if (!isFinite(ratio) || ratio <= 0) return 40;
+  if (ratio >= 0.85 && ratio <= 1.45) return 100;
+  if (ratio >= 0.7 && ratio < 0.85) return Math.round(60 + ((ratio - 0.7) / 0.15) * 40);
+  if (ratio > 1.45 && ratio <= 1.7) return Math.round(100 - ((ratio - 1.45) / 0.25) * 40);
+  if (ratio >= 0.55 && ratio < 0.7) return Math.round(30 + ((ratio - 0.55) / 0.15) * 30);
+  if (ratio > 1.7 && ratio <= 2.0) return Math.round(60 - ((ratio - 1.7) / 0.3) * 30);
+  return 30;
+}
+function pausesNote(m, surah) {
+  if (m.pauses < surah.ayahCount * 0.5) return "عدد وقفاتك (" + m.pauses + ") أقل من نهايات الآيات (" + surah.ayahCount + ") — حاولي الوقوف جيداً عند كل آية.";
+  if (m.pauses > surah.ayahCount * 2.2) return "وقفاتك كثيرة داخل الآيات — حاولي وصل الكلام عند الوقف المسموح.";
+  return null;
+}
+function evaluate(surah, metrics, transcript) {
+  const ref = REFERENCES[String(surah.id)] || { duration: surah.duration, speechRatio: 0.86, pauses: surah.ayahCount, segments: surah.ayahCount + 1 };
+  const refSpeech = ref.duration * ref.speechRatio;
+  const notes = [];
+  let score = 0;
+  let breakdown = { accuracy: 0, completeness: 0, pacing: 0, steadiness: 0 };
+  let weights = { accuracy: 40, completeness: 35, pacing: 15, steadiness: 10 };
+  let missingAyahs = [], extrasCount = 0;
+
+  const refDisplayWords = surah.ayahs.map((a) =>
+    a.text.split(/\s+/).filter(Boolean).map((w) => ({ w, status: "missing", spoken: undefined }))
+  );
+  const hypRaw = toWords(transcript || "");
+  const asrUsed = hypRaw.length > 0;
+
+  if (asrUsed) {
+    const refWords = [];
+    surah.ayahs.forEach((a) => { toWords(a.text).forEach((w) => refWords.push(w)); });
+    const hypWords = stripBismillah(hypRaw);
+    const align = alignWords(refWords, hypWords);
+    extrasCount = align.extras.length;
+    let wi = 0;
+    for (const words of refDisplayWords) {
+      for (const word of words) {
+        const st = align.refStatus[wi];
+        word.status = st;
+        if (st === "sub" && align.spoken[wi]) word.spoken = align.spoken[wi];
+        wi++;
+      }
+    }
+    missingAyahs = refDisplayWords.map((words, i) => (words.every((w) => w.status === "missing") ? surah.ayahs[i].n : 0)).filter(Boolean);
+    let near = 0;
+    for (let i = 0; i < align.refStatus.length; i++) {
+      if (align.refStatus[i] === "sub" && align.spoken[i] && wordSim(refWords[i], align.spoken[i]) >= 0.65) near++;
+    }
+    const accuracy = Math.min(100, Math.round(((align.matched + 0.5 * near) / Math.max(1, align.hypWords.length)) * 100));
+    const completeness = pct(align.matched, Math.max(1, refWords.length));
+    const speechDur = metrics.speechDuration || metrics.duration * (metrics.speechRatio || ref.speechRatio);
+    const pacing = pacingScore(refSpeech > 0 ? speechDur / refSpeech : 100);
+    const steadiness = Math.round(clamp(100 - Math.abs(metrics.speechRatio - ref.speechRatio) * 250 - (metrics.longGaps || 0) * 12, 25, 100));
+    breakdown = { accuracy, completeness, pacing, steadiness };
+    score = Math.round(accuracy * 0.4 + completeness * 0.35 + pacing * 0.15 + steadiness * 0.1);
+
+    const wrongCount = align.refStatus.filter((s) => s === "sub").length;
+    const missingCount = align.refStatus.filter((s) => s === "missing").length;
+    if (completeness >= 97 && accuracy >= 95) notes.push("ما شاء الله! قرأتِ السورة كاملة بالنص الصحيح تقريباً.");
+    if (wrongCount > 0) notes.push("وُجدت " + wrongCount + " كلمة تحتاج تصحيحاً (مظللة بالأحمر، مع ظهور أقرب ما قُرئ)" + (near > 0 ? " — منها " + near + " كلمة نطقتها قريباً من الصواب." : "."));
+    if (missingCount > 0) notes.push("هناك " + missingCount + " كلمة ناقصة لم نسمعها في التسجيل.");
+    if (missingAyahs.length > 0) {
+      const show = missingAyahs.slice(0, 8).join("، ");
+      notes.push("لم يُسمع من الآيات: " + show + (missingAyahs.length > 8 ? " وغيرها" : "") + ".");
+    }
+    if (extrasCount > 3) notes.push("وُجدت " + extrasCount + " كلمة زائدة عن نص السورة — تأكدي أنكِ في السورة الصحيحة.");
+    const ratio = speechDur / refSpeech;
+    if (ratio < 0.8) notes.push("قراءتك أسرع من التلاوة المرجعية بنحو " + Math.round((1 - ratio) * 100) + "% — تمهلي وأبطئي قليلاً.");
+    else if (ratio > 1.5) notes.push("قراءتك أبطأ من التلاوة المرجعية بنحو " + Math.round((ratio - 1) * 100) + "% — حاولي رفع السرعة مع الحفاظ على الترتيل.");
+    else notes.push("سرعتك قريبة من التلاوة المرجعية، أحسنتِ.");
+    const pn = pausesNote(metrics, surah);
+    if (pn) notes.push(pn);
+    if ((metrics.longGaps || 0) > 0) notes.push("يوجد صمت طويل أثناء التسجيل — اقتربي من الميكروفون ومواصلي التلاوة دون توقف طويل.");
+  } else {
+    weights = { accuracy: 0, completeness: 40, pacing: 30, steadiness: 20 };
+    const segRatio = clamp(metrics.segments / Math.max(2, ref.segments), 0, 1.15);
+    const pauseRatio = clamp(metrics.pauses / Math.max(2, ref.pauses), 0, 1.15);
+    const completeness = Math.round(clamp(0.6 * segRatio + 0.4 * pauseRatio, 0, 1) * 100);
+    const speechDur = metrics.speechDuration || metrics.duration * (metrics.speechRatio || ref.speechRatio);
+    const pacing = pacingScore(refSpeech > 0 ? speechDur / refSpeech : 100);
+    const steadiness = Math.round(clamp(100 - Math.abs(metrics.speechRatio - ref.speechRatio) * 250 - (metrics.longGaps || 0) * 12, 25, 100));
+    breakdown = { accuracy: 0, completeness, pacing, steadiness };
+    score = Math.round(completeness * 0.4 + pacing * 0.3 + steadiness * 0.2);
+    notes.push("تعذّر تحليل النص المنطوق لهذا التسجيل، فحُسبت العلامة من المؤشرات الصوتية: الاكتمال والإيقاع والثبات.");
+    const ratio = speechDur / refSpeech;
+    if (ratio < 0.8) notes.push("قراءتك أسرع من التلاوة المرجعية بنحو " + Math.round((1 - ratio) * 100) + "%.");
+    else if (ratio > 1.5) notes.push("قراءتك أبطأ من التلاوة المرجعية بنحو " + Math.round((ratio - 1) * 100) + "%.");
+    else notes.push("سرعتك قريبة من التلاوة المرجعية.");
+  }
+
+  const g = gradeFor(score);
+  if (score >= 90 && !notes.some((n) => n.includes("ما شاء الله"))) notes.unshift("أحسنتِ! علامتك ممتازة، استمري على هذا الإتقان.");
+
+  return {
+    ok: true, score,
+    grade: g.label, gradeColor: g.color, gradeBg: g.bg,
+    breakdown, weights,
+    asrUsed, transcript: asrUsed ? transcript : null,
+    text: refDisplayWords.map((words, i) => ({ n: surah.ayahs[i].n, words, fullyMissing: words.every((w) => w.status === "missing") })),
+    missingAyahs, extrasCount, notes, metrics
+  };
+}
+
+/* ============ recorder (+ browser speech recognition as ASR) ============ */
+const MAX_SECONDS = 600;
+const rec = {
+  state: "idle", seconds: 0, level: 0, error: null, result: null,
+  stream: null, ctx: null, analyser: null, mediaRec: null, chunks: [], processor: null, pcm: [],
+  wavMode: false, raf: 0, timer: null, secs: 0, levelVal: 0,
+  sr: null, srFinal: "", srInterim: "",
+  srSupported: !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+};
+function recCleanup() {
+  if (rec.raf) cancelAnimationFrame(rec.raf);
+  if (rec.timer) clearInterval(rec.timer);
+  rec.timer = null;
+  if (rec.processor) { rec.processor.disconnect(); rec.processor = null; }
+  if (rec.stream) { rec.stream.getTracks().forEach((t) => t.stop()); rec.stream = null; }
+  if (rec.ctx && rec.ctx.state !== "closed") rec.ctx.close().catch(() => {});
+  rec.ctx = null; rec.analyser = null; rec.mediaRec = null;
+}
+function recStartTipsUpdate() { /* tips rotate via interval set in renderRecite */ }
+async function recStart() {
+  rec.error = null;
+  if (rec.result) { URL.revokeObjectURL(rec.result.url); rec.result = null; }
+  rec.seconds = 0; rec.level = 0; rec.secs = 0; rec.levelVal = 0;
+  rec.chunks = []; rec.pcm = []; rec.srFinal = ""; rec.srInterim = "";
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+    rec.stream = stream;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new Ctx(); rec.ctx = ctx;
+    const source = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser(); analyser.fftSize = 1024;
+    source.connect(analyser); rec.analyser = analyser;
+    rec.wavMode = false;
+    if (typeof MediaRecorder !== "undefined") {
+      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus"
+        : MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : null;
+      if (mime) {
+        const mr = new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 96000 });
+        mr.ondataavailable = (e) => { if (e.data.size > 0) rec.chunks.push(e.data); };
+        mr.start(1000);
+        rec.mediaRec = mr;
+      } else rec.wavMode = true;
+    } else rec.wavMode = true;
+    if (rec.wavMode) {
+      const proc = ctx.createScriptProcessor(4096, 1, 1);
+      proc.onaudioprocess = (e) => { rec.pcm.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
+      source.connect(proc); proc.connect(ctx.destination);
+      rec.processor = proc;
+    }
+    // browser speech recognition (works in Chrome/Edge with internet; app falls back to audio-only otherwise)
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      try {
+        const sr = new SR();
+        sr.lang = "ar-SA"; sr.continuous = true; sr.interimResults = true;
+        sr.onresult = (e) => {
+          let fin = "", intr = "";
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            const r = e.results[i];
+            if (r.isFinal) fin += r[0].transcript + " "; else intr += r[0].transcript + " ";
+          }
+          rec.srFinal += fin; rec.srInterim = intr;
+        };
+        sr.onerror = () => {};
+        sr.start();
+        rec.sr = sr;
+      } catch (e) { rec.sr = null; }
+    }
+    const buf = new Float32Array(analyser.fftSize);
+    const meterBars = () => document.querySelectorAll("#meter i");
+    const tick = () => {
+      if (!rec.analyser) return;
+      rec.analyser.getFloatTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      const rms = Math.sqrt(sum / buf.length);
+      const l = Math.min(1, rms * 6);
+      rec.levelVal = rec.levelVal * 0.7 + l * 0.3;
+      rec.level = rec.levelVal;
+      const bars = meterBars();
+      for (let i = 0; i < bars.length; i++) {
+        const h = Math.max(6, rec.level * 100 * (0.55 + 0.45 * Math.sin(i * 0.9 + Date.now() / 90)));
+        bars[i].style.height = Math.min(100, h) + "%";
+        bars[i].style.background = "#c9a227";
+      }
+      rec.raf = requestAnimationFrame(tick);
+    };
+    rec.raf = requestAnimationFrame(tick);
+    rec.timer = setInterval(() => {
+      rec.secs++; rec.seconds = rec.secs;
+      const t1 = $("#rec-timer-1"), t2 = $("#rec-timer-2");
+      const txt = fmtClock(rec.seconds);
+      if (t1) t1.textContent = txt;
+      if (t2) t2.textContent = txt;
+      if (rec.secs >= MAX_SECONDS) recStop();
+    }, 1000);
+    rec.state = "recording";
+    render(); // swaps ayah text into memorization (hidden) mode
+  } catch (e) {
+    recCleanup();
+    const name = e && e.name;
+    micSetFromError(name);
+    rec.error = (name === "NotAllowedError" || name === "SecurityError")
+      ? "لم يُسمح بالوصول إلى الميكروفون — اتبعي خطوات السماح في «دليل المايكروفون» أعلى الشاشة ثم أعيدي المحاولة."
+      : name === "NotFoundError" || name === "NotReadableError"
+        ? "لم يُعثر على مايكروفون — تأكدي من توصيله وأنه غير مشغول بتطبيق آخر ثم أعيدي المحاولة."
+        : "تعذّر بدء التسجيل. تأكدي من الميكروفون ثم أعيدي المحاولة.";
+    render();
+  }
+}
+async function recStop() {
+  if (rec.state !== "recording") return;
+  rec.state = "analyzing";
+  render();
+  try {
+    const mime = rec.wavMode ? "audio/wav" : (rec.mediaRec && rec.mediaRec.mimeType) || "audio/webm";
+    let blob = null;
+    if (rec.mediaRec && rec.mediaRec.state !== "inactive") {
+      await new Promise((res) => { rec.mediaRec.onstop = () => res(); rec.mediaRec.stop(); });
+      if (rec.chunks.length) blob = new Blob(rec.chunks, { type: mime.split(";")[0] });
+    } else if (rec.wavMode) {
+      const total = rec.pcm.reduce((s, a) => s + a.length, 0);
+      const x = new Float32Array(total);
+      let off = 0;
+      for (const c of rec.pcm) { x.set(c, off); off += c.length; }
+      blob = encodeWav(x, rec.ctx ? rec.ctx.sampleRate : 44100);
+    }
+    if (rec.sr) { try { rec.sr.stop(); } catch (e) {} }
+    await new Promise((r) => setTimeout(r, 500)); // let final recognition results arrive
+    const transcript = (rec.srFinal + " " + rec.srInterim).replace(/\s+/g, " ").trim();
+    recCleanup();
+    rec.level = 0;
+    if (!blob || blob.size < 1000) {
+      rec.state = "idle"; rec.error = "التسجيل فارغ أو قصير جداً. حاولي مرة أخرى."; render(); return;
+    }
+    const metrics = await analyzeBlob(blob);
+    if (metrics.duration < 1.5) {
+      rec.state = "idle"; rec.error = "التسجيل قصير جداً — سجّلي تلاوتك كاملة ثم توقفي."; render(); return;
+    }
+    rec.result = { blob, mime: mime.split(";")[0], url: URL.createObjectURL(blob), metrics, transcript };
+    rec.state = "idle";
+    render();
+  } catch (e) {
+    recCleanup(); rec.state = "idle";
+    rec.error = "حدث خطأ أثناء معالجة التسجيل. حاولي مرة أخرى.";
+    render();
+  }
+}
+function recReset() {
+  if (rec.result) URL.revokeObjectURL(rec.result.url);
+  rec.result = null; rec.error = null; rec.seconds = 0; rec.state = "idle";
+  render();
+}
+
+/* ============ app state & router ============ */
+const app = { view: "home", surah: null, result: null, q: "", submitting: false, submitError: null, confirmClear: false };
+let tipsTimer = null, tipIdx = 0;
+const TIPS = [
+  "استمعي للتلاوة المرجعية أولاً، ثم سجّلي تلاوتك بنفسك.",
+  "اجلسي في مكان هادئ واقتربي من الميكروفون.",
+  "أثناء التسجيل تُخفى الكلمات — اقرئي السورة كاملة من حفظك وتوقفي عند نهاية كل آية.",
+  "عند الانتهاء اضغطي زر الإيقاف ثم أرسلي التقييم."
+];
+
+function render() {
+  if (tipsTimer) { clearInterval(tipsTimer); tipsTimer = null; }
+  const el = $("#app");
+  if (app.view === "home") el.innerHTML = renderHome();
+  else if (app.view === "recite") el.innerHTML = renderRecite();
+  else if (app.view === "results") el.innerHTML = renderResults();
+  else if (app.view === "progress") el.innerHTML = renderProgress();
+  window.scrollTo(0, 0);
+  afterRender();
+}
+
+/* ============ home view ============ */
+function renderHome() {
+  const attempts = loadAttempts();
+  const stats = overallStats(attempts);
+  const badges = computeBadges(attempts).filter((b) => b.earned);
+  const profile = parseProfile(getProfileRaw());
+  const best = new Map();
+  for (const a of attempts) { const cur = best.get(a.surahId); if (cur === undefined || a.score > cur) best.set(a.surahId, a.score); }
+
+  const q = app.q.trim();
+  let filtered = SURAHS;
+  if (q) {
+    const norm = normalizeArabic(q).replace(/^سورة\s*/, "");
+    if (norm) {
+      filtered = SURAHS.filter((s) => {
+        const n = normalizeArabic(s.name).replace(/^سورة\s*/, "");
+        return n.includes(norm) || s.englishName.toLowerCase().includes(q.toLowerCase()) || String(s.id) === norm;
+      });
+    }
+  }
+
+  const surahCards = filtered.map((s) => {
+    const b = best.get(s.id);
+    const mastered = (b || 0) >= 90;
+    const pill = b !== undefined
+      ? '<span class="score-pill ' + (mastered ? "mastered" : "tried") + '">' + (mastered ? "★ " : "") + "أفضل علامة: " + b + "</span>"
+      : '<span class="score-pill new">لم تُسمّعي بعد</span>';
+    return (
+      '<button class="surah-card" data-action="select-surah" data-id="' + s.id + '" aria-label="سورة ' + esc(s.name) + " — " + s.ayahCount + ' آية">' +
+        '<span class="star-badge"><span class="star-num">' + s.id + "</span></span>" +
+        '<h3 class="font-quran">' + esc(s.name.replace("سُورَةُ ", "")) + "</h3>" +
+        '<p class="surah-meta"><span>' + icon("list", 12) + " " + s.ayahCount + " آية</span><span>" + icon("clock", 12) + " " + fmtDur(s.duration) + "</span></p>" +
+        pill +
+      "</button>"
+    );
+  }).join("");
+
+  const statChips = stats.total > 0
+    ? '<span class="chip">محاولاتك: <b>' + stats.total + "</b></span>" +
+      '<span class="chip">متوسطك: <b>' + stats.avg + "</b></span>" +
+      '<span class="chip">' + icon("star", 14) + ' سور متقنة: <b>' + stats.mastered + "</b></span>"
+    : "";
+
+  const badgePills = badges.map((b) => '<span class="badge-pill" title="' + esc(b.desc) + '"><span aria-hidden="true">' + b.icon + "</span> " + esc(b.name) + "</span>").join("");
+
+  return (
+    '<div class="container">' +
+      '<section class="hero">' +
+        '<p class="hero-ayah font-quran">﴿ وَرَتِّلِ ٱلْقُرْآنَ تَرْتِيلًا ﴾</p>' +
+        "<h1>اختاري السورة وابدئي التسميع</h1>" +
+        '<p class="hero-sub">سجّلي قراءتك لسورة من جزء عمّ، وقارن التطبيق تلاوتك بالتلاوة المرجعية صوتياً ونصياً، ثم يعطيكِ علامة من 100 مع تلوين الأخطاء وملاحظات للتحسين.</p>' +
+        '<div class="chips">' +
+          '<button class="chip clickable" data-action="go-progress">' + icon("chart", 14) + " سجل التقدم</button>" +
+          '<span class="chip">' + icon("list", 14) + " " + SURAHS.length + " سورة</span>" + statChips +
+        "</div>" +
+        (badges.length ? '<div class="badges-row" aria-label="الشارات المكتسبة">' + badgePills + "</div>" : "") +
+      "</section>" +
+
+      micCardHtml() +
+
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<div class="profile-head">' +
+          "<h2>" + icon("user", 16) + " بيانات الطالبة</h2>" +
+          '<span class="saved-hint' + ((profile.name || profile.classroom) ? " active" : "") + '">' + icon("check", 14) + " تُحفظ تلقائياً في جهازك</span>" +
+        "</div>" +
+        '<div class="grid2">' +
+          "<label><span class=\"field-label\">اسم الطالبة الرباعي</span>" +
+            '<input class="input" id="profile-name" value="' + esc(profile.name) + '" placeholder="مثال: فاطمة أحمد عبد الله المحمدي" aria-label="اسم الطالبة الرباعي" maxlength="80">' +
+          "</label>" +
+          "<label><span class=\"field-label\"><span class=\"cap\">" + icon("cap", 14) + " الصف والشعبة</span></span>" +
+            '<input class="input" id="profile-class" value="' + esc(profile.classroom) + '" placeholder="مثال: الصف الخامس / شعبة ب" aria-label="الصف والشعبة" maxlength="40">' +
+          "</label>" +
+        "</div>" +
+      "</section>" +
+
+      '<div class="search-wrap">' + icon("search", 16) +
+        '<input class="input" id="surah-search" value="' + esc(app.q) + '" placeholder="ابحثي عن سورة بالاسم أو الرقم…" aria-label="البحث عن سورة">' +
+      "</div>" +
+      '<div id="surah-grid" class="grid-surahs">' + surahCards + "</div>" +
+      (filtered.length === 0 ? '<p class="empty-note">لا توجد سورة بهذا الاسم — جرّبي اسماً آخر.</p>' : "") +
+    "</div>"
+  );
+}
+
+/* ============ recite view ============ */
+function envelopeBars(env, color) {
+  const bars = env.length > 120 ? env.filter((_, i) => i % Math.ceil(env.length / 120) === 0) : env;
+  return bars.map((v) => '<i style="height:' + Math.max(8, v) + "%;background:" + color + ";opacity:" + (0.55 + (v / 100) * 0.45) + '"></i>').join("");
+}
+function renderRecite() {
+  const s = app.surah;
+  const ref = REFERENCES[String(s.id)] || { duration: s.duration, speechRatio: 0.86, pauses: s.ayahCount, segments: s.ayahCount + 1, envelope: [] };
+  const recording = rec.state === "recording";
+  const hasTake = !!rec.result;
+
+  let rateLabel = "السرعة ×1";
+  const audioEl = $("#ref-audio");
+  if (audioEl && audioEl.playbackRate === 0.75) rateLabel = "السرعة ×0.75";
+
+  const ayahSection = recording
+    ? '<h2 style="margin-bottom:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:700;color:#8a6d1a">' + icon("eyeOff", 16) + " وضع الحفظ — الكلمات مخفية أثناء التسجيل</h2>" +
+      '<div class="mem-box">' +
+        '<span class="mem-icon">' + icon("eyeOff", 28) + "</span>" +
+        '<p class="mem-title font-quran">اقرئي السورة من حفظك…</p>' +
+        '<p class="mem-sub">الكلمات مخفية الآن وستظهر تلقائياً بعد إيقاف التسجيل</p>' +
+        '<p class="rec-line"><span class="rec-dot"></span> جارٍ التسجيل… <span id="rec-timer-1">' + fmtClock(rec.seconds) + "</span></p>" +
+      "</div>"
+    : '<h2 style="margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:700;color:#6e7b72">' + icon("book", 16) + " نص السورة — راجعيه قبل التسجيل، ويُخفى أثناء التسجيل</h2>" +
+      '<div class="ayah-scroll">' +
+        '<p class="bismillah font-quran">' + BISMILLAH_TEXT + "</p>" +
+        '<p class="ayah-text font-quran" dir="rtl">' +
+          s.ayahs.map((a) => "<span>" + a.text + ' <span class="ayah-num" aria-label="آية ' + a.n + '">' + a.n + "</span> </span>").join("") +
+        "</p>" +
+      "</div>";
+
+  let statusHtml;
+  if (recording) statusHtml = '<p class="rec-line"><span class="rec-dot"></span> جارٍ التسجيل… <span id="rec-timer-2">' + fmtClock(rec.seconds) + "</span></p>";
+  else if (rec.state === "analyzing") statusHtml = '<p style="display:flex;align-items:center;gap:.5rem;color:#6e7b72">' + icon("loader", 16, "spin") + " جاري تجهيز التسجيل…</p>";
+  else statusHtml = "<p>" + (hasTake ? "تسجيلك جاهز — استمعي إليه ثم أرسليه للتقييم" : "اضغطي على الميكروفون لبدء التسجيل") + "</p>";
+
+  const takePanel = hasTake
+    ? '<div class="take-panel">' +
+        '<audio class="take-audio" src="' + rec.result.url + '" controls></audio>' +
+        '<div class="actions-row">' +
+          '<button class="btn" data-action="rec-reset" ' + (app.submitting ? "disabled" : "") + ">" + icon("rotate", 16) + " إعادة التسجيل</button>" +
+          '<button class="btn btn-gold" data-action="submit-take" ' + (app.submitting ? "disabled" : "") + ">" + (app.submitting ? icon("loader", 16, "spin") : icon("send", 16)) + " " + (app.submitting ? "جاري التقييم…" : "إرسال التقييم") + "</button>" +
+        "</div>" +
+        (app.submitError ? '<p class="alert" role="alert">' + esc(app.submitError) + "</p>" : "") +
+      "</div>"
+    : "";
+
+  return (
+    '<div class="container">' +
+      '<div class="topbar">' +
+        '<button class="btn btn-sm" data-action="go-home">' + icon("arrowRight", 16) + " رجوع</button>" +
+        '<div class="topbar-center"><h1 class="font-quran">سورة ' + esc(s.name.replace("سُورَةُ ", "")) + "</h1>" +
+        "<p>" + s.ayahCount + " آية · التلاوة المرجعية " + fmtClock(ref.duration) + " دقيقة</p></div>" +
+        '<div class="topbar-spacer"></div>' +
+      "</div>" +
+
+      '<section class="card card-p">' +
+        '<div class="ref-head">' +
+          '<div class="ref-title"><span class="ref-icon">' + icon("volume", 20) + "</span><div><h2>التلاوة المرجعية — الشيخ مشاري العفاسي</h2><p>استمعي إليها لمراجعة الإيقاع والوقف</p></div></div>" +
+          '<div class="ref-actions">' +
+            '<button class="btn btn-sm" data-action="ref-rate">' + icon("gauge", 14) + ' <span id="rate-label">' + rateLabel + "</span></button>" +
+            '<button class="btn btn-sm btn-primary" data-action="ref-play" id="ref-play-btn">' + icon("play", 14) + " استمعي</button>" +
+          "</div>" +
+        "</div>" +
+        '<div class="envelope">' + envelopeBars(ref.envelope || [], "#C9A227") + "</div>" +
+        '<audio id="ref-audio" src="https://server8.mp3quran.net/afs/' + String(s.id).padStart(3, "0") + '.mp3" preload="none"></audio>' +
+      "</section>" +
+
+      '<section class="card card-p ayah-box">' + ayahSection + "</section>" +
+
+      '<section class="card" style="margin-top:1rem;padding:1.5rem">' +
+        micBannerHtml() +
+        '<div class="tips"><p class="tip-fade" id="tip">' + TIPS[tipIdx % TIPS.length] + "</p></div>" +
+        '<div class="recorder-col">' +
+          '<div class="meter" id="meter" aria-hidden="true">' + Array.from({ length: 28 }).map(() => "<i></i>").join("") + "</div>" +
+          '<button class="mic-btn' + (recording ? " mic-btn-recording" : "") + '" data-action="' + (recording ? "rec-stop" : "rec-start") + '" ' +
+            'aria-label="' + (recording ? "إيقاف التسجيل" : "بدء التسجيل") + '" ' +
+            (rec.state === "analyzing" || app.submitting ? "disabled" : "") + ">" +
+            (recording ? icon("square", 32) : icon("mic", 32)) +
+          "</button>" +
+          '<div class="rec-status">' + statusHtml + "</div>" +
+          (rec.error ? '<p class="alert" role="alert">' + esc(rec.error) + "</p>" : "") +
+          takePanel +
+        "</div>" +
+      "</section>" +
+    "</div>"
+  );
+}
+function afterRenderRecite() {
+  tipsTimer = setInterval(() => {
+    tipIdx++;
+    const t = $("#tip");
+    if (t) t.textContent = TIPS[tipIdx % TIPS.length];
+  }, 5000);
+  const audio = $("#ref-audio");
+  if (audio) {
+    audio.addEventListener("ended", updateRefBtn);
+    audio.addEventListener("pause", updateRefBtn);
+    audio.addEventListener("play", updateRefBtn);
+  }
+}
+function updateRefBtn() {
+  const audio = $("#ref-audio"), btn = $("#ref-play-btn");
+  if (!audio || !btn) return;
+  const playing = !audio.paused;
+  btn.innerHTML = (playing ? icon("pause", 14) : icon("play", 14)) + " " + (playing ? "إيقاف" : "استمعي");
+}
+
+/* ============ results view ============ */
+const BREAKDOWN_META = {
+  accuracy: { label: "دقة القراءة", desc: "مطابقة الكلمات المنطوقة لنص السورة", color: "#1E4D3B" },
+  completeness: { label: "الاكتمال", desc: "كم كلمة من السورة قرأتِ", color: "#2E6B54" },
+  pacing: { label: "الإيقاع والسرعة", desc: "مقارنة سرعتك بالتلاوة المرجعية", color: "#C9A227" },
+  steadiness: { label: "الثبات", desc: "استمرارية التلاوة دون فترات صمت", color: "#8A6D1A" }
+};
+function scoreRing(score, color, sublabel) {
+  const size = 180, stroke = 14;
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r;
+  const filled = (clamp(score, 0, 100) / 100) * c;
+  return (
+    '<div class="ring-wrap" style="width:' + size + "px;height:" + size + 'px">' +
+      '<svg width="' + size + '" height="' + size + '" style="transform:rotate(-90deg)" role="img" aria-label="العلامة ' + score + ' من 100">' +
+        '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="#EDE6D4" stroke-width="' + stroke + '"/>' +
+        '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="' + stroke + '" stroke-linecap="round" stroke-dasharray="' + filled + " " + (c - filled) + '" style="transition:stroke-dasharray 1s ease-out"/>' +
+      "</svg>" +
+      '<div class="ring-center"><small>علامتك</small><span class="score" style="color:' + color + '">' + score + '</span><span class="of">من 100</span>' +
+      (sublabel ? '<span class="sub" style="color:' + color + '">' + esc(sublabel) + "</span>" : "") +
+      "</div></div>"
+  );
+}
+function renderResults() {
+  const r = app.result, s = app.surah;
+  const ringColor = r.score >= 80 ? "#1E4D3B" : r.score >= 60 ? "#C9A227" : "#B3261E";
+  const activeKeys = Object.keys(r.weights).filter((k) => r.weights[k] > 0);
+  const breakdownHtml = activeKeys.map((k) => {
+    const meta = BREAKDOWN_META[k];
+    const v = r.breakdown[k];
+    return (
+      '<div class="bd-row">' +
+        '<div class="bd-head"><span class="lbl">' + meta.label + ' <small>(وزن ' + r.weights[k] + ' نقطة)</small></span>' +
+        '<span class="val" style="color:' + meta.color + '">' + Math.round(v) + "</span></div>" +
+        '<div class="bd-track"><div class="bd-fill" style="width:' + v + "%;background-color:" + meta.color + '"></div></div>' +
+        '<p class="bd-desc">' + meta.desc + "</p>" +
+      "</div>"
+    );
+  }).join("");
+
+  const notesHtml = r.notes.map((n) => {
+    const ic = n.includes("ما شاء الله") || n.includes("أحسنت") || n.includes("استمري")
+      ? icon("check", 16, "") .replace('stroke="currentColor"', 'stroke="#1E4D3B"')
+      : n.includes("تعذّر") || n.includes("تأكدي")
+        ? icon("info", 16).replace('stroke="currentColor"', 'stroke="#8A6D1A"')
+        : icon("alert", 16).replace('stroke="currentColor"', 'stroke="#C9A227"');
+    return "<li>" + ic + "<span>" + esc(n) + "</span></li>";
+  }).join("");
+
+  const textHtml = r.text.map((a) =>
+    "<span>" +
+      a.words.map((wd) => {
+        const cls = wd.status === "correct" ? "w-correct" : wd.status === "sub" ? "w-sub" : "w-missing";
+        const title = wd.spoken ? ' title="قرأتِ: ' + esc(wd.spoken) + '"' : "";
+        return '<span class="' + cls + '"' + title + ">" + wd.w + "</span> ";
+      }).join("") +
+      '<span class="ayah-num" aria-label="آية ' + a.n + '">' + a.n + "</span> " +
+    "</span>"
+  ).join("");
+
+  return (
+    '<div class="container">' +
+      '<section class="card" style="margin-top:1rem;padding:1.5rem">' +
+        '<div class="score-head"><small>نتيجة تسميعك لسورة</small><h1 class="font-quran">سورة ' + esc(s.name.replace("سُورَةُ ", "")) + "</h1></div>" +
+        '<div style="margin-top:1rem;display:flex;flex-direction:column;align-items:center;gap:.75rem">' +
+          scoreRing(r.score, ringColor, r.grade) +
+          '<span class="grade-pill" style="color:' + r.gradeColor + ";background:" + r.gradeBg + '">' + esc(r.grade) + "</span>" +
+          (!r.asrUsed ? '<p class="asr-note">' + icon("info", 16) + " حُسبت العلامة هذه المرة من المؤشرات الصوتية فقط (تعذّر تحليل النص المنطوق)</p>" : "") +
+        "</div>" +
+      "</section>" +
+
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<h2 class="section-title" style="margin-bottom:1rem">تفصيل العلامة</h2>' +
+        breakdownHtml +
+      "</section>" +
+
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<h2 class="section-title" style="margin-bottom:.75rem">ملاحظات المقيّم</h2>' +
+        '<ul class="notes-list">' + notesHtml + "</ul>" +
+      "</section>" +
+
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<div style="margin-bottom:.75rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem">' +
+          '<h2 class="section-title">نص السورة مع تلوين الأخطاء</h2>' +
+          '<div class="legend"><span><span class="dot" style="background:#1E4D3B"></span> صحيحة</span><span><span class="dot" style="background:#B3261E"></span> خطأ أو ناقصة</span></div>' +
+        "</div>" +
+        '<div class="ayah-scroll" style="max-height:20rem"><p class="ayah-text font-quran" dir="rtl">' + textHtml + "</p></div>" +
+        (r.extrasCount > 0 ? '<p class="extras-note">ملاحظة: وُجدت ' + r.extrasCount + " كلمة في التسجيل زائدة عن نص السورة.</p>" : "") +
+      "</section>" +
+
+      '<div class="results-actions">' +
+        '<button class="btn btn-primary" data-action="retry">' + icon("rotate", 16) + " إعادة المحاولة</button>" +
+        '<button class="btn" data-action="go-progress">' + icon("chart", 16) + " سجل التقدم</button>" +
+        '<button class="btn" data-action="go-home">' + icon("home", 16) + " سورة أخرى</button>" +
+      "</div>" +
+    "</div>"
+  );
+}
+
+/* ============ progress view ============ */
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString("ar", { day: "numeric", month: "short" }) + " - " + d.toLocaleTimeString("ar", { hour: "2-digit", minute: "2-digit" });
+}
+function lineChart(attempts) {
+  const pts = attempts.slice(-30);
+  if (pts.length === 0) return "";
+  const W = 560, H = 180, P = { t: 12, r: 12, b: 24, l: 30 };
+  const xs = (i) => P.l + (i / Math.max(1, pts.length - 1)) * (W - P.l - P.r);
+  const ys = (v) => P.t + (1 - v / 100) * (H - P.t - P.b);
+  const path = pts.map((a, i) => (i === 0 ? "M" : "L") + xs(i).toFixed(1) + "," + ys(a.score).toFixed(1)).join(" ");
+  const area = path + " L" + xs(pts.length - 1).toFixed(1) + "," + (H - P.b) + " L" + xs(0).toFixed(1) + "," + (H - P.b) + " Z";
+  const grid = [0, 50, 100].map((g) =>
+    '<g><line x1="' + P.l + '" x2="' + (W - P.r) + '" y1="' + ys(g) + '" y2="' + ys(g) + '" stroke="#EDE6D4" stroke-dasharray="4 4"/>' +
+    '<text x="' + (P.l - 6) + '" y="' + (ys(g) + 4) + '" font-size="10" fill="#6E7B72" text-anchor="end">' + g + "</text></g>"
+  ).join("");
+  const dots = pts.map((a, i) =>
+    '<circle cx="' + xs(i).toFixed(1) + '" cy="' + ys(a.score).toFixed(1) + '" r="' + (a.score >= 90 ? 4.5 : 3) + '" fill="' +
+    (a.score >= 90 ? "#1E4D3B" : a.score >= 60 ? "#C9A227" : "#B3261E") + '" stroke="#fff" stroke-width="1.5"><title>' + esc(a.grade) + " — " + a.score + "</title></circle>"
+  ).join("");
+  return (
+    '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%" role="img" aria-label="رسم تطور العلامات">' +
+      grid + '<path d="' + area + '" fill="#C9A227" opacity="0.12"/><path d="' + path + '" fill="none" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round"/>' + dots +
+    "</svg>"
+  );
+}
+function renderProgress() {
+  const attempts = loadAttempts();
+  const stats = overallStats(attempts);
+  const badges = computeBadges(attempts);
+  const profile = parseProfile(getProfileRaw());
+  const surahName = (id) => {
+    const s = SURAHS.find((x) => x.id === id);
+    return s ? s.name.replace("سُورَةُ ", "") : "سورة " + id;
+  };
+  const sorted = attempts.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const profileBar = (profile.name || profile.classroom)
+    ? '<div class="profile-bar">' +
+        (profile.name ? "<span>" + icon("user", 16) + " الطالبة: <b>" + esc(profile.name) + "</b></span>" : "") +
+        (profile.classroom ? "<span>" + icon("cap", 16) + " الصف والشعبة: <b>" + esc(profile.classroom) + "</b></span>" : "") +
+      "</div>"
+    : "";
+
+  const statCards = [
+    { label: "عدد المحاولات", value: stats.total, color: "#1E4D3B" },
+    { label: "متوسط العلامات", value: stats.avg, color: "#C9A227" },
+    { label: "سور متقنة (90+)", value: stats.mastered, color: "#2E6B54" },
+    { label: "سور جرّبتِها", value: stats.surahsTried, color: "#8A6D1A" }
+  ].map((c) => '<div class="stat-card"><p class="v" style="color:' + c.color + '">' + c.value + '</p><p class="l">' + c.label + "</p></div>").join("");
+
+  const badgesHtml = badges.map((b) =>
+    '<div class="badge-card' + (b.earned ? " earned" : "") + '"><span class="ic" aria-hidden="true">' + b.icon + "</span><p>" + esc(b.name) + "</p><small>" + esc(b.desc) + "</small></div>"
+  ).join("");
+
+  const clearBtn = attempts.length > 0
+    ? (app.confirmClear
+        ? '<div style="display:flex;align-items:center;gap:.5rem"><button class="btn btn-sm btn-destructive" data-action="clear-confirm">تأكيد الحذف</button><button class="btn btn-sm" data-action="clear-cancel">إلغاء</button></div>'
+        : '<button class="btn btn-sm btn-ghost danger" data-action="clear-ask">' + icon("trash", 14) + " حذف السجل</button>")
+    : "";
+
+  const table = sorted.length === 0
+    ? '<p class="chart-empty">لا توجد محاولات مسجلة بعد.</p>'
+    : '<div class="table-wrap"><table><thead><tr>' +
+        "<th>التاريخ</th><th>السورة</th><th>العلامة</th><th>التقدير</th></tr></thead><tbody>" +
+        sorted.map((a) => {
+          const color = a.score >= 90 ? "#1E4D3B" : a.score >= 60 ? "#8A6D1A" : "#B3261E";
+          const bg = a.score >= 90 ? "#E2F0E8" : a.score >= 60 ? "#F5EBD0" : "#F9E3E1";
+          return "<tr><td class=\"date\">" + fmtDate(a.date) + '</td><td class="font-quran">' + esc(surahName(a.surahId)) +
+            '</td><td><span style="color:' + color + ";background:" + bg + '">' + a.score + "</span></td><td style=\"font-size:12px\">" + esc(a.grade) + "</td></tr>";
+        }).join("") +
+        "</tbody></table></div>";
+
+  return (
+    '<div class="container">' +
+      '<div class="progress-head"><h1>سجل التقدم</h1><button class="btn btn-sm" data-action="go-home">' + icon("home", 16) + " الرئيسية</button></div>" +
+      profileBar +
+      '<div class="stats-grid">' + statCards + "</div>" +
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<h2 class="section-title" style="margin-bottom:.5rem">تطور علاماتك (آخر 30 محاولة)</h2>' +
+        (attempts.length ? lineChart(attempts) : '<p class="chart-empty">لا توجد محاولات بعد — ابدئي بأول تسميع وسيظهر رسم التطور هنا.</p>') +
+      "</section>" +
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<h2 class="section-title" style="margin-bottom:.75rem;display:flex;align-items:center;gap:.375rem">' + icon("trophy", 16) + " الشارات</h2>" +
+        '<div class="badges-grid">' + badgesHtml + "</div>" +
+      "</section>" +
+      '<section class="card card-p" style="margin-top:1rem">' +
+        '<div style="margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between">' +
+          '<h2 class="section-title">كل المحاولات</h2>' + clearBtn +
+        "</div>" + table +
+      "</section>" +
+    "</div>"
+  );
+}
+
+/* ============ actions ============ */
+async function submitTake() {
+  if (!rec.result || app.submitting) return;
+  app.submitting = true; app.submitError = null;
+  render();
+  try {
+    await new Promise((r) => setTimeout(r, 60));
+    const result = evaluate(app.surah, rec.result.metrics, rec.result.transcript || "");
+    saveAttempt({
+      surahId: app.surah.id, score: result.score, grade: result.grade,
+      accuracy: result.breakdown.accuracy || null,
+      completeness: result.breakdown.completeness,
+      pacing: result.breakdown.pacing,
+      steadiness: result.breakdown.steadiness,
+      asrUsed: result.asrUsed
+    });
+    app.result = result; app.view = "results"; app.submitting = false;
+    render();
+  } catch (e) {
+    app.submitting = false;
+    app.submitError = "تعذّر تقييم التسجيل، حاولي مرة أخرى.";
+    render();
+  }
+}
+function navigate(view) {
+  if (app.view === "recite" && rec.state === "recording") recStop();
+  app.view = view; app.confirmClear = false;
+  render();
+}
+
+/* ============ global event delegation ============ */
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const act = el.dataset.action;
+  if (act === "go-home") navigate("home");
+  else if (act === "go-progress") navigate("progress");
+  else if (act === "select-surah") {
+    const s = SURAHS.find((x) => x.id === Number(el.dataset.id));
+    if (s) { app.surah = s; app.result = null; app.view = "recite"; render(); micActivate(); }
+  } else if (act === "rec-start") recStart();
+  else if (act === "mic-activate") micActivate();
+  else if (act === "open-standalone") openStandalone();
+  else if (act === "rec-stop") recStop();
+  else if (act === "rec-reset") recReset();
+  else if (act === "submit-take") submitTake();
+  else if (act === "retry") { app.result = null; app.view = "recite"; render(); micActivate(); }
+  else if (act === "ref-play") {
+    const audio = $("#ref-audio");
+    if (audio) { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); }
+  } else if (act === "ref-rate") {
+    const audio = $("#ref-audio"), lbl = $("#rate-label");
+    if (audio) {
+      audio.playbackRate = audio.playbackRate === 1 ? 0.75 : 1;
+      if (lbl) lbl.textContent = audio.playbackRate === 1 ? "السرعة ×1" : "السرعة ×0.75";
+    }
+  } else if (act === "clear-ask") { app.confirmClear = true; render(); }
+  else if (act === "clear-cancel") { app.confirmClear = false; render(); }
+  else if (act === "clear-confirm") { clearProgress(); app.confirmClear = false; render(); }
+});
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (t.id === "surah-search") {
+    app.q = t.value;
+    // re-render only the grid to keep focus in the input
+    const attempts = loadAttempts();
+    const best = new Map();
+    for (const a of attempts) { const cur = best.get(a.surahId); if (cur === undefined || a.score > cur) best.set(a.surahId, a.score); }
+    const q = app.q.trim();
+    let filtered = SURAHS;
+    if (q) {
+      const norm = normalizeArabic(q).replace(/^سورة\s*/, "");
+      if (norm) filtered = SURAHS.filter((s) => {
+        const n = normalizeArabic(s.name).replace(/^سورة\s*/, "");
+        return n.includes(norm) || s.englishName.toLowerCase().includes(q.toLowerCase()) || String(s.id) === norm;
+      });
+    }
+    const grid = $("#surah-grid");
+    if (grid) {
+      grid.innerHTML = filtered.map((s) => {
+        const b = best.get(s.id);
+        const mastered = (b || 0) >= 90;
+        const pill = b !== undefined
+          ? '<span class="score-pill ' + (mastered ? "mastered" : "tried") + '">' + (mastered ? "★ " : "") + "أفضل علامة: " + b + "</span>"
+          : '<span class="score-pill new">لم تُسمّعي بعد</span>';
+        return (
+          '<button class="surah-card" data-action="select-surah" data-id="' + s.id + '" aria-label="سورة ' + esc(s.name) + " — " + s.ayahCount + ' آية">' +
+            '<span class="star-badge"><span class="star-num">' + s.id + "</span></span>" +
+            '<h3 class="font-quran">' + esc(s.name.replace("سُورَةُ ", "")) + "</h3>" +
+            '<p class="surah-meta"><span>' + icon("list", 12) + " " + s.ayahCount + " آية</span><span>" + icon("clock", 12) + " " + fmtDur(s.duration) + "</span></p>" +
+            pill +
+          "</button>"
+        );
+      }).join("");
+      let empty = $(".empty-note");
+      if (filtered.length === 0 && !empty) grid.insertAdjacentHTML("afterend", '<p class="empty-note">لا توجد سورة بهذا الاسم — جرّبي اسماً آخر.</p>');
+      else if (filtered.length > 0 && empty) empty.remove();
+    }
+  } else if (t.id === "profile-name") {
+    const p = parseProfile(getProfileRaw()); p.name = t.value; saveProfile(p);
+  } else if (t.id === "profile-class") {
+    const p = parseProfile(getProfileRaw()); p.classroom = t.value; saveProfile(p);
+  }
+});
+window.addEventListener("storage", (e) => { if (app.view === "home" || app.view === "progress") render(); });
+
+/* ============ boot ============ */
+function afterRender() {
+  if (app.view === "recite") afterRenderRecite();
+}
+render();
+micQuery();
+
+</script>
+</body>
+</html>
